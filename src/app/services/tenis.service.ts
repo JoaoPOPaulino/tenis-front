@@ -21,20 +21,20 @@ export class TenisService {
     return this.httpClient.get<Tenis>(`${this.baseUrl}/${id}`); 
   }
 
-  insert(Tenis: Tenis): Observable<Tenis> {
+  insert(tenis: Tenis): Observable<Tenis> {
     const data = {
-      nome: Tenis.nome,
-      tamanho: Tenis.tamanho
+      nome: tenis.nome,
+      tamanho: tenis.tamanho
     }
     return this.httpClient.post<Tenis>(this.baseUrl, data);
   }
 
-  update(Tenis: Tenis): Observable<Tenis> {
+  update(tenis: Tenis): Observable<Tenis> {
     const data = {
-      nome: Tenis.nome,
-      tamanho: Tenis.tamanho
+      nome: tenis.nome,
+      tamanho: tenis.tamanho
     }
-    return this.httpClient.put<any>(`${this.baseUrl}/${Tenis.id}`, data); 
+    return this.httpClient.put<any>(`${this.baseUrl}/${tenis.id}`, data); 
   }
 
   delete(id: number): Observable<any>{
