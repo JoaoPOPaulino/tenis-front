@@ -1,1 +1,38 @@
-<p>usuario-form works!</p>
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome" required>
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" required>
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-label>Telefone</mat-label>
+      <input matInput formControlName="telefone" required>
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-label>Endereço</mat-label>
+      <input matInput formControlName="endereco" required>
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-label>Senha</mat-label>
+      <input matInput type="password" formControlName="senha" required>
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-label>Tipo de Usuário</mat-label>
+      <mat-select formControlName="tipoUsuario" required>
+        <mat-option *ngFor="let tipo of tiposUsuario" [value]="tipo">
+          {{ tipo }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <button mat-raised-button color="primary" type="submit" [disabled]="formGroup.invalid">Salvar</button>
+  </form>
+  

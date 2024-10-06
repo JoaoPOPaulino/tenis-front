@@ -1,40 +1,46 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuarioService } from '../../../services/usuario.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TipoUsuario } from '../../../models/tipo-usuario.model';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-usuario-form',
   standalone: true,
-  imports: [],
+  imports: [CommonModule,ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule],
   templateUrl: './usuario-form.component.html',
   styleUrl: './usuario-form.component.css'
 })
 export class UsuarioFormComponent {
   formGroup: FormGroup;
-  usuarioTipo: TipoUsuario [] = [];
+  tiposUsuario = Object.values(TipoUsuario);
 
   constructor(private formBuilder: FormBuilder,
-    private  usuarioService: UsuarioService,
-    private  tipoUsuario:  TipoUsuario,
-    private router: Router,
-    private activatedRoute: ActivatedRoute) {
-      this.formGroup = this.formBuilder.group({
-        id:  [''],
-        nome:['', Validators.required],
-        email: ['', Validators.required],
-        senha: ['', Validators.required],
-        telefone: ['', Validators.required],
-        endereco:  ['', Validators.required],
-        tipoUsuario: [null]
-      })  
-    }
+              private usuarioService: UsuarioService,
+              private router: Router) {
+                this.formGroup = this.formBuilder.group({
+                  nome: ['',Validators.required],
+                  email: ['', Validators.required],
+                  telefone:  ['', Validators.required],
+                  endereco:  ['', Validators.required],
+                  senha:  ['', Validators.required],
+                  tipoUsuario: ['', Validators.required]
+              });
+              }
 
-    ngOnInit(): void{
-      this.tipoUsuario.findAll().subscribe(data => {
-        this.usuarioTipo = data;
-        this.initializeForm();
-      })
+
+  onSubmit(){
+    if(this.formGroup.valid){
+      const novoUsuario = this.formGroup.value;
+      this.usuarioService.insert(novoUsuario).subscribe({
+        next: () => this.router.navigate(['/usuarios']),
+        error: (err) => console.error('Erro ao cadastrar usuário:', err)
+      });
     }
+  }
 }
