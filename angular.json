@@ -28,9 +28,15 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/paper-kit.css",
+              "src/assets/demo/demo.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/jquery.min.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/js/paper-kit.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -87,9 +93,15 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/paper-kit.css",
+              "src/assets/demo/demo.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/jquery.min.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/js/paper-kit.js"
+            ]
           }
         }
       }
