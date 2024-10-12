@@ -1,0 +1,82 @@
+.full-width-input {
+    width: 100%;
+  }
+  
+  .full-width-button {
+    width: 100% !important;
+    margin-bottom: 1rem;
+  }
+  
+  mat-card {
+    max-width: 800px;
+    margin: 2rem auto;
+  }
+  
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .form-container {
+    padding: 2rem;
+  }
+  
+  .centered-toolbar {
+    display: flex;
+    justify-content: center;
+    font-size: x-large;
+  }
+  
+  .flex-container {
+    display: flex;
+    gap: 22px;
+  }
+  
+  .button {
+    appearance: none;
+    backface-visibility: hidden;
+    background-color: #4361EE;
+    border-radius: 10px;
+    border-style: none;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    height: 56px;
+    letter-spacing: normal;
+    line-height: 1.5;
+    outline: none;
+    overflow: hidden;
+    padding: 14px 30px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transform: translate3d(0, 0, 0);
+    transition: all .3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+  
+  .button:active {
+    box-shadow: rgba(0, 0, 0, .1) 0 3px 6px 0, rgba(0, 0, 0, .1) 0 0 10px 0, rgba(0, 0, 0, .1) 0 1px 4px -1px;
+    transform: translateY(2px);
+    transition-duration: .35s;
+  }
+  
+  .button:active:after {
+    opacity: 1;
+  }
+  
+  @media (min-width: 768px) {
+    .button {
+      padding: 14px 22px;
+      width: 100%;
+    }
+  }

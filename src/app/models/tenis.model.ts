@@ -1,8 +1,9 @@
-import { Marca } from "./marca.model";
+import { Marca } from './marca.model';
 
 export class Tenis {
-    id!: number;
-    nome!: string;
-    tamanho!: number;
-    marca!: Marca;
+  id!: number;
+  descricao!: string;
+  marca!: Marca;
+  modelo!: string;
+  preco!: number;
 }

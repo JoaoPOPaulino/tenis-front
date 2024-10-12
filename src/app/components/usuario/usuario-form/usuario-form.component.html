@@ -1,38 +1,149 @@
-<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-    <mat-form-field>
-      <mat-label>Nome</mat-label>
-      <input matInput formControlName="nome" required>
-    </mat-form-field>
-    
-    <mat-form-field>
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" required>
-    </mat-form-field>
-    
-    <mat-form-field>
-      <mat-label>Telefone</mat-label>
-      <input matInput formControlName="telefone" required>
-    </mat-form-field>
-    
-    <mat-form-field>
-      <mat-label>Endereço</mat-label>
-      <input matInput formControlName="endereco" required>
-    </mat-form-field>
-    
-    <mat-form-field>
-      <mat-label>Senha</mat-label>
-      <input matInput type="password" formControlName="senha" required>
-    </mat-form-field>
-    
-    <mat-form-field>
-      <mat-label>Tipo de Usuário</mat-label>
-      <mat-select formControlName="tipoUsuario" required>
-        <mat-option *ngFor="let tipo of tiposUsuario" [value]="tipo">
-          {{ tipo }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    
-    <button mat-raised-button color="primary" type="submit" [disabled]="formGroup.invalid">Salvar</button>
-  </form>
-  
+<mat-toolbar class="centered-toolbar">Cadastro de Usuario</mat-toolbar>
+<div class="form-container">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup">
+        <div class="flex-container">
+          <mat-form-field appearance="outline" class="full-width-input">
+            <mat-label>Nome</mat-label>
+            <input matInput type="text" formControlName="nome" />
+            <mat-error *ngIf="formGroup.get('nome')?.hasError('apiError')">
+              {{ formGroup.get('nome')?.hasError('apiError') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width-input">
+            <mat-label>Sobrenome</mat-label>
+            <input matInput type="text" formControlName="sobrenome" />
+            <mat-error *ngIf="formGroup.get('sobrenome')?.hasError('apiError')">
+              {{ formGroup.get('sobrenome')?.hasError('apiError') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="flex-container">
+          <mat-form-field appearance="outline" class="full-width-input">
+            <mat-label>CPF</mat-label>
+            <input matInput type="number" formControlName="cpf" />
+            <mat-error *ngIf="formGroup.get('cpf') &&
+                      formGroup.get('cpf')?.invalid &&
+                      formGroup.get('cpf')?.touched">
+              CPF é obrigatório.
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width-input">
+            <mat-label>RG</mat-label>
+            <input matInput type="number" formControlName="rg" />
+            <mat-error *ngIf="formGroup.get('rg') &&
+                      formGroup.get('rg')?.invalid &&
+                      formGroup.get('rg')?.touched">
+              RG é obrigatório.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width-input">
+          <mat-label>Nome de Usuário (Login)</mat-label>
+          <input matInput type="text" formControlName="login" />
+          <mat-error *ngIf="formGroup.get('login')?.hasError('apiError')">
+            {{ formGroup.get('login')?.getError('apiError') }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width-input">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" formControlName="senha" />
+          <mat-error *ngIf="formGroup.get('senha') &&
+                    formGroup.get('senha')?.invalid &&
+                    formGroup.get('senha')?.touched">
+            Senha é obrigatória.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width-input">
+          <mat-label for="perfil-id">Perfil</mat-label>
+          <mat-select formControlName="perfil" id="perfil-id">
+            <mat-option *ngFor="let perfil of perfis" [value]="perfil">
+              {{perfil.label}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- <div formArrayName="telefones">
+          <div *ngFor="let telefoneGroup of telefones.controls; let i = index">
+            <mat-card>
+              <mat-card-content>
+                <div [formGroupName]="i">
+                  <mat-form-field appearance="outline" class="full-width-input">
+                    <mat-label>DDD</mat-label>
+                    <input matInput type="text" formControlName="ddd" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width-input">
+                    <mat-label>Número</mat-label>
+                    <input matInput type="text" formControlName="numero" />
+                  </mat-form-field>
+                </div>
+              </mat-card-content>
+              <mat-card-content>
+                <button mat-icon-button color="warn" *ngIf="isNewRoute" (click)="removerTelefone(i)">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" *ngIf="isEditRoute"
+                  (click)="deletarTelefone(telefoneGroup.get('id')?.value)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <button mat-flat-button color="primary" (click)="adicionarTelefone()" class="full-width-button">
+          <mat-icon>add</mat-icon>
+          Adicionar Telefone
+        </button>
+        <div formArrayName="enderecos">
+          <div *ngFor="let enderecoGroup of enderecos.controls; let i = index">
+            <mat-card>
+              <mat-card-content>
+                <div [formGroupName]="i">
+                  <mat-form-field appearance="outline" class="full-width-input">
+                    <mat-label>Logradouro</mat-label>
+                    <input matInput type="text" formControlName="logradouro" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width-input">
+                    <mat-label>Número</mat-label>
+                    <input matInput type="text" formControlName="numero" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width-input">
+                    <mat-label>Complemento</mat-label>
+                    <input matInput type="text" formControlName="complemento" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width-input">
+                    <mat-label>Bairro</mat-label>
+                    <input matInput type="text" formControlName="bairro" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width-input">
+                    <mat-label>CEP</mat-label>
+                    <input matInput type="text" formControlName="cep" />
+                  </mat-form-field>
+                </div>
+              </mat-card-content>
+              <mat-card-content>
+                <button mat-icon-button color="warn" *ngIf="isNewRoute" (click)="removerEndereco(i)">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" *ngIf="isEditRoute"
+                  (click)="deletarEndereco(enderecoGroup.get('id')?.value)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <button mat-flat-button color="primary" (click)="adicionarEndereco()" class="full-width-button">
+          <mat-icon>add</mat-icon>
+          Adicionar Endereço
+        </button> -->
+      </form>
+    </mat-card-content>
+    <mat-card-content>
+      <div class="flex-container">
+        <button class="button" color="primary" (click)="salvar()">Salvar</button>
+        <button class="button" routerLink="/admin/usuarios/list">Cancelar</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
