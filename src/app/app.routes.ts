@@ -1,15 +1,41 @@
-import { Routes } from '@angular/router';
-import { TenisListComponent } from './components/tenis/tenis-list/tenis-list.component';
-import { TenisFormComponent } from './components/tenis/tenis-form/tenis-form.component';
-import { MarcaFormComponent } from './components/marca/marca-form/marca-form.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { EstadoListComponent } from './components/estado/estado-list/estado-list.component';
+import { ProdutoListComponent } from './components/produto/produto-list/produto-list.component';
+import { UsuarioListComponent } from './components/usuario/usuario-list/usuario-list.component';
+import { FornecedorListComponent } from './components/fornecedor/fornecedor-list/fornecedor-list.component';
 import { MarcaListComponent } from './components/marca/marca-list/marca-list.component';
-import { UsuarioFormComponent } from './components/usuario/usuario-form/usuario-form.component';
+import { TenisListComponent } from './components/tenis/tenis-list/tenis-list.component';
 
+const routes: Routes = [
+  {
+    path: 'estados',
+    component: EstadoListComponent,
+    title: 'Lista de Estados',
+  },
+  {
+    path: 'produtos',
+    component: ProdutoListComponent,
+    title: 'Lista de Produtos',
+  },
+  {
+    path: 'usuarios',
+    component: UsuarioListComponent,
+    title: 'Lista de Usuários',
+  },
 
-export const routes: Routes = [
-    {path: 'tenis', component: TenisListComponent, title: 'Lista de Tenis'},
-    {path: 'tenis/new', component: TenisFormComponent, title: 'Novo Tenis'},
-    {path: 'marca', component: MarcaListComponent, title: 'Lista de Marca'},
-    {path: 'marca/new', component: MarcaFormComponent, title: 'Nova Marca'},
-    {path: 'usuarios/new', component: UsuarioFormComponent, title: 'Cadastro de Usuário'}
+  {
+    path: 'fornecedores',
+    component: FornecedorListComponent,
+    title: 'Lista de Fornecedores',
+  },
+  { path: 'marcas', component: MarcaListComponent, title: 'Lista de Marcas' },
+  { path: 'tenis', component: TenisListComponent, title: 'Lista de Tênis' },
+  { path: '', redirectTo: '/produtos', pathMatch: 'full' }, // Redirecionar para produtos por padrão
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

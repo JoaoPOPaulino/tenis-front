@@ -1,1 +1,8 @@
-<p>avaliacao-list works!</p>
+<div class="container">
+    <h2 class="header">Lista de Avaliações</h2>
+    <ul>
+        <li *ngFor="let avaliacao of avaliacoes" class="item">
+            {{avaliacao.comentario}} - Nota: {{avaliacao.nota}} - Usuário: {{avaliacao.usuarioId}}
+        </li>
+    </ul>
+</div>

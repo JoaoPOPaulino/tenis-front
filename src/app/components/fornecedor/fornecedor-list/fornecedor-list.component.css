@@ -1,0 +1,12 @@
+/* fornecedor-list.component.css */
+
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007BFF;
+}
+
+.item {
+    background-color: #e7f3ff; /* Cor de fundo específica para fornecedores */
+    border: 1px solid #007BFF; /* Borda azul */
+}

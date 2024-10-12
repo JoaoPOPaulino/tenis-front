@@ -1,69 +1,12 @@
-.input-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-}
+/* tenis-list.component.css */
 
-.input-field {
-  margin-right: 5px;
-}
-
-.input-field>input {
-  width: 500px;
-  border-radius: 10px;
-  padding: 12px;
-  border: 2px solid #ddd;
-  outline: none;
-}
-
-.input-field>input:focus {
-  border: 2px solid #4361EE;
-  outline: 2px solid #B5C1F8;
-}
-
-.search-button,
-.add-button,
-.report-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 43px;
-  height: 43px;
-  color: #fff;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-}
-
-.search-button {
-  background-color: #4361EE;
-  margin-right: 5px;
-}
-
-.add-button {
-  background-color: #35CE8D;
-  margin-right: 5px;
-}
-
-.report-button {
-  color: #000;
-}
-
-mat-icon {
+.header {
   font-size: 24px;
+  font-weight: bold;
+  color: #DC3545;
 }
 
-.full-width-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.demo-table {
-  width: 100%;
-}
-
-.mat-elevation-z8 {
-  box-shadow: none;
+.item {
+  background-color: #ffe8e8; /* Cor de fundo específica para tênis */
+  border: 1px solid #DC3545; /* Borda vermelha */
 }

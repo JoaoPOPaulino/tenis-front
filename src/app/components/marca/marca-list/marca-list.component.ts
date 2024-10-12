@@ -1,32 +1,23 @@
-import { NgFor } from '@angular/common';
-import { Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { Marca } from '../../../models/marca.model';
 import { MarcaService } from '../../../services/marca.service';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-marca-list',
   standalone: true,
-  imports: [NgFor, MatToolbarModule, MatIconModule, MatButtonModule, MatTableModule, RouterModule],
+  imports: [NgFor],
   templateUrl: './marca-list.component.html',
-  styleUrl: './marca-list.component.css'
+  styleUrls: ['./marca-list.component.css'],
 })
-export class MarcaListComponent {
-  marcas: Marca [] = [];
-  displayedColumns: String[] = ['id', 'nome', 'acao'];
+export class MarcaListComponent implements OnInit {
+  marcas: Marca[] = [];
 
-  constructor(private marcaService: MarcaService){
-
-  }
+  constructor(private marcaService: MarcaService) {}
 
   ngOnInit(): void {
-    this.marcaService.findAll().subscribe(
-      data => { this.marcas = data}
-    );
+    this.marcaService.getMarcas().subscribe((data) => {
+      this.marcas = data;
+    });
   }
-
 }
