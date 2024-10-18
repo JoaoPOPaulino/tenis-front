@@ -1,27 +1,30 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-//import { AppComponent } from './app.component';
-import { TestComponent } from './test/test.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 
+// Definindo as rotas
 const routes: Routes = [
   { path: '', component: HomeComponent }
-  
 ];
 
 @NgModule({
   declarations: [
-    //AppComponent,
-    TestComponent
+    HomeComponent // Certifique-se de ter registrado o seu componente Home
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes)
+    BrowserAnimationsModule, // Necessário para animações do Angular Material
+    MatToolbarModule, // Para barra de ferramentas
+    MatButtonModule,  // Para botões
+    MatCardModule,    // Para cards
+    RouterModule.forRoot(routes) // Para configuração das rotas
   ],
   providers: [],
-  //bootstrap: [AppComponent]
+  bootstrap: [HomeComponent] // Defina o componente principal a ser carregado
 })
-
-
 export class AppModule { }
