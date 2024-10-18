@@ -1,19 +1,17 @@
-<header>
-    <nav>
-      <ul>
-        <li><a routerLink="/">Início</a></li>
-        <li><a routerLink="/colecoes">Coleções</a></li>
-        <li><a routerLink="/marcas">Marcas</a></li>
-        <li><a routerLink="/ofertas">Ofertas</a></li>
-        <li><a routerLink="/contato">Contato</a></li>
-      </ul>
-    </nav>
-  </header>
-  
-  <main>
-    <router-outlet></router-outlet>
-  </main>
-  
-  <footer>
-    <p>&copy; 2023 Sneaker Paradise. Todos os direitos reservados.</p>
-  </footer>
+<mat-toolbar color="primary">
+  <nav>
+    <a mat-button [routerLink]="['/']">Início</a>
+    <a mat-button [routerLink]="['/produtos']">Produtos</a>
+    <a mat-button [routerLink]="['/tenis']">Tênis</a>
+    <a mat-button [routerLink]="['/marcas']">Marcas</a>
+    <a mat-button [routerLink]="['/fornecedores']">Fornecedores</a>
+  </nav>
+</mat-toolbar>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
+
+<footer>
+  <p>© {{ currentYear }} Sneaker Paradise. Todos os direitos reservados.</p>
+</footer>
