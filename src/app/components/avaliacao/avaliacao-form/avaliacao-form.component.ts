@@ -9,6 +9,7 @@ import { AvaliacaoService } from '../../../services/avaliacao.service';
 import { Router } from '@angular/router';
 import { Tenis } from '../../../models/tenis.model';
 import { Avaliacao } from '../../../models/avaliacao.model';
+import { TenisService } from '../../../services/tenis.service';
 
 @Component({
   selector: 'app-avaliacao-form',
@@ -20,10 +21,12 @@ import { Avaliacao } from '../../../models/avaliacao.model';
 export class AvaliacaoFormComponent {
   formGruop: FormGroup;
   tenis: Tenis[] = [];
+  activatedRoute: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private avaliacaoService: AvaliacaoService,
+    private tenisService: TenisService,
     private router: Router
   ) {
     this.formGruop = this.formBuilder.group({
@@ -34,8 +37,9 @@ export class AvaliacaoFormComponent {
   }
 
   ngOnInit(): void {
-    this.avaliacaoService.findAll().subscribe((data) => {
+    this.avaliacaoService.findAll(0, 999).subscribe((data) => {
       this.tenis = data;
+
       this.initializeForm();
     });
   }
@@ -116,6 +120,7 @@ export class AvaliacaoFormComponent {
         return this.errorMessages[controlConteudo][errorConteudo];
       }
     }
+    return '';
   }
 
   errorMessages: {
