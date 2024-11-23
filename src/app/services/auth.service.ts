@@ -1,9 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
-import { HttpClient } from '@angular/common/http';
 import { LocalStorageService } from './local-storage.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +29,7 @@ export class AuthService {
     }
   }
 
-  private loginADM(username: string, senha: string): Observable<any> {
+  public loginADM(username: string, senha: string): Observable<any> {
     const params = {
       login: username,
       senha: senha,

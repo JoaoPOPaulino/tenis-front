@@ -6,4 +6,5 @@ export class Tenis {
   marca!: Marca;
   modelo!: string;
   preco!: number;
+  nomeImagem!: string;
 }

@@ -23,6 +23,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "bootstrap": "^4.6.2",
     "jquery": "^3.5.1",
+    "loja-tenis": "file:",
     "ngx-toastr": "^19.0.0",
     "popper.js": "^1.16.1",
     "rxjs": "~7.8.0",

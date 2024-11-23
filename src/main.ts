@@ -10,6 +10,6 @@ import { AppComponent } from './app/app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideAnimationsAsync(), provideAnimationsAsync()]
+  providers: [provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync()]
 })
   .catch(err => console.error(err));
