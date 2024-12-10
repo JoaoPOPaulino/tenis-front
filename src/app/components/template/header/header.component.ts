@@ -1,20 +1,27 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatBadge } from '@angular/material/badge';
-import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
+import { MatBadge } from '@angular/material/badge';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { SidebarService } from '../../../services/sidebar.service';
 import { Usuario } from '../../../models/usuario.model';
 import { AuthService } from '../../../services/auth.service';
-import { SidebarService } from '../../../services/sidebar.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatToolbar, MatIcon, MatBadge, MatButton, MatIconButton, RouterModule],
+  imports: [
+    MatToolbar,
+    MatIcon,
+    MatBadge,
+    MatButton,
+    MatIconButton,
+    RouterModule,
+  ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   usuarioLogado: Usuario | null = null;
@@ -22,14 +29,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private sidebarService: SidebarService,
-    private authService: AuthService) {
-
-  }
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.subscription.add(this.authService.getUsuarioLogado().subscribe(
-      usuario => this.usuarioLogado = usuario
-    ));
+    this.subscription.add(
+      this.authService
+        .getUsuarioLogado()
+        .subscribe((usuario) => (this.usuarioLogado = usuario))
+    );
   }
 
   ngOnDestroy() {
@@ -44,5 +52,4 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authService.removeToken();
     this.authService.removeUsuarioLogado();
   }
-
 }
