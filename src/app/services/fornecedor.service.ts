@@ -14,4 +14,8 @@ export class FornecedorService {
   getFornecedores(): Observable<Fornecedor[]> {
     return this.httpClient.get<Fornecedor[]>(this.baseUrl);
   }
+
+  findById(id: string): Observable<Fornecedor> {
+    return this.httpClient.get<Fornecedor>(`${this.baseUrl}/${id}`);
+  }
 }

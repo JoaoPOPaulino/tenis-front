@@ -4,6 +4,12 @@ import { AdminTemplateComponent } from './components/template/admin-template/adm
 import { UserTemplateComponent } from './components/template/user-template/user-template.component';
 import { TenisListComponent } from './components/tenis/tenis-list/tenis-list.component';
 import { LoginComponent } from './components/login/login.component';
+import { CarrinhoComponent } from './components/carrinho/carrinho.component';
+import { TenisFormComponent } from './components/tenis/tenis-form/tenis-form.component';
+import { tenisResolver } from './components/tenis/resolver/tenis.resolver';
+import { FornecedorListComponent } from './components/fornecedor/fornecedor-list/fornecedor-list.component';
+import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form/fornecedor-form.component';
+import { fornecedorResolver } from './components/fornecedor/resolver/resolver.component';
 
 export const routes: Routes = [
   {
@@ -17,6 +23,7 @@ export const routes: Routes = [
         component: TenisListComponent,
         title: 'Lista de Tenis',
       },
+      { path: 'carrinho', component: CarrinhoComponent, title: 'Carrinho' },
     ],
   },
 
@@ -27,7 +34,36 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'tenis' },
 
-      { path: 'login', component: LoginComponent, title: 'Login' },
+      {
+        path: 'login',
+        component: LoginComponent,
+        title: 'Login',
+        canActivate: [],
+      },
+
+      { path: 'tenis', component: TenisListComponent, title: 'Lista de Tenis' },
+      { path: 'tenis/new', component: TenisFormComponent, title: 'Novo Tenis' },
+      {
+        path: 'tenis/edit/:id',
+        component: TenisFormComponent,
+        resolve: { tenis: tenisResolver },
+      },
+
+      {
+        path: 'fornecedor',
+        component: FornecedorListComponent,
+        title: 'Lista de Fornecedores',
+      },
+      {
+        path: 'fornecedor/new',
+        component: FornecedorFormComponent,
+        title: 'Novo Fornecedor',
+      },
+      {
+        path: 'fornecedor/edit/:id',
+        component: FornecedorFormComponent,
+        resolve: { fornecedor: fornecedorResolver },
+      },
     ],
   },
 
