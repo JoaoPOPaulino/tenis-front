@@ -22,60 +22,107 @@ import { Tenis } from '../../../models/tenis.model';
   selector: 'app-tenis-form',
   standalone: true,
   imports: [
+    NgIf,
+    NgFor,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatButtonModule,
-    NgIf,
     MatInputModule,
+    MatButtonModule,
     MatCardModule,
     MatToolbarModule,
     RouterModule,
     MatSelectModule,
+    MatIconModule,
   ],
   templateUrl: './tenis-form.component.html',
-  styleUrl: './tenis-form.component.css',
 })
-export class TenisFormComponent {
+export class TenisFormComponent implements OnInit {
   formGroup: FormGroup;
   marcas: Marca[] = [];
-  apiResponse: any = null;
+  tamanhos: Tamanho[] = [];
   fileName: string = '';
   selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
     private tenisService: TenisService,
-    private marcaService: MarcaService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.formGroup = this.formBuilder.group({
       id: [null],
-      descricao: [null],
-      marca: [null],
-      modelo: [null],
-      preco: [null],
+      nome: ['', Validators.required],
+      descricao: ['', Validators.required],
+      preco: ['', Validators.required],
+      estoque: ['', Validators.required],
+      marca: [null, Validators.required],
+      modelo: ['', Validators.required],
+      tamanho: [null, Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.marcaService.findAll(0, 16).subscribe((data) => {
+    // Carregar marcas e tamanhos disponíveis
+    this.tenisService.findMarcas().subscribe((data) => {
       this.marcas = data;
       this.initializeForm();
+    });
+
+    this.tenisService.findTamanhos().subscribe((data) => {
+      this.tamanhos = data;
     });
   }
 
   initializeForm(): void {
-    const tenis: Tenis = this.activatedRoute.snapshot.data['tenis'];
+    const tenis: Tenis = this.route.snapshot.data['tenis'];
+    if (tenis && tenis.nomeImagem) {
+      this.imagePreview = this.tenisService.getUrlImage(tenis.nomeImagem);
+      this.fileName = tenis.nomeImagem;
+    }
 
-    const marca = this.marcas.find(
-      (marca) => marca.id === (tenis?.marca?.id || null)
-    );
+    const marca = this.marcas.find((m) => m.id === (tenis?.marca?.id || null));
 
-    this.formGroup = this.formBuilder.group({
-      id: [tenis && tenis.id ? tenis.id : null],
-      nome: [tenis && tenis.marca ? tenis.marca : null, Validators.required],
-      marca: [marca],
+    this.formGroup.patchValue({
+      id: tenis?.id || null,
+      nome: tenis?.nome || null,
+      descricao: tenis?.descricao || null,
+      preco: tenis?.preco || null,
+      estoque: tenis?.estoque || null,
+      marca: marca || null,
+      modelo: tenis?.modelo || null,
+      tamanho: tenis?.tamanho || null,
     });
+  }
+
+  carregarImagemSelecionada(event: any) {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile) {
+      this.fileName = this.selectedFile.name;
+      const reader = new FileReader();
+      reader.onload = (e) => (this.imagePreview = reader.result);
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  salvar() {
+    if (this.formGroup.valid) {
+      const tenis = this.formGroup.value;
+      const operacao =
+        tenis.id == null
+          ? this.tenisService.insert(tenis)
+          : this.tenisService.update(tenis);
+
+      operacao.subscribe({
+        next: (tenisSalvo) => {
+          this.uploadImage(tenisSalvo.id);
+        },
+        error: (error) => {
+          console.log('Erro ao Salvar' + JSON.stringify(error));
+          this.tratarErros(error);
+        },
+      });
+    }
   }
 }

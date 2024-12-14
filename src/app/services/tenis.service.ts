@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Tenis } from '../models/tenis.model';
+import { Marca } from '../models/marca.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TenisService {
-  private baseUrl = 'http://localhost:8080/teniss';
+  private baseUrl = 'http://localhost:8080/tenis';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -15,68 +16,60 @@ export class TenisService {
     return `${this.baseUrl}/image/download/${nomeImagem}`;
   }
 
+  uploadImage(id: number, nomeImagem: string, imagem: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('id', id.toString());
+    formData.append('nomeImagem', imagem.name);
+    formData.append('imagem', imagem, imagem.name);
+
+    return this.httpClient.patch<Tenis>(
+      `${this.baseUrl}/image/upload`,
+      formData
+    );
+  }
+
+  findMarcas(): Observable<Marca[]> {
+    return this.httpClient.get<Marca[]>(`${this.baseUrl}/marcas`);
+  }
+
+  findTamanhos(): Observable<Tamanho[]> {
+    return this.httpClient.get<Tamanho[]>(`${this.baseUrl}/tamanhos`);
+  }
+
   findAll(page?: number, pageSize?: number): Observable<Tenis[]> {
     let params = {};
-
     if (page !== undefined && pageSize !== undefined) {
       params = {
         page: page.toString(),
         pageSize: pageSize.toString(),
       };
     }
-
-    console.log(params);
-
     return this.httpClient.get<Tenis[]>(this.baseUrl, { params });
-  }
-
-  count(): Observable<number> {
-    return this.httpClient.get<number>(`${this.baseUrl}/count`);
-  }
-
-  findById(id: string): Observable<Tenis> {
-    return this.httpClient.get<Tenis>(`${this.baseUrl}/${id}`);
-  }
-
-  findByModelo(
-    titulo: string,
-    page?: number,
-    pageSize?: number
-  ): Observable<Tenis[]> {
-    let params = {};
-    if (page !== undefined && pageSize !== undefined) {
-      params = {
-        page: page.toString(),
-        pageSize: pageSize.toString(),
-      };
-    }
-    return this.httpClient.get<Tenis[]>(
-      `${this.baseUrl}/search/tenis/${Tenis}`,
-      { params }
-    );
   }
 
   insert(tenis: Tenis): Observable<Tenis> {
     const data = {
-      modelo: tenis.modelo,
-      marca: tenis.marca.label,
+      nome: tenis.
       descricao: tenis.descricao,
+      modelo: tenis.modelo,
+      idMarca: tenis.marca.id,
+      idTamanho: tenis.tamanho.id,
       preco: tenis.preco,
+      estoque: tenis.estoque,
     };
     return this.httpClient.post<Tenis>(this.baseUrl, data);
   }
 
   update(tenis: Tenis): Observable<Tenis> {
     const data = {
-      modelo: tenis.modelo,
-      marca: tenis.marca.label,
+      nome: tenis.nome,
       descricao: tenis.descricao,
+      modelo: tenis.modelo,
+      idMarca: tenis.marca.id,
+      idTamanho: tenis.tamanho.id,
       preco: tenis.preco,
+      estoque: tenis.estoque,
     };
-    return this.httpClient.put<any>(`${this.baseUrl}/${tenis.id}`, data);
-  }
-
-  delete(id: number): Observable<any> {
-    return this.httpClient.delete<any>(`${this.baseUrl}/${id}`);
+    return this.httpClient.put<Tenis>(`${this.baseUrl}/${tenis.id}`, data);
   }
 }
