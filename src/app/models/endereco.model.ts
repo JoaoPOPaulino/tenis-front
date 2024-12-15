@@ -1,5 +1,4 @@
 import { Cidade } from './cidade.model';
-import { Usuario } from './usuario.model';
 
 export class Endereco {
   id!: number;
@@ -8,8 +7,7 @@ export class Endereco {
   quadra!: string;
   rua!: string;
   numero!: string;
-  complemento!: string;
-  usuario!: Usuario;
+  complemento?: string;
   principal!: boolean;
   ativo!: boolean;
 }

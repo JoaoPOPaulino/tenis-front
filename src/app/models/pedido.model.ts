@@ -4,10 +4,10 @@ import { Item } from './item.model';
 import { Usuario } from './usuario.model';
 
 export class Pedido {
-  id!: number;
-  data!: Date;
+  id?: number;
+  data?: Date;
   usuario!: Usuario;
-  itens!: Item[];
+  iten?: Item[];
   total!: number;
   endereco!: Endereco;
   cartao!: Cartao;
