@@ -1,74 +1,95 @@
-import { NgFor } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import {
-  MatCardActions,
-  MatCardContent,
-  MatCardFooter,
-  MatCardModule,
-  MatCardTitle,
-} from '@angular/material/card';
-import { Tenis } from '../../../models/tenis.model';
+import { Component, OnInit } from '@angular/core';
 import { TenisService } from '../../../services/tenis.service';
-
-type Card = {
-  titulo: string;
-  marca: string;
-  descricao: string;
-  preco: number;
-  imageUrl: string;
-};
+import { Tenis } from '../../../models/tenis.model';
+import { NgFor, NgStyle, CurrencyPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { RouterModule } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-tenis-card-list',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, NgFor],
+  imports: [
+    NgFor,
+    NgStyle,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatGridListModule,
+    MatPaginatorModule,
+    RouterModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    CurrencyPipe,
+  ],
   templateUrl: './tenis-card-list.component.html',
+  styleUrls: ['./tenis-card-list.component.css'],
 })
 export class TenisCardListComponent implements OnInit {
   tenis: Tenis[] = [];
-  cards = signal<TenisCard[]>([]);
+  totalRecords = 0;
+  pageSize = 12;
+  page = 0;
+  filtro: string = '';
 
   constructor(
     private tenisService: TenisService,
-    private carrinhoService: CarrinhoService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    this.carregarTenis();
+    this.loadTenis();
+    this.loadTotal();
   }
 
-  carregarTenis() {
-    this.tenisService.findAll(0, 10).subscribe((data) => {
-      this.tenis = data;
-      this.carregarCards();
-    });
+  loadTenis() {
+    this.tenisService
+      .findAll(this.page, this.pageSize)
+      .subscribe((data) => (this.tenis = data));
   }
 
-  carregarCards() {
-    const cards: TenisCard[] = [];
-    this.tenis.forEach((tenis) => {
-      cards.push({
-        idTenis: tenis.id,
-        titulo: tenis.nome,
-        marca: tenis.marca.nome,
-        modelo: tenis.modelo,
-        tamanho: tenis.tamanho.descricao,
-        preco: tenis.preco,
-        imageUrl: this.tenisService.getUrlImage(tenis.nomeImagem),
-      });
-    });
-    this.cards.set(cards);
+  loadTotal() {
+    this.tenisService.count().subscribe((data) => (this.totalRecords = data));
   }
 
-  adicionarAoCarrinho(card: TenisCard) {
-    this.showSnackbarTopPosition('Tênis adicionado ao carrinho');
-    this.carrinhoService.adicionar({
-      id: card.idTenis,
-      nome: card.titulo,
-      preco: card.preco,
-      quantidade: 1,
-    });
+  paginar(event: PageEvent): void {
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadTenis();
+  }
+
+  filtrar() {
+    if (this.filtro) {
+      this.tenisService
+        .findByNome(this.filtro, this.page, this.pageSize)
+        .subscribe((data) => (this.tenis = data));
+      this.tenisService
+        .countByNome(this.filtro)
+        .subscribe((data) => (this.totalRecords = data));
+    } else {
+      this.loadTenis();
+      this.loadTotal();
+    }
+    this.snackBar.open('Filtro aplicado', 'Ok', { duration: 3000 });
+  }
+
+  getEstoqueStatus(estoque: number): string {
+    if (estoque === 0) return 'Esgotado';
+    if (estoque < 10) return 'Últimas unidades';
+    return 'Disponível';
+  }
+
+  getEstoqueColor(estoque: number): string {
+    if (estoque === 0) return '#f44336';
+    if (estoque < 10) return '#ff9800';
+    return '#4caf50';
   }
 }

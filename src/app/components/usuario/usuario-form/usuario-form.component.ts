@@ -1,231 +1,254 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { UsuarioService } from '../../../services/usuario.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Usuario } from '../../../models/usuario.model';
 import { TipoUsuario } from '../../../models/tipo-usuario.enum';
-import { UsuarioService } from '../../../services/usuario.service';
-import { Endereco } from '../../../models/endereco.model';
+import { TipoCartao } from '../../../models/tipo-cartao.model';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-usuario-form',
+  standalone: true,
+  imports: [
+    NgFor,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatCheckboxModule,
+    MatIconModule,
+  ],
   templateUrl: './usuario-form.component.html',
   styleUrls: ['./usuario-form.component.css'],
 })
 export class UsuarioFormComponent implements OnInit {
   formGroup: FormGroup;
-  apiResponse: any = null;
-  usuario: Usuario = new Usuario();
-  usuarios: Usuario[] = [];
-  tipoUsuario: TipoUsuario[] = [];
-  isEditRoute: boolean = false;
-  isNewRoute: boolean = false;
+  tiposUsuario = Object.values(TipoUsuario);
+  tiposCartao = Object.values(TipoCartao);
 
   constructor(
     private formBuilder: FormBuilder,
     private usuarioService: UsuarioService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
-    this.formGroup = formBuilder.group({
+    this.formGroup = this.formBuilder.group({
       id: [null],
       nome: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       login: ['', Validators.required],
       senha: ['', Validators.required],
-      enderecos: formBuilder.array([]),
-      perfil: [null],
+      username: ['', Validators.required],
+      tipoUsuario: [TipoUsuario.USUARIO, Validators.required],
+      telefones: this.formBuilder.array([]),
+      enderecos: this.formBuilder.array([]),
+      cartoes: this.formBuilder.array([]),
     });
   }
 
   ngOnInit(): void {
-    this.usuarioService.findAll(0, 999).subscribe((data) => {
-      this.usuarios = data;
-      this.initializeForm();
-    });
-
-    this.usuarioService.getTipoUsuario().subscribe((data) => {
-      this.tipoUsuario = data;
-      this.initializeForm();
-    });
-
-    this.activatedRoute.url.subscribe((urlSegments) => {
-      this.isEditRoute =
-        urlSegments.length > 0 && urlSegments[0].path === 'edit';
-    });
-
-    this.activatedRoute.url.subscribe((urlSegments) => {
-      this.isNewRoute = urlSegments.length > 0 && urlSegments[0].path === 'new';
-    });
+    this.initializeForm();
   }
 
   initializeForm() {
     const usuario: Usuario = this.activatedRoute.snapshot.data['usuario'];
-    const tipoUsuario = this.tipoUsuario.find(
-      (tipoUsuario) => tipoUsuario.id === (usuario?.tipoUsuario?.id || null)
-    );
-
-    this.formGroup = this.formBuilder.group({
-      id: [usuario && usuario.id ? usuario.id : null],
-      nome: [usuario && usuario.nome ? usuario.nome : '', Validators.required],
-      login: [
-        usuario && usuario.login ? usuario.login : '',
-        Validators.required,
-      ],
-      senha: [
-        usuario && usuario.senha ? usuario.senha : '',
-        Validators.required,
-      ],
-      enderecos: this.formBuilder.array([]),
-      tipoUsuario: [tipoUsuario],
-    });
-
-    if (usuario && usuario.endereco) {
-      const enderecosFormArray = this.formGroup.get('enderecos') as FormArray;
-      usuario.endereco.forEach((endereco: Endereco) => {
-        enderecosFormArray.push(
-          this.formBuilder.group({
-            id: [endereco && endereco.id ? endereco.id : null],
-            endereco: [
-              endereco && endereco.cep ? endereco.cep : '',
-              Validators.required,
-            ],
-            quadra: [
-              endereco && endereco.quadra ? endereco.quadra : '',
-              Validators.required,
-            ],
-            rua: [
-              endereco && endereco.rua ? endereco.rua : '',
-              Validators.required,
-            ],
-            numero: [
-              endereco && endereco.numero ? endereco.numero : '',
-              Validators.required,
-            ],
-            complemento: [
-              endereco && endereco.complemento ? endereco.complemento : null,
-            ],
-          })
-        );
-      });
+    if (usuario) {
+      this.formGroup.patchValue(usuario);
+      this.loadTelefones(usuario);
+      this.loadEnderecos(usuario);
+      this.loadCartoes(usuario);
     }
+  }
+
+  get telefonesArray() {
+    return this.formGroup.get('telefones') as FormArray;
+  }
+
+  get enderecosArray() {
+    return this.formGroup.get('enderecos') as FormArray;
+  }
+
+  get cartoesArray() {
+    return this.formGroup.get('cartoes') as FormArray;
+  }
+
+  addTelefone() {
+    const telefoneGroup = this.formBuilder.group({
+      ddd: ['', Validators.required],
+      numero: ['', Validators.required],
+    });
+    this.telefonesArray.push(telefoneGroup);
+  }
+
+  removeTelefone(index: number) {
+    this.telefonesArray.removeAt(index);
+  }
+
+  addEndereco() {
+    const enderecoGroup = this.formBuilder.group({
+      cidade: this.formBuilder.group({
+        id: [null],
+        nome: ['', Validators.required],
+        estado: this.formBuilder.group({
+          id: [null],
+          nome: ['', Validators.required],
+          sigla: ['', Validators.required],
+        }),
+      }),
+      cep: ['', Validators.required],
+      quadra: ['', Validators.required],
+      rua: ['', Validators.required],
+      numero: ['', Validators.required],
+      complemento: [''],
+      principal: [false],
+      ativo: [true],
+    });
+    this.enderecosArray.push(enderecoGroup);
+  }
+
+  removeEndereco(index: number) {
+    this.enderecosArray.removeAt(index);
+  }
+
+  addCartao() {
+    const cartaoGroup = this.formBuilder.group({
+      tipoCartao: [TipoCartao.CREDITO, Validators.required],
+      numero: ['', Validators.required],
+      cvv: ['', Validators.required],
+      validade: [null, Validators.required],
+      titular: ['', Validators.required],
+      cpf: ['', Validators.required],
+      ativo: [true],
+    });
+    this.cartoesArray.push(cartaoGroup);
+  }
+
+  removeCartao(index: number) {
+    this.cartoesArray.removeAt(index);
+  }
+
+  private loadTelefones(usuario: Usuario) {
+    usuario.telefones?.forEach((telefone) => {
+      this.telefonesArray.push(
+        this.formBuilder.group({
+          ddd: [telefone.ddd, Validators.required],
+          numero: [telefone.numero, Validators.required],
+        })
+      );
+    });
+  }
+
+  private loadEnderecos(usuario: Usuario) {
+    usuario.enderecos?.forEach((endereco) => {
+      this.enderecosArray.push(
+        this.formBuilder.group({
+          cidade: this.formBuilder.group({
+            id: [endereco.cidade.id],
+            nome: [endereco.cidade.nome, Validators.required],
+            estado: this.formBuilder.group({
+              id: [endereco.cidade.estado.id],
+              nome: [endereco.cidade.estado.nome, Validators.required],
+              sigla: [endereco.cidade.estado.sigla, Validators.required],
+            }),
+          }),
+          cep: [endereco.cep, Validators.required],
+          quadra: [endereco.quadra, Validators.required],
+          rua: [endereco.rua, Validators.required],
+          numero: [endereco.numero, Validators.required],
+          complemento: [endereco.complemento],
+          principal: [endereco.principal],
+          ativo: [endereco.ativo],
+        })
+      );
+    });
+  }
+
+  private loadCartoes(usuario: Usuario) {
+    usuario.cartoes?.forEach((cartao) => {
+      this.cartoesArray.push(
+        this.formBuilder.group({
+          tipoCartao: [cartao.tipoCartao, Validators.required],
+          numero: [cartao.numero, Validators.required],
+          cvv: [cartao.cvv, Validators.required],
+          validade: [cartao.validade, Validators.required],
+          titular: [cartao.titular, Validators.required],
+          cpf: [cartao.cpf, Validators.required],
+          ativo: [cartao.ativo],
+        })
+      );
+    });
   }
 
   salvar() {
     if (this.formGroup.valid) {
-      const usuario = this.formGroup.value as Usuario;
+      const usuario = this.formGroup.value;
+      const operacao = usuario.id
+        ? this.usuarioService.update(usuario)
+        : this.usuarioService.insert(usuario);
 
-      usuario.endereco = this.enderecos.value;
-
-      if (usuario.id == null) {
-        this.usuarioService.create(usuario).subscribe({
-          next: (response) => {
-            console.log(
-              'Usuario cadastrado com sucesso' + JSON.stringify(response)
-            );
-            this.router.navigateByUrl('/admin/usuarios/list');
-          },
-          error: (error) => {
-            this.apiResponse = error.error;
-
-            this.formGroup
-              .get('nome')
-              ?.setErrors({ apiError: this.getErrorMessage('nome') });
-            this.formGroup
-              .get('login')
-              ?.setErrors({ apiError: this.getErrorMessage('login') });
-
-            console.log('Erro ao incluir' + JSON.stringify(error));
-          },
-        });
-      } else {
-        this.usuarioService.update(usuario).subscribe({
-          next: (response) => {
-            console.log(
-              'Usuario atualizado com sucesso' + JSON.stringify(response)
-            );
-            this.router.navigateByUrl('/admin/usuarios/list');
-          },
-          error: (error) => {
-            console.log('Erro ao alterar' + JSON.stringify(error));
-          },
-        });
-      }
+      operacao.subscribe({
+        next: () => {
+          this.router.navigateByUrl('/usuarios');
+          this.snackBar.open('Usuário salvo com sucesso!', 'Ok', {
+            duration: 3000,
+          });
+        },
+        error: (error) => {
+          console.error('Erro ao salvar usuário', error);
+          this.snackBar.open('Erro ao salvar usuário', 'Ok', {
+            duration: 3000,
+          });
+        },
+      });
     }
   }
 
   excluir() {
     const usuario = this.formGroup.value;
-    if (usuario.id != null) {
-      this.usuarioService.delete(usuario).subscribe({
-        next: (response) => {
-          console.log(
-            'Usuario excluido com sucesso' + JSON.stringify(response)
-          );
-          this.router.navigateByUrl('/admin/usuarios/list');
-        },
-        error: (err) => {
-          console.log('Erro ao excluir' + JSON.stringify(err));
+    if (usuario.id) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        data: {
+          message: 'Deseja realmente excluir este usuário?',
         },
       });
-    }
-  }
 
-  adicionarEndereco() {
-    const enderecoFormGroup = this.formBuilder.group({
-      id: [null],
-      endereco: ['', Validators.required],
-      numero: ['', Validators.required],
-      complemento: ['', Validators.required],
-      bairro: ['', Validators.required],
-      cep: ['', Validators.required],
-    });
-
-    this.enderecos.push(enderecoFormGroup);
-  }
-
-  deletarEndereco(enderecoId: number) {
-    const usuario = this.formGroup.value as Usuario;
-
-    if (usuario.id != null) {
-      this.usuarioService.deletarEndereco(usuario.id, enderecoId).subscribe({
-        next: (response) => {
-          const enderecosFormArray = this.formGroup.get(
-            'enderecos'
-          ) as FormArray;
-
-          const enderecoIndex = enderecosFormArray.controls.findIndex(
-            (enderecoControl: AbstractControl) =>
-              enderecoControl.get('id')?.value === enderecoId
-          );
-
-          if (enderecoIndex !== -1) {
-            enderecosFormArray.removeAt(enderecoIndex);
-          }
-        },
-        error: (error) => {
-          console.log('Erro ao deletar endereco: ' + JSON.stringify(error));
-        },
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.usuarioService.delete(usuario).subscribe({
+            next: () => {
+              this.router.navigateByUrl('/usuarios');
+              this.snackBar.open('Usuário excluído com sucesso!', 'Ok', {
+                duration: 3000,
+              });
+            },
+            error: (error) => {
+              console.error('Erro ao excluir usuário', error);
+              this.snackBar.open('Erro ao excluir usuário', 'Ok', {
+                duration: 3000,
+              });
+            },
+          });
+        }
       });
     }
-  }
-
-  removerEndereco(index: number) {
-    this.enderecos.removeAt(index);
-  }
-
-  getErrorMessage(fieldName: string): string {
-    const error = this.apiResponse.errors.find(
-      (error: any) => error.fieldName === fieldName
-    );
-    return error ? error.message : '';
-  }
-
-  get enderecos() {
-    return this.formGroup.get('enderecos') as FormArray;
   }
 }

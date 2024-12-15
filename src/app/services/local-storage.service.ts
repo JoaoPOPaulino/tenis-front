@@ -6,16 +6,38 @@ import { Injectable } from '@angular/core';
 export class LocalStorageService {
   constructor() {}
 
-  getItem(key: string): any {
-    const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : null;
+  setItem(key: string, value: any): void {
+    try {
+      const serializedValue = JSON.stringify(value);
+      localStorage.setItem(key, serializedValue);
+    } catch (error) {
+      console.error('Erro ao salvar no localStorage:', error);
+    }
   }
 
-  setItem(key: string, value: any): void {
-    localStorage.setItem(key, JSON.stringify(value));
+  getItem(key: string): any {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    } catch (error) {
+      console.error('Erro ao ler do localStorage:', error);
+      return null;
+    }
   }
 
   removeItem(key: string): void {
-    localStorage.removeItem(key);
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.error('Erro ao remover do localStorage:', error);
+    }
+  }
+
+  clear(): void {
+    try {
+      localStorage.clear();
+    } catch (error) {
+      console.error('Erro ao limpar localStorage:', error);
+    }
   }
 }

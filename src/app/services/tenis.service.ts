@@ -1,50 +1,104 @@
-import { HttpClient } from '@angular/common/http';
+// Atualização do TenisService para incluir fornecedor:
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tenis } from '../models/tenis.model';
-import { Marca } from '../models/marca.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TenisService {
   private baseUrl = 'http://localhost:8080/tenis';
 
-  constructor(private http: HttpClient) {}
+  constructor(private httpClient: HttpClient) {}
 
-  findAll(page: number = 0, size: number = 10): Observable<Tenis[]> {
-    return this.http.get<Tenis[]>(`${this.baseUrl}?page=${page}&size=${size}`);
+  findAll(page?: number, pageSize?: number): Observable<Tenis[]> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+      };
+    }
+
+    return this.httpClient.get<Tenis[]>(this.baseUrl, { params });
   }
 
-  findById(id: number): Observable<Tenis> {
-    return this.http.get<Tenis>(`${this.baseUrl}/${id}`);
+  count(): Observable<number> {
+    return this.httpClient.get<number>(`${this.baseUrl}/count`);
   }
 
-  findMarcas(): Observable<Marca[]> {
-    return this.http.get<Marca[]>(`${this.baseUrl}/marcas`);
+  countByNome(nome: string): Observable<number> {
+    return this.httpClient.get<number>(`${this.baseUrl}/count/search/${nome}`);
+  }
+
+  findByNome(
+    nome: string,
+    page?: number,
+    pageSize?: number
+  ): Observable<Tenis[]> {
+    let params = {};
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+      };
+    }
+    return this.httpClient.get<Tenis[]>(`${this.baseUrl}/search/nome/${nome}`, {
+      params,
+    });
+  }
+
+  findById(id: string): Observable<Tenis> {
+    return this.httpClient.get<Tenis>(`${this.baseUrl}/${id}`);
   }
 
   insert(tenis: Tenis): Observable<Tenis> {
-    return this.http.post<Tenis>(this.baseUrl, tenis);
+    const data = {
+      nome: tenis.nome,
+      preco: tenis.preco,
+      estoque: tenis.estoque,
+      fornecedor: {
+        id: tenis.fornecedor.id,
+        nome: tenis.fornecedor.nome,
+      },
+      descricao: tenis.descricao,
+      marca: {
+        id: tenis.marca.id,
+        nome: tenis.marca.nome,
+        nomeImagem: tenis.marca.nomeImagem,
+      },
+      modelo: tenis.modelo,
+      tamanho: tenis.tamanho,
+      nomeImagem: tenis.nomeImagem,
+    };
+    return this.httpClient.post<Tenis>(this.baseUrl, data);
   }
 
   update(tenis: Tenis): Observable<Tenis> {
-    return this.http.put<Tenis>(`${this.baseUrl}/${tenis.id}`, tenis);
+    const data = {
+      nome: tenis.nome,
+      preco: tenis.preco,
+      estoque: tenis.estoque,
+      fornecedor: {
+        id: tenis.fornecedor.id,
+        nome: tenis.fornecedor.nome,
+      },
+      descricao: tenis.descricao,
+      marca: {
+        id: tenis.marca.id,
+        nome: tenis.marca.nome,
+        nomeImagem: tenis.marca.nomeImagem,
+      },
+      modelo: tenis.modelo,
+      tamanho: tenis.tamanho,
+      nomeImagem: tenis.nomeImagem,
+    };
+    return this.httpClient.put<Tenis>(`${this.baseUrl}/${tenis.id}`, data);
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
-  }
-
-  uploadImage(id: number, nomeImagem: string, imagem: File): Observable<Tenis> {
-    const formData = new FormData();
-    formData.append('id', id.toString());
-    formData.append('nomeImagem', nomeImagem);
-    formData.append('imagem', imagem);
-    return this.http.patch<Tenis>(`${this.baseUrl}/image/upload`, formData);
-  }
-
-  getUrlImage(nomeImagem: string): string {
-    return `${this.baseUrl}/image/download/${nomeImagem}`;
+  delete(tenis: Tenis): Observable<any> {
+    return this.httpClient.delete<any>(`${this.baseUrl}/${tenis.id}`);
   }
 }

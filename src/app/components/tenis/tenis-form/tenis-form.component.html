@@ -1,106 +1,84 @@
-<mat-toolbar class="centered-toolbar">
-  <div class="toolbar-title">Cadastro de Tênis</div>
-</mat-toolbar>
+<div class="container">
+  <h2>{{ formGroup.value.id ? 'Editar Tênis' : 'Novo Tênis' }}</h2>
+  
+  <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+    <mat-form-field>
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome" required>
+      <mat-error *ngIf="formGroup.get('nome')?.invalid">Nome é obrigatório</mat-error>
+    </mat-form-field>
 
-<div class="form-container">
-  <mat-card>
-    <mat-card-content>
-      <form [formGroup]="formGroup">
-        <div class="flex-container">
-          <mat-form-field appearance="outline">
-            <mat-label>Marca</mat-label>
-            <mat-select formControlName="marca">
-              <mat-option *ngFor="let marca of marcas" [value]="marca">
-                {{marca.nome}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="formGroup.get('marca')?.invalid && formGroup.get('marca')?.touched">
-              {{getErrorMessage('marca', formGroup.get('marca')?.errors)}}
-            </mat-error>
-          </mat-form-field>
+    <mat-form-field>
+      <mat-label>Preço</mat-label>
+      <input matInput type="number" formControlName="preco" required>
+      <mat-error *ngIf="formGroup.get('preco')?.hasError('required')">Preço é obrigatório</mat-error>
+      <mat-error *ngIf="formGroup.get('preco')?.hasError('min')">Preço deve ser maior que zero</mat-error>
+    </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width-input">
-            <mat-label>Modelo</mat-label>
-            <input matInput type="text" formControlName="modelo" />
-            <mat-error *ngIf="formGroup.get('modelo')?.invalid && formGroup.get('modelo')?.touched">
-              {{getErrorMessage('modelo', formGroup.get('modelo')?.errors)}}
-            </mat-error>
-          </mat-form-field>
-        </div>
+    <mat-form-field>
+      <mat-label>Fornecedor</mat-label>
+      <mat-select formControlName="fornecedor" required>
+        <mat-option *ngFor="let fornecedor of fornecedores" [value]="fornecedor">
+          {{fornecedor.nome}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formGroup.get('fornecedor')?.invalid">Fornecedor é obrigatório</mat-error>
+    </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width-input">
-          <mat-label>Descrição</mat-label>
-          <input matInput type="text" formControlName="descricao" />
-          <mat-error *ngIf="formGroup.get('descricao')?.invalid && formGroup.get('descricao')?.touched">
-            {{getErrorMessage('descricao', formGroup.get('descricao')?.errors)}}
-          </mat-error>
-        </mat-form-field>
+    <mat-form-field>
+      <mat-label>Quantidade em Estoque</mat-label>
+      <input matInput type="number" formControlName="quantidadeEstoque" required>
+      <mat-error *ngIf="formGroup.get('quantidadeEstoque')?.hasError('required')">Quantidade é obrigatória</mat-error>
+      <mat-error *ngIf="formGroup.get('quantidadeEstoque')?.hasError('min')">Quantidade deve ser maior que zero</mat-error>
+    </mat-form-field>
 
-        <div class="flex-container">
-          <mat-form-field appearance="outline">
-            <mat-label>Preço</mat-label>
-            <input matInput type="number" formControlName="preco" />
-            <mat-error *ngIf="formGroup.get('preco')?.invalid && formGroup.get('preco')?.touched">
-              {{getErrorMessage('preco', formGroup.get('preco')?.errors)}}
-            </mat-error>
-          </mat-form-field>
+    <mat-form-field>
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="descricao" required rows="4"></textarea>
+      <mat-error *ngIf="formGroup.get('descricao')?.invalid">Descrição é obrigatória</mat-error>
+    </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Estoque</mat-label>
-            <input matInput type="number" formControlName="estoque" />
-            <mat-error *ngIf="formGroup.get('estoque')?.invalid && formGroup.get('estoque')?.touched">
-              {{getErrorMessage('estoque', formGroup.get('estoque')?.errors)}}
-            </mat-error>
-          </mat-form-field>
+    <mat-form-field>
+      <mat-label>Marca</mat-label>
+      <mat-select formControlName="marca" required>
+        <mat-option *ngFor="let marca of marcas" [value]="marca">
+          {{marca.nome}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formGroup.get('marca')?.invalid">Marca é obrigatória</mat-error>
+    </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Tamanho</mat-label>
-            <mat-select formControlName="tamanho">
-              <mat-option value="PP">PP</mat-option>
-              <mat-option value="P">P</mat-option>
-              <mat-option value="M">M</mat-option>
-              <mat-option value="G">G</mat-option>
-              <mat-option value="GG">GG</mat-option>
-            </mat-select>
-            <mat-error *ngIf="formGroup.get('tamanho')?.invalid && formGroup.get('tamanho')?.touched">
-              {{getErrorMessage('tamanho', formGroup.get('tamanho')?.errors)}}
-            </mat-error>
-          </mat-form-field>
-        </div>
+    <mat-form-field>
+      <mat-label>Modelo</mat-label>
+      <input matInput formControlName="modelo" required>
+      <mat-error *ngIf="formGroup.get('modelo')?.invalid">Modelo é obrigatório</mat-error>
+    </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width-input">
-          <mat-label>Imagem</mat-label>
-          <input type="file" (change)="loadSelectedImage($event)" hidden #fileInput>
-          <input matInput [value]="fileName" readonly>
-          <button mat-icon-button matSuffix (click)="fileInput.click()">
-            <mat-icon>folder_open</mat-icon>
-          </button>
-        </mat-form-field>
+    <mat-form-field>
+      <mat-label>Tamanho</mat-label>
+      <mat-select formControlName="tamanho" required>
+        <mat-option *ngFor="let tamanho of tamanhos" [value]="tamanho">
+          {{tamanho}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formGroup.get('tamanho')?.invalid">Tamanho é obrigatório</mat-error>
+    </mat-form-field>
 
-        <div *ngIf="imagePreview" class="image-container">
-          <img [src]="imagePreview" alt="Preview">
-        </div>
-      </form>
-    </mat-card-content>
+    <mat-form-field>
+      <mat-label>Nome da Imagem</mat-label>
+      <input matInput formControlName="nomeImagem">
+    </mat-form-field>
 
-    <mat-card-actions>
-      <button mat-raised-button (click)="voltarPagina()">
-        Cancelar
-      </button>
-
-      <button mat-raised-button *ngIf="formGroup?.get('id')?.value" 
-              color="warn" 
-              (click)="excluir()"
-              [disabled]="formGroup.invalid">
-        Excluir
-      </button>
-
-      <button mat-raised-button 
-              color="primary" 
-              (click)="salvar()"
-              [disabled]="formGroup.invalid">
+    <div class="button-group">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!formGroup.valid">
         Salvar
       </button>
-    </mat-card-actions>
-  </mat-card>
+      <button mat-raised-button color="warn" type="button" (click)="excluir()" *ngIf="formGroup.value.id">
+        Excluir
+      </button>
+      <button mat-raised-button routerLink="/tenis">
+        Voltar
+      </button>
+    </div>
+  </form>
 </div>

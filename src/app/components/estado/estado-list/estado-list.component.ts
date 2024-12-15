@@ -1,26 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { EstadoService } from '../services/estado.service'; // Importa o serviço
-import { Estado } from  '../models/estado.model'; // Importa o modelo
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { EstadoService } from '../../../services/estado.service';
+import { Estado } from '../../../models/estado.model';
 
 @Component({
   selector: 'app-estado-list',
-  standalone: true,  // Mudamos para true
+  standalone: true, // Mudamos para true
   imports: [
     CommonModule,
     MatTableModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './estado-list.component.html',
-  styleUrls: ['./estado-list.component.css']  // Corrigido o nome para "styleUrls"
+  styleUrls: ['./estado-list.component.css'], // Corrigido o nome para "styleUrls"
 })
 export class EstadoListComponent implements OnInit {
   estados: Estado[] = []; // Define a lista de estados como um array do modelo Estado
@@ -41,7 +41,7 @@ export class EstadoListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao carregar estados', err); // Tratamento de erro
-      }
+      },
     });
   }
 

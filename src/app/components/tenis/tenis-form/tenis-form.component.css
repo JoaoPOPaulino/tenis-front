@@ -1,130 +1,99 @@
-/* Estilos dos inputs e containers */
-.full-width-input {
-  width: 100%;
-}
-
-mat-card {
+.container {
+  padding: 20px;
   max-width: 800px;
-  margin: 2rem auto;
+  margin: 0 auto;
+  background-color: #ffffff;
 }
 
-mat-card-actions {
+h2 {
+  color: #673ab7;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+form {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px; /* Adicionado para espaçamento consistente entre botões */
-  padding: 16px !important; /* Força o padding para manter consistência */
+  flex-direction: column;
+  gap: 20px;
 }
 
-.form-container {
-  padding: 2rem;
-}
-
-.flex-container {
-  display: flex;
-  gap: 22px;
-  margin-bottom: 16px; /* Adicionado para espaçamento entre grupos de campos */
-  align-items: baseline; /* Alinha os campos na mesma linha base */
-}
-
-/* Estilos da toolbar */
-.centered-toolbar {
-  display: flex;
-  justify-content: center;
-  font-size: x-large;
-  margin-bottom: 16px; /* Espaço entre toolbar e conteúdo */
-}
-
-/* Estilos dos botões */
-button[mat-flat-button],
-button[mat-button] {
-  width: 120px;
-  margin-left: 8px; /* Espaçamento consistente entre botões */
-}
-
-/* Estilos do container de imagem */
-.image-container {
-  margin: 16px auto;
-  border: 2px dashed #ccc; /* Cor mais suave para a borda */
-  border-radius: 10px;
-  width: fit-content;
-  padding: 16px; /* Adicionado padding interno */
-  transition: border-color 0.3s ease; /* Transição suave para hover */
-}
-
-.image-container:hover {
-  border-color: #666; /* Escurece a borda no hover */
-}
-
-.image-container > img {
-  width: 256px;
-  height: auto;
-  border-radius: 4px; /* Cantos arredondados para a imagem */
-  display: block; /* Remove espaço extra abaixo da imagem */
-}
-
-/* Estilos adicionais para melhorar a experiência */
 mat-form-field {
-  margin-bottom: 8px; /* Espaçamento consistente entre campos */
-}
-
-/* Ajustes responsivos */
-@media (max-width: 600px) {
-  .flex-container {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  button[mat-flat-button],
-  button[mat-button] {
-    width: 100%;
-    margin: 4px 0;
-  }
-
-  .form-container {
-    padding: 1rem;
-  }
-
-  mat-card {
-    margin: 1rem;
-  }
-
-  .image-container > img {
-    width: 100%;
-    max-width: 256px;
-  }
-}
-
-/* Estilos para o campo de upload de arquivo */
-.file-input-container {
-  position: relative;
   width: 100%;
 }
 
-/* Estilos para preview de imagem */
-.preview-container {
+.button-group {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 16px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
-/* Estilos para mensagens de erro */
-mat-error {
-  font-size: 12px;
-  margin-top: 4px;
+/* Deep Purple & Amber theme specific styles */
+:host ::ng-deep .mat-form-field-label {
+  color: rgba(0, 0, 0, 0.6) !important;
 }
 
-/* Estilos para o ícone do botão de upload */
-button[mat-icon-button] {
-  color: rgba(0, 0, 0, 0.54);
+:host ::ng-deep .mat-form-field-underline {
+  background-color: rgba(0, 0, 0, 0.12);
 }
 
-/* Animação suave para interações */
-.mat-form-field-appearance-outline .mat-form-field-outline {
-  transition: color 0.3s ease;
+:host ::ng-deep .mat-form-field-ripple {
+  background-color: #673ab7;
 }
 
-/* Ajuste para campos desabilitados */
-mat-form-field.mat-form-field-disabled {
-  opacity: 0.6;
+:host ::ng-deep .mat-focused .mat-form-field-label {
+  color: #673ab7 !important;
+}
+
+:host ::ng-deep .mat-form-field-invalid .mat-form-field-label {
+  color: #f44336 !important;
+}
+
+/* Button styles */
+.mat-raised-button.mat-primary {
+  background-color: #673ab7;
+  color: white;
+}
+
+.mat-raised-button.mat-warn {
+  background-color: #f44336;
+  color: white;
+}
+
+.mat-raised-button:not(.mat-primary):not(.mat-warn) {
+  background-color: #ffd740;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Hover effects */
+.mat-raised-button.mat-primary:hover {
+  background-color: #5e35b1;
+}
+
+.mat-raised-button.mat-warn:hover {
+  background-color: #e53935;
+}
+
+.mat-raised-button:not(.mat-primary):not(.mat-warn):hover {
+  background-color: #ffab00;
+}
+
+/* Textarea styles */
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .button-group button {
+    width: 100%;
+  }
 }

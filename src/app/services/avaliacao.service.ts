@@ -1,64 +1,101 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Avaliacao } from '../models/avaliacao.model';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AvaliacaoService {
-  private baseUrl: string = 'http://localhost:8080/avaliacoes';
+  private baseUrl = 'http://localhost:8080/avaliacoes';
 
   constructor(private httpClient: HttpClient) {}
 
-  create(avaliacao: Avaliacao): Observable<Avaliacao> {
-    return this.httpClient.post<Avaliacao>(`${this.baseUrl}`, avaliacao);
-  }
+  findAll(page?: number, pageSize?: number): Observable<Avaliacao[]> {
+    let params = {};
 
-  update(avaliacao: Avaliacao): Observable<Avaliacao> {
-    return this.httpClient.put<Avaliacao>(
-      `${this.baseUrl}/${avaliacao.id}`,
-      avaliacao
-    );
-  }
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+      };
+    }
 
-  delete(avaliacao: Avaliacao): Observable<any> {
-    return this.httpClient.delete<Avaliacao>(`${this.baseUrl}/${avaliacao.id}`);
-  }
-
-  findAll(page: number, pageSize: number): Observable<Avaliacao[]> {
-    const params = {
-      page: page.toString(),
-      pageSize: pageSize.toString(),
-    };
-
-    return this.httpClient.get<Avaliacao[]>(`${this.baseUrl}`, { params });
-  }
-
-  findById(id: string): Observable<Avaliacao> {
-    return this.httpClient.get<Avaliacao>(`${this.baseUrl}/${id}`);
-  }
-
-  findByNome(
-    nome: string,
-    page: number,
-    pageSize: number
-  ): Observable<Avaliacao[]> {
-    const params = {
-      page: page.toString(),
-      pageSize: pageSize.toString(),
-    };
-
-    return this.httpClient.get<Avaliacao[]>(`${this.baseUrl}/search/${nome}`, {
-      params,
-    });
+    return this.httpClient.get<Avaliacao[]>(this.baseUrl, { params });
   }
 
   count(): Observable<number> {
     return this.httpClient.get<number>(`${this.baseUrl}/count`);
   }
 
-  countByConteudo(nome: string): Observable<number> {
-    return this.httpClient.get<number>(`${this.baseUrl}/search/${nome}/count`);
+  countByConteudo(conteudo: string): Observable<number> {
+    return this.httpClient.get<number>(
+      `${this.baseUrl}/count/search/${conteudo}`
+    );
+  }
+
+  findByConteudo(
+    conteudo: string,
+    page?: number,
+    pageSize?: number
+  ): Observable<Avaliacao[]> {
+    let params = {};
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+      };
+    }
+    return this.httpClient.get<Avaliacao[]>(
+      `${this.baseUrl}/search/conteudo/${conteudo}`,
+      { params }
+    );
+  }
+
+  findById(id: string): Observable<Avaliacao> {
+    return this.httpClient.get<Avaliacao>(`${this.baseUrl}/${id}`);
+  }
+
+  insert(avaliacao: Avaliacao): Observable<Avaliacao> {
+    const data = {
+      tenis: {
+        id: avaliacao.tenis.id,
+        nome: avaliacao.tenis.nome,
+      },
+      usuario: {
+        id: avaliacao.usuario.id,
+        nome: avaliacao.usuario.nome,
+      },
+      conteudo: avaliacao.conteudo,
+      nota: avaliacao.nota,
+      dataAvaliacao: avaliacao.dataAvaliacao,
+      ativa: avaliacao.ativa,
+    };
+    return this.httpClient.post<Avaliacao>(this.baseUrl, data);
+  }
+
+  update(avaliacao: Avaliacao): Observable<Avaliacao> {
+    const data = {
+      tenis: {
+        id: avaliacao.tenis.id,
+        nome: avaliacao.tenis.nome,
+      },
+      usuario: {
+        id: avaliacao.usuario.id,
+        nome: avaliacao.usuario.nome,
+      },
+      conteudo: avaliacao.conteudo,
+      nota: avaliacao.nota,
+      dataAvaliacao: avaliacao.dataAvaliacao,
+      ativa: avaliacao.ativa,
+    };
+    return this.httpClient.put<Avaliacao>(
+      `${this.baseUrl}/${avaliacao.id}`,
+      data
+    );
+  }
+
+  delete(avaliacao: Avaliacao): Observable<any> {
+    return this.httpClient.delete<any>(`${this.baseUrl}/${avaliacao.id}`);
   }
 }

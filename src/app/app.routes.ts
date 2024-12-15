@@ -5,12 +5,11 @@ import { TenisListComponent } from './components/tenis/tenis-list/tenis-list.com
 import { LoginComponent } from './components/login/login.component';
 import { CarrinhoComponent } from './components/carrinho/carrinho.component';
 import { TenisFormComponent } from './components/tenis/tenis-form/tenis-form.component';
-import { tenisResolver } from './components/tenis/resolver/tenis.resolver';
 import { FornecedorListComponent } from './components/fornecedor/fornecedor-list/fornecedor-list.component';
 import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form/fornecedor-form.component';
+import { tenisResolver } from './components/tenis/resolver/tenis.resolver';
 import { fornecedorResolver } from './components/fornecedor/resolver/resolver.component';
-//import { NotFoundComponent } from './components/not-found/not-found.component';
-//import { AuthGuard } from './guards/auth.guard';
+import { authGuard } from './guard/auth.guard';
 
 export const routes: Routes = [
   // Rota pública (e-commerce)
@@ -19,26 +18,26 @@ export const routes: Routes = [
     component: UserTemplateComponent,
     title: 'e-commerce',
     children: [
-      { 
-        path: '', 
-        pathMatch: 'full', 
-        redirectTo: 'ecommerce' 
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'ecommerce',
       },
       {
         path: 'ecommerce',
         component: TenisListComponent,
         title: 'Lista de Tênis',
       },
-      { 
-        path: 'carrinho', 
-        component: CarrinhoComponent, 
-        title: 'Carrinho' 
+      {
+        path: 'carrinho',
+        component: CarrinhoComponent,
+        title: 'Carrinho',
       },
       {
         path: 'login',
         component: LoginComponent,
-        title: 'Login'
-      }
+        title: 'Login',
+      },
     ],
   },
 
@@ -47,35 +46,35 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminTemplateComponent,
     title: 'Administração',
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
-      { 
-        path: '', 
-        pathMatch: 'full', 
-        redirectTo: 'tenis' 
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'tenis',
       },
 
       // Rotas de Tênis
-      { 
-        path: 'tenis', 
+      {
+        path: 'tenis',
         children: [
           {
             path: '',
             component: TenisListComponent,
-            title: 'Lista de Tênis'
+            title: 'Lista de Tênis',
           },
           {
             path: 'new',
             component: TenisFormComponent,
-            title: 'Novo Tênis'
+            title: 'Novo Tênis',
           },
           {
             path: 'edit/:id',
             component: TenisFormComponent,
             title: 'Editar Tênis',
-            resolve: { tenis: tenisResolver }
-          }
-        ]
+            resolve: { tenis: tenisResolver },
+          },
+        ],
       },
 
       // Rotas de Fornecedor
@@ -85,28 +84,26 @@ export const routes: Routes = [
           {
             path: '',
             component: FornecedorListComponent,
-            title: 'Lista de Fornecedores'
+            title: 'Lista de Fornecedores',
           },
           {
             path: 'new',
             component: FornecedorFormComponent,
-            title: 'Novo Fornecedor'
+            title: 'Novo Fornecedor',
           },
           {
             path: 'edit/:id',
             component: FornecedorFormComponent,
             title: 'Editar Fornecedor',
-            resolve: { fornecedor: fornecedorResolver }
-          }
-        ]
-      }
+            resolve: { fornecedor: fornecedorResolver },
+          },
+        ],
+      },
     ],
   },
 
-  // Rota para página não encontrada
   {
     path: '**',
-    component: NotFoundComponent,
-    title: 'Página não encontrada'
-  }
+    redirectTo: '/ecommerce',
+  },
 ];

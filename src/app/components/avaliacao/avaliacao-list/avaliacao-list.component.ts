@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Avaliacao } from '../../../models/avaliacao.model';
 import { AvaliacaoService } from '../../../services/avaliacao.service';
-import { NgFor } from '@angular/common';
+import { NgFor, NgStyle } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,7 @@ import { DatePipe } from '@angular/common';
   standalone: true,
   imports: [
     NgFor,
+    NgStyle,
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
@@ -42,6 +43,7 @@ export class AvaliacaoListComponent implements OnInit {
   avaliacoes: Avaliacao[] = [];
   displayedColumns: string[] = [
     'linha',
+    'id',
     'tenis',
     'usuario',
     'nota',
@@ -65,6 +67,10 @@ export class AvaliacaoListComponent implements OnInit {
   ngOnInit(): void {
     this.loadAvaliacoes();
     this.loadTotal();
+  }
+
+  obterNumeroLinha(index: number): number {
+    return this.page * this.pageSize + index + 1;
   }
 
   loadAvaliacoes() {
