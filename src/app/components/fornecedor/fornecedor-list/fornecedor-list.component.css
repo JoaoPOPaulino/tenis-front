@@ -1,12 +1,77 @@
 /* fornecedor-list.component.css */
 
-.header {
+.all {
+    background-color: #fff;
+    color: #000;
+  }
+  
+  .titulo {
+    background-color: #673ab7;
+    color: #fff;
+  }
+  
+  .toolbar-title {
     font-size: 24px;
     font-weight: bold;
-    color: #007BFF;
-}
-
-.item {
-    background-color: #e7f3ff; /* Cor de fundo específica para fornecedores */
-    border: 1px solid #007BFF; /* Borda azul */
-}
+  }
+  
+  .container {
+    margin: 20px;
+  }
+  
+  .input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-field {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .search-button {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
+  table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  th {
+    background-color: #673ab7;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  td {
+    background-color: #fff;
+    color: #000;
+  }
+  
+  tr:nth-child(even) td {
+    background-color: #f5f5f5;
+  }
+  
+  button {
+    margin-right: 5px;
+  }
+  
+  .mat-fab {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
+  .mat-icon-button.mat-primary {
+    color: #673ab7;
+  }
+  
+  .mat-icon-button.mat-warn {
+    color: #f44336;
+  }
+  
+  .mat-paginator {
+    background-color: #fff;
+    color: #000;
+  }
