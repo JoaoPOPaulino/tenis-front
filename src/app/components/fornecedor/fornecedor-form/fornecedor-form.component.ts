@@ -12,13 +12,22 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Fornecedor } from '../../../models/fornecedor.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-fornecedor-form',
   standalone: true,
-  imports: [],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './fornecedor-form.component.html',
-  styleUrl: './fornecedor-form.component.css',
+  styleUrls: ['./fornecedor-form.component.css'],
 })
 export class FornecedorFormComponent implements OnInit {
   formGroup: FormGroup;

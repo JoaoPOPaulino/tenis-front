@@ -1,134 +1,124 @@
-import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AvaliacaoService } from '../../../services/avaliacao.service';
-import { Router } from '@angular/router';
-import { Tenis } from '../../../models/tenis.model';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Avaliacao } from '../../../models/avaliacao.model';
-import { TenisService } from '../../../services/tenis.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-avaliacao-form',
   standalone: true,
-  imports: [],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSliderModule,
+    MatCheckboxModule,
+  ],
   templateUrl: './avaliacao-form.component.html',
-  styleUrl: './avaliacao-form.component.css',
+  styleUrls: ['./avaliacao-form.component.css'],
 })
-export class AvaliacaoFormComponent {
-  formGruop: FormGroup;
-  tenis: Tenis[] = [];
-  activatedRoute: any;
+export class AvaliacaoFormComponent implements OnInit {
+  formGroup: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private avaliacaoService: AvaliacaoService,
-    private tenisService: TenisService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
-    this.formGruop = this.formBuilder.group({
+    this.formGroup = this.formBuilder.group({
       id: [null],
       tenis: ['', Validators.required],
-      conteudo: [null],
+      usuario: ['', Validators.required],
+      conteudo: ['', [Validators.required, Validators.minLength(10)]],
+      nota: [0, [Validators.required, Validators.min(0), Validators.max(5)]],
+      dataAvaliacao: [new Date(), Validators.required],
+      ativa: [true],
     });
   }
 
   ngOnInit(): void {
-    this.avaliacaoService.findAll(0, 999).subscribe((data) => {
-      this.tenis = data;
-
-      this.initializeForm();
-    });
+    this.initializeForm();
   }
 
-  initializeForm(): void {
+  initializeForm() {
     const avaliacao: Avaliacao = this.activatedRoute.snapshot.data['avaliacao'];
 
-    const tenis = this.tenis.find(
-      (tenis) => tenis.id === avaliacao?.tenis?.id || null
-    );
-
-    this.formGruop = this.formBuilder.group({
-      id: [avaliacao && avaliacao.id ? avaliacao.id : null],
-      tenis: [tenis],
-      conteudo: [
-        avaliacao && avaliacao.conteudo ? avaliacao.conteudo : null,
-        Validators.compose([Validators.required, Validators.maxLength(1000)]),
-      ],
-    });
+    if (avaliacao) {
+      this.formGroup.patchValue(avaliacao);
+    }
   }
 
   salvar() {
-    this.formGruop.markAllAsTouched();
-    if (this.formGruop.valid) {
-      const avaliacao = this.formGruop.value;
-      if (avaliacao.id == null) {
-        this.avaliacaoService.create(avaliacao).subscribe({
-          next: (avaliacaoCadastro) => {
-            this.router.navigate(['/avaliacao']);
-          },
-          error: (err) => {
-            console.log('Erro ao Incluir' + JSON.stringify(err));
-          },
-        });
-      } else {
-        this.avaliacaoService.update(avaliacao).subscribe({
-          next: (avaliacaoAtualizado) => {
-            this.router.navigate(['/avaliacao']);
-          },
-          error: (err) => {
-            console.log('Erro ao Editar' + JSON.stringify(err));
-          },
-        });
-      }
-    } else {
-      console.log('Formulário inválido');
+    if (this.formGroup.valid) {
+      const avaliacao = this.formGroup.value;
+      const operacao = avaliacao.id
+        ? this.avaliacaoService.update(avaliacao)
+        : this.avaliacaoService.insert(avaliacao);
+
+      operacao.subscribe({
+        next: () => {
+          this.router.navigateByUrl('/avaliacoes');
+          this.snackBar.open('Avaliação salva com sucesso!', 'Ok', {
+            duration: 3000,
+          });
+        },
+        error: (error) => {
+          console.error('Erro ao salvar avaliação', error);
+          this.snackBar.open('Erro ao salvar avaliação', 'Ok', {
+            duration: 3000,
+          });
+        },
+      });
     }
   }
 
   excluir() {
-    if (this.formGruop.valid) {
-      const avaliacao = this.formGruop.value;
-      if (avaliacao.id != null) {
-        this.avaliacaoService.delete(avaliacao).subscribe({
-          next: () => {
-            this.router.navigateByUrl('/avaliacoes');
-          },
-          error: (err) => {
-            console.log('Erro ao Excluir' + JSON.stringify(err));
-          },
-        });
-      }
+    const avaliacao = this.formGroup.value;
+    if (avaliacao.id) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        data: {
+          message: 'Deseja realmente excluir esta avaliação?',
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.avaliacaoService.delete(avaliacao).subscribe({
+            next: () => {
+              this.router.navigateByUrl('/avaliacoes');
+              this.snackBar.open('Avaliação excluída com sucesso!', 'Ok', {
+                duration: 3000,
+              });
+            },
+            error: (error) => {
+              console.error('Erro ao excluir avaliação', error);
+              this.snackBar.open('Erro ao excluir avaliação', 'Ok', {
+                duration: 3000,
+              });
+            },
+          });
+        }
+      });
     }
   }
-
-  getErrorMessage(
-    controlConteudo: string,
-    errors: ValidationErrors | null | undefined
-  ): string {
-    if (!errors) {
-      return '';
-    }
-    for (const errorConteudo in errors) {
-      if (
-        errors.hasOwnProperty(errorConteudo) &&
-        this.errorMessages[controlConteudo][errorConteudo]
-      ) {
-        return this.errorMessages[controlConteudo][errorConteudo];
-      }
-    }
-    return '';
-  }
-
-  errorMessages: {
-    [controlConteudo: string]: { [errorConteudo: string]: string };
-  } = {
-    nome: {
-      required: 'A descricao deve ser informada.',
-      maxlength: 'A descrição deve conter no máximo 1000 caracteres.',
-    },
-  };
 }

@@ -1,8 +1,118 @@
-<div class="container">
-    <h2 class="header">Lista de Avaliações</h2>
-    <ul>
-        <li *ngFor="let avaliacao of avaliacoes" class="item">
-            {{avaliacao.comentario}} - Nota: {{avaliacao.nota}} - Usuário: {{avaliacao.usuarioId}}
-        </li>
-    </ul>
-</div>
+<div class="all">
+    <mat-toolbar color="primary" class="titulo">
+      <span class="toolbar-title">Controle de Avaliações</span>
+      <button mat-fab color="accent" routerLink="./new">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-toolbar>
+   
+    <div class="container">
+      <div class="input-container">
+        <mat-form-field appearance="outline" class="input-field">
+          <mat-label>Pesquisar Avaliação</mat-label>
+          <input
+            [(ngModel)]="filtro"
+            matInput
+            placeholder="Ex: Ótimo tênis..."
+            #input
+            (keyup.enter)="filtrar()"
+          />
+        </mat-form-field>
+        <button
+          mat-icon-button
+          color="primary"
+          class="search-button"
+          id="meuBotaoPesquisar"
+          (click)="filtrar()"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
+    </div>
+   
+    <table mat-table [dataSource]="avaliacoes" class="mat-elevation-z8">
+      <ng-container matColumnDef="linha">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let avaliacao; let i = index">
+          {{ obterNumeroLinha(i) }}
+        </td>
+      </ng-container>
+   
+      <!-- Id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>Id</th>
+        <td mat-cell *matCellDef="let avaliacao">{{ avaliacao.id }}</td>
+      </ng-container>
+   
+      <!-- Tênis Column -->
+      <ng-container matColumnDef="tenis">
+        <th mat-header-cell *matHeaderCellDef>Tênis</th>
+        <td mat-cell *matCellDef="let avaliacao">{{ avaliacao.tenis.nome }}</td>
+      </ng-container>
+   
+      <!-- Usuário Column -->
+      <ng-container matColumnDef="usuario">
+        <th mat-header-cell *matHeaderCellDef>Usuário</th>
+        <td mat-cell *matCellDef="let avaliacao">{{ avaliacao.usuario.nome }}</td>
+      </ng-container>
+   
+      <!-- Conteúdo Column -->
+      <ng-container matColumnDef="conteudo">
+        <th mat-header-cell *matHeaderCellDef>Conteúdo</th>
+        <td mat-cell *matCellDef="let avaliacao">{{ avaliacao.conteudo }}</td>
+      </ng-container>
+   
+      <!-- Nota Column -->
+      <ng-container matColumnDef="nota">
+        <th mat-header-cell *matHeaderCellDef>Nota</th>
+        <td mat-cell *matCellDef="let avaliacao">{{ avaliacao.nota }}</td>
+      </ng-container>
+   
+      <!-- Data Column -->
+      <ng-container matColumnDef="dataAvaliacao">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let avaliacao">
+          {{ avaliacao.dataAvaliacao | date:'dd/MM/yyyy' }}
+        </td>
+      </ng-container>
+   
+      <!-- Status Column -->
+      <ng-container matColumnDef="ativa">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let avaliacao">
+          <mat-icon [ngStyle]="{'color': avaliacao.ativa ? 'green' : 'red'}">
+            {{ avaliacao.ativa ? 'check_circle' : 'cancel' }}
+          </mat-icon>
+        </td>
+      </ng-container>
+   
+      <!-- Ação Column -->
+      <ng-container matColumnDef="acao">
+        <th mat-header-cell *matHeaderCellDef>Ação</th>
+        <td mat-cell *matCellDef="let avaliacao">
+          <button
+            mat-icon-button
+            color="primary"
+            routerLink="/avaliacoes/edit/{{ avaliacao.id }}"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+   
+          <button mat-icon-button color="warn" (click)="excluir(avaliacao)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+   
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+   
+    <mat-paginator
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      [pageSize]="pageSize"
+      [length]="totalRecords"
+      (page)="paginar($event)"
+    >
+    </mat-paginator>
+   </div>

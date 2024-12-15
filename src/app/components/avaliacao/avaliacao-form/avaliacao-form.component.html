@@ -1,1 +1,75 @@
-<p>avaliacao-form works!</p>
+<div class="container">
+    <h2>{{ formGroup.value.id ? 'Editar Avaliação' : 'Nova Avaliação' }}</h2>
+    
+    <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+      <mat-form-field>
+        <mat-label>Tênis</mat-label>
+        <mat-select formControlName="tenis" required>
+          <mat-option [value]="tenis" *ngFor="let tenis of tenis">
+            {{tenis.nome}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.get('tenis')?.hasError('required')">
+          Tênis é obrigatório
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Usuário</mat-label>
+        <mat-select formControlName="usuario" required>
+          <mat-option [value]="usuario" *ngFor="let usuario of usuarios">
+            {{usuario.nome}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.get('usuario')?.hasError('required')">
+          Usuário é obrigatório
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Conteúdo</mat-label>
+        <textarea matInput formControlName="conteudo" required rows="4"></textarea>
+        <mat-error *ngIf="formGroup.get('conteudo')?.hasError('required')">
+          Conteúdo é obrigatório
+        </mat-error>
+        <mat-error *ngIf="formGroup.get('conteudo')?.hasError('minlength')">
+          Conteúdo deve ter pelo menos 10 caracteres
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Nota</mat-label>
+        <input matInput type="number" formControlName="nota" required min="0" max="5">
+        <mat-error *ngIf="formGroup.get('nota')?.hasError('required')">
+          Nota é obrigatória
+        </mat-error>
+        <mat-error *ngIf="formGroup.get('nota')?.hasError('min') || formGroup.get('nota')?.hasError('max')">
+          Nota deve estar entre 0 e 5
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Data da Avaliação</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dataAvaliacao" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="formGroup.get('dataAvaliacao')?.hasError('required')">
+          Data é obrigatória
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-checkbox formControlName="ativa">Ativa</mat-checkbox>
+  
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!formGroup.valid">
+          Salvar
+        </button>
+        <button mat-raised-button color="warn" type="button" (click)="excluir()" *ngIf="formGroup.value.id">
+          Excluir
+        </button>
+        <button mat-raised-button routerLink="/avaliacoes">
+          Voltar
+        </button>
+      </div>
+    </form>
+  </div>

@@ -1,0 +1,50 @@
+/* deeppurple-amber.css */
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h2 {
+    color: #673ab7;
+    margin-bottom: 20px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  mat-label {
+    color: #673ab7;
+  }
+  
+  input[type="text"] {
+    color: #000;
+  }
+  
+  mat-error {
+    color: #f44336;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  button[type="submit"] {
+    background-color: #673ab7;
+    color: #fff;
+  }
+  
+  button[type="button"] {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
+  button[type="button"]:last-child {
+    background-color: #e0e0e0;
+    color: #000;
+  }
