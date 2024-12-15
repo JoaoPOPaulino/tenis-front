@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Usuario } from '../../../models/usuario.model';
-import { TipoUsuario } from '../../../models/tipo-usuario.model';
+import { TipoUsuario } from '../../../models/tipo-usuario.enum';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Endereco } from '../../../models/endereco.model';
 

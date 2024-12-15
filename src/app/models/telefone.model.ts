@@ -1,5 +1,5 @@
 export class Telefone {
   id!: number;
-  codigoArea!: string;
+  ddd!: string;
   numero!: string;
 }

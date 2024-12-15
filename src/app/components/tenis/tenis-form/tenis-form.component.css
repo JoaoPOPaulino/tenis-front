@@ -1,49 +1,130 @@
+/* Estilos dos inputs e containers */
 .full-width-input {
-    width: 100%;
-  }
-  
-  mat-card {
-    max-width: 800px;
-    margin: 2rem auto;
-  }
-  
-  mat-card-actions {
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .form-container {
-    padding: 2rem;
-  }
-  
+  width: 100%;
+}
+
+mat-card {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px; /* Adicionado para espaçamento consistente entre botões */
+  padding: 16px !important; /* Força o padding para manter consistência */
+}
+
+.form-container {
+  padding: 2rem;
+}
+
+.flex-container {
+  display: flex;
+  gap: 22px;
+  margin-bottom: 16px; /* Adicionado para espaçamento entre grupos de campos */
+  align-items: baseline; /* Alinha os campos na mesma linha base */
+}
+
+/* Estilos da toolbar */
+.centered-toolbar {
+  display: flex;
+  justify-content: center;
+  font-size: x-large;
+  margin-bottom: 16px; /* Espaço entre toolbar e conteúdo */
+}
+
+/* Estilos dos botões */
+button[mat-flat-button],
+button[mat-button] {
+  width: 120px;
+  margin-left: 8px; /* Espaçamento consistente entre botões */
+}
+
+/* Estilos do container de imagem */
+.image-container {
+  margin: 16px auto;
+  border: 2px dashed #ccc; /* Cor mais suave para a borda */
+  border-radius: 10px;
+  width: fit-content;
+  padding: 16px; /* Adicionado padding interno */
+  transition: border-color 0.3s ease; /* Transição suave para hover */
+}
+
+.image-container:hover {
+  border-color: #666; /* Escurece a borda no hover */
+}
+
+.image-container > img {
+  width: 256px;
+  height: auto;
+  border-radius: 4px; /* Cantos arredondados para a imagem */
+  display: block; /* Remove espaço extra abaixo da imagem */
+}
+
+/* Estilos adicionais para melhorar a experiência */
+mat-form-field {
+  margin-bottom: 8px; /* Espaçamento consistente entre campos */
+}
+
+/* Ajustes responsivos */
+@media (max-width: 600px) {
   .flex-container {
-    display: flex;
-    gap: 22px;
+    flex-direction: column;
+    gap: 8px;
   }
-  
-  .centered-toolbar {
-    display: flex;
-    justify-content: center;
-    font-size: x-large;
-  }
-  
+
   button[mat-flat-button],
   button[mat-button] {
-    width: 120px;
+    width: 100%;
+    margin: 4px 0;
   }
-  
-  button[mat-flat-button]:not(:last-child) {
-    margin-right: 1rem;
+
+  .form-container {
+    padding: 1rem;
   }
-  
-  .image-container {
-    margin: auto;
-    border: 2px dashed #000;
-    border-radius: 10px;
-    width: fit-content;
+
+  mat-card {
+    margin: 1rem;
   }
-  
-  .image-container>img {
-    width: 256px;
-    height: auto;
+
+  .image-container > img {
+    width: 100%;
+    max-width: 256px;
   }
+}
+
+/* Estilos para o campo de upload de arquivo */
+.file-input-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Estilos para preview de imagem */
+.preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+}
+
+/* Estilos para mensagens de erro */
+mat-error {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Estilos para o ícone do botão de upload */
+button[mat-icon-button] {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+/* Animação suave para interações */
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  transition: color 0.3s ease;
+}
+
+/* Ajuste para campos desabilitados */
+mat-form-field.mat-form-field-disabled {
+  opacity: 0.6;
+}

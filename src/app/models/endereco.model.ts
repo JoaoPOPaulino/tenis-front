@@ -2,7 +2,7 @@ import { Cidade } from './cidade.model';
 import { Usuario } from './usuario.model';
 
 export class Endereco {
-  id?: number;
+  id!: number;
   cidade!: Cidade;
   cep!: string;
   quadra!: string;

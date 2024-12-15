@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@auth0/angular-jwt": "^5.2.0",
-    "bootstrap": "^4.6.2",
+    "bootstrap": "^5.3.3",
     "jquery": "^3.5.1",
     "loja-tenis": "file:",
     "ngx-toastr": "^19.0.0",

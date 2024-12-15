@@ -1,8 +1,25 @@
-<div class="container">
-  <h2 class="header">Lista de Tênis</h2>
-  <ul>
-      <li *ngFor="let tenis of tenis" class="item">
-          {{tenis.nome}} - Marca ID: {{tenis.marcaId}} - Fornecedor ID: {{tenis.fornecedorId}}
-      </li>
-  </ul>
-</div>
+<!-- src/app/components/tenis/tenis-list/tenis-list.component.html -->
+<table mat-table [dataSource]="tenis" class="mat-elevation-z8">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>ID</th>
+    <td mat-cell *matCellDef="let tenis">{{tenis.id}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="nome">
+    <th mat-header-cell *matHeaderCellDef>Nome</th>
+    <td mat-cell *matCellDef="let tenis">{{tenis.nome}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="marca">
+    <th mat-header-cell *matHeaderCellDef>Marca</th>
+    <td mat-cell *matCellDef="let tenis">{{tenis.marca.nome}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="fornecedor">
+    <th mat-header-cell *matHeaderCellDef>Fornecedor</th>
+    <td mat-cell *matCellDef="let tenis">{{tenis.fornecedor.nome}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

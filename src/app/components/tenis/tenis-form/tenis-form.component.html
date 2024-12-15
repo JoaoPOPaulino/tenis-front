@@ -1,116 +1,106 @@
-<mat-toolbar class="centered-toolbar">Cadastro de Produto</mat-toolbar>
+<mat-toolbar class="centered-toolbar">
+  <div class="toolbar-title">Cadastro de Tênis</div>
+</mat-toolbar>
+
 <div class="form-container">
   <mat-card>
     <mat-card-content>
       <form [formGroup]="formGroup">
         <div class="flex-container">
           <mat-form-field appearance="outline">
-            <mat-label for="marca-id">Marca</mat-label>
-            <mat-select formControlName="marca" id="marca-id">
+            <mat-label>Marca</mat-label>
+            <mat-select formControlName="marca">
               <mat-option *ngFor="let marca of marcas" [value]="marca">
                 {{marca.nome}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="formGroup.get('marca')?.getError('apiError')">
-              {{formGroup.get('marca')?.getError('apiError')}}
+            <mat-error *ngIf="formGroup.get('marca')?.invalid && formGroup.get('marca')?.touched">
+              {{getErrorMessage('marca', formGroup.get('marca')?.errors)}}
             </mat-error>
           </mat-form-field>
+
           <mat-form-field appearance="outline" class="full-width-input">
-            <mat-label>Nome</mat-label>
-            <input matInput type="text" formControlName="nome" />
-            <mat-error *ngIf="formGroup.get('nome')?.getError('apiError')">
-              {{formGroup.get('nome')?.getError('apiError')}}
+            <mat-label>Modelo</mat-label>
+            <input matInput type="text" formControlName="modelo" />
+            <mat-error *ngIf="formGroup.get('modelo')?.invalid && formGroup.get('modelo')?.touched">
+              {{getErrorMessage('modelo', formGroup.get('modelo')?.errors)}}
             </mat-error>
           </mat-form-field>
         </div>
+
         <mat-form-field appearance="outline" class="full-width-input">
-          <mat-label>Preço</mat-label>
-          <input matInput type="number" formControlName="preco" />
-          <mat-error *ngIf="formGroup.get('preco')?.getError('apiError')">
-            {{formGroup.get('preco')?.getError('apiError')}}
+          <mat-label>Descrição</mat-label>
+          <input matInput type="text" formControlName="descricao" />
+          <mat-error *ngIf="formGroup.get('descricao')?.invalid && formGroup.get('descricao')?.touched">
+            {{getErrorMessage('descricao', formGroup.get('descricao')?.errors)}}
           </mat-error>
         </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width-input">
-          <mat-label>Estoque</mat-label>
-          <input matInput type="number" formControlName="estoque" />
-          <mat-error *ngIf="formGroup.get('estoque')?.getError('apiError')">
-            {{formGroup.get('estoque')?.getError('apiError')}}
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width-input">
-          <mat-label>Modelo</mat-label>
-          <input matInput type="text" formControlName="modelo" />
-          <mat-error *ngIf="formGroup.get('modelo')?.getError('apiError')">
-            {{formGroup.get('modelo')?.getError('apiError')}}
-          </mat-error>
-        </mat-form-field>
+
         <div class="flex-container">
           <mat-form-field appearance="outline">
-            <mat-label for="fabricante-id">Fabricante</mat-label>
-            <mat-select formControlName="fabricante" id="fabricante-id">
-              <mat-option *ngFor="let fabricante of fabricantes" [value]="fabricante">
-                {{fabricante.nome}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="formGroup.get('fabricante')?.getError('apiError')">
-              {{formGroup.get('fabricante')?.getError('apiError')}}
+            <mat-label>Preço</mat-label>
+            <input matInput type="number" formControlName="preco" />
+            <mat-error *ngIf="formGroup.get('preco')?.invalid && formGroup.get('preco')?.touched">
+              {{getErrorMessage('preco', formGroup.get('preco')?.errors)}}
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline" class="full-width-input">
-            <mat-label>Data de Lançamento</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="lancamento" />
-            <mat-error *ngIf="formGroup.get('lancamento')?.getError('apiError')">
-              {{formGroup.get('lancamento')?.getError('apiError')}}
-            </mat-error>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-        <div class="flex-container">
-          <mat-form-field appearance="outline" class="full-width-input">
-            <mat-label for="categoria-id">Categoria</mat-label>
-            <mat-select formControlName="categoria" id="categoria-id">
-              <mat-option *ngFor="let categoria of categorias" [value]="categoria">
-                {{categoria.label}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="formGroup.get('categoria')?.getError('apiError')">
-              {{formGroup.get('categoria')?.getError('apiError')}}
+
+          <mat-form-field appearance="outline">
+            <mat-label>Estoque</mat-label>
+            <input matInput type="number" formControlName="estoque" />
+            <mat-error *ngIf="formGroup.get('estoque')?.invalid && formGroup.get('estoque')?.touched">
+              {{getErrorMessage('estoque', formGroup.get('estoque')?.errors)}}
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline" class="full-width-input">
-            <mat-label for="status-id">Status</mat-label>
-            <mat-select formControlName="status" id="status-id">
-              <mat-option *ngFor="let status of status" [value]="status">
-                {{status.label}}
-              </mat-option>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tamanho</mat-label>
+            <mat-select formControlName="tamanho">
+              <mat-option value="PP">PP</mat-option>
+              <mat-option value="P">P</mat-option>
+              <mat-option value="M">M</mat-option>
+              <mat-option value="G">G</mat-option>
+              <mat-option value="GG">GG</mat-option>
             </mat-select>
-            <mat-error *ngIf="formGroup.get('status')?.getError('apiError')">
-              {{formGroup.get('status')?.getError('apiError')}}
+            <mat-error *ngIf="formGroup.get('tamanho')?.invalid && formGroup.get('tamanho')?.touched">
+              {{getErrorMessage('tamanho', formGroup.get('tamanho')?.errors)}}
             </mat-error>
           </mat-form-field>
         </div>
-        <mat-form-field appearance="outline" class="full-width-input">
-          <mat-label>Descricao</mat-label>
-          <input matInput type="text" formControlName="descricao" />
-          <mat-error *ngIf="formGroup.get('descricao')?.getError('apiError')">
-            {{formGroup.get('descricao')?.getError('apiError')}}
-          </mat-error>
-        </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width-input">
           <mat-label>Imagem</mat-label>
           <input type="file" (change)="loadSelectedImage($event)" hidden #fileInput>
           <input matInput [value]="fileName" readonly>
-          <button mat-icon-button matSuffix (click)="fileInput.click()"><mat-icon>folder_open</mat-icon></button>
+          <button mat-icon-button matSuffix (click)="fileInput.click()">
+            <mat-icon>folder_open</mat-icon>
+          </button>
         </mat-form-field>
-        <div class="image-container">
-          <img [src]="imagePreview">
+
+        <div *ngIf="imagePreview" class="image-container">
+          <img [src]="imagePreview" alt="Preview">
         </div>
       </form>
     </mat-card-content>
+
     <mat-card-actions>
-      <button mat-flat-button color="primary" (click)="salvar()">Salvar</button>
-      <button mat-button color="warn" routerLink="/admin/hardwares/list">Cancelar</button>
+      <button mat-raised-button (click)="voltarPagina()">
+        Cancelar
+      </button>
+
+      <button mat-raised-button *ngIf="formGroup?.get('id')?.value" 
+              color="warn" 
+              (click)="excluir()"
+              [disabled]="formGroup.invalid">
+        Excluir
+      </button>
+
+      <button mat-raised-button 
+              color="primary" 
+              (click)="salvar()"
+              [disabled]="formGroup.invalid">
+        Salvar
+      </button>
     </mat-card-actions>
   </mat-card>
 </div>

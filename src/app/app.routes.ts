@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { AdminTemplateComponent } from './components/template/admin-template/admin-template.component';
 import { UserTemplateComponent } from './components/template/user-template/user-template.component';
 import { TenisListComponent } from './components/tenis/tenis-list/tenis-list.component';
@@ -10,77 +9,104 @@ import { tenisResolver } from './components/tenis/resolver/tenis.resolver';
 import { FornecedorListComponent } from './components/fornecedor/fornecedor-list/fornecedor-list.component';
 import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form/fornecedor-form.component';
 import { fornecedorResolver } from './components/fornecedor/resolver/resolver.component';
+//import { NotFoundComponent } from './components/not-found/not-found.component';
+//import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
+  // Rota pública (e-commerce)
   {
     path: '',
     component: UserTemplateComponent,
     title: 'e-commerce',
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'ecommerce' },
+      { 
+        path: '', 
+        pathMatch: 'full', 
+        redirectTo: 'ecommerce' 
+      },
       {
         path: 'ecommerce',
         component: TenisListComponent,
-        title: 'Lista de Tenis',
+        title: 'Lista de Tênis',
       },
-      { path: 'carrinho', component: CarrinhoComponent, title: 'Carrinho' },
+      { 
+        path: 'carrinho', 
+        component: CarrinhoComponent, 
+        title: 'Carrinho' 
+      },
+      {
+        path: 'login',
+        component: LoginComponent,
+        title: 'Login'
+      }
     ],
   },
 
+  // Rota administrativa (protegida)
   {
     path: 'admin',
     component: AdminTemplateComponent,
     title: 'Administração',
+    canActivate: [AuthGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'tenis' },
-
-      {
-        path: 'login',
-        component: LoginComponent,
-        title: 'Login',
-        canActivate: [],
+      { 
+        path: '', 
+        pathMatch: 'full', 
+        redirectTo: 'tenis' 
       },
 
-      { path: 'tenis', component: TenisListComponent, title: 'Lista de Tenis' },
-      { path: 'tenis/new', component: TenisFormComponent, title: 'Novo Tenis' },
-      {
-        path: 'tenis/edit/:id',
-        component: TenisFormComponent,
-        resolve: { tenis: tenisResolver },
+      // Rotas de Tênis
+      { 
+        path: 'tenis', 
+        children: [
+          {
+            path: '',
+            component: TenisListComponent,
+            title: 'Lista de Tênis'
+          },
+          {
+            path: 'new',
+            component: TenisFormComponent,
+            title: 'Novo Tênis'
+          },
+          {
+            path: 'edit/:id',
+            component: TenisFormComponent,
+            title: 'Editar Tênis',
+            resolve: { tenis: tenisResolver }
+          }
+        ]
       },
 
+      // Rotas de Fornecedor
       {
         path: 'fornecedor',
-        component: FornecedorListComponent,
-        title: 'Lista de Fornecedores',
-      },
-      {
-        path: 'fornecedor/new',
-        component: FornecedorFormComponent,
-        title: 'Novo Fornecedor',
-      },
-      {
-        path: 'fornecedor/edit/:id',
-        component: FornecedorFormComponent,
-        resolve: { fornecedor: fornecedorResolver },
-      },
+        children: [
+          {
+            path: '',
+            component: FornecedorListComponent,
+            title: 'Lista de Fornecedores'
+          },
+          {
+            path: 'new',
+            component: FornecedorFormComponent,
+            title: 'Novo Fornecedor'
+          },
+          {
+            path: 'edit/:id',
+            component: FornecedorFormComponent,
+            title: 'Editar Fornecedor',
+            resolve: { fornecedor: fornecedorResolver }
+          }
+        ]
+      }
     ],
   },
 
-  // { path: '', component: HomeComponent, title: 'Página Inicial' },
-  // { path: 'estados', component: EstadoListComponent, title: 'Lista de Estados' },
-  // { path: 'produtos', component: ProdutoListComponent, title: 'Lista de Produtos' },
-  // { path: 'produto/:id', component: ProdutoFormComponent, title: 'Detalhes do Produto' },
-  // { path: 'produto/novo', component: ProdutoFormComponent, title: 'Novo Produto' },
-  // { path: 'usuarios', component: UsuarioListComponent, title: 'Lista de Usuários' },
-  // { path: 'fornecedores', component: FornecedorListComponent, title: 'Lista de Fornecedores' },
-  // { path: 'marcas', component: MarcaListComponent, title: 'Lista de Marcas' },
-  // { path: 'tenis', component: TenisListComponent, title: 'Lista de Tênis' },
-  // { path: '**', redirectTo: '', pathMatch: 'full' }
+  // Rota para página não encontrada
+  {
+    path: '**',
+    component: NotFoundComponent,
+    title: 'Página não encontrada'
+  }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}

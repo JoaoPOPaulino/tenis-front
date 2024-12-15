@@ -1,0 +1,9 @@
+export enum StatusPagamento {
+    PENDENTE = 'PENDENTE',
+    PROCESSANDO = 'PROCESSANDO',
+    APROVADO = 'APROVADO',
+    RECUSADO = 'RECUSADO',
+    CANCELADO = 'CANCELADO',
+    ESTORNADO = 'ESTORNADO'
+  }
+  

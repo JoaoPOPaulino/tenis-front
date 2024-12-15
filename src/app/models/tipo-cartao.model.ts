@@ -1,4 +1,4 @@
-export class TipoCartao {
-  id!: number;
-  label!: string;
+export enum TipoCartao {
+  CREDITO = 'CREDITO',
+  DEBITO = 'DEBITO'
 }
