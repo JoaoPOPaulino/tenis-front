@@ -1,39 +1,42 @@
+<div class="container">
+  <h1>{{ home?.tituloPagina }}</h1>
 
-<!-- Barra de navegação com Angular Material -->
-<mat-toolbar color="primary">
-  <a mat-button routerLink="/">Início</a>
-  <a mat-button routerLink="/colecoes">Coleções</a>
-  <a mat-button routerLink="/marcas">Marcas</a>
-  <a mat-button routerLink="/ofertas">Ofertas</a>
-  <a mat-button routerLink="/contato">Contato</a>
-</mat-toolbar>
+  <div class="banner">
+    <img [src]="home?.bannerPrincipal" alt="Banner Principal">
+  </div>
 
-<div>
-    <h1>Sneaker Paradise</h1>
-    <p>Seu Destino para Tênis de Estilo</p>
+  <div class="featured-products">
+    <h2>Produtos em Destaque</h2>
+    <div class="product-grid">
+      <div class="product-card" *ngFor="let produto of home?.destaques">
+        <img [src]="produto.imagemUrl" [alt]="produto.nome">
+        <h3>{{ produto.nome }}</h3>
+        <p>{{ produto.preco | currency }}</p>
+        <a [routerLink]="['/produtos', produto.id]" class="btn">Ver Detalhes</a>
+      </div>
+    </div>
   </div>
-  
-  <nav>
-    <a routerLink="/">Início</a>
-    <a routerLink="/colecoes">Coleções</a>
-    <a routerLink="/marcas">Marcas</a>
-    <a routerLink="/ofertas">Ofertas</a>
-    <a routerLink="/contato">Contato</a>
-  </nav>
-  
-  <main>
-    <h2>Destaques</h2>
-  <!-- Grid de produtos utilizando Angular Material -->
-  <div class="product-grid">
-    <mat-card *ngFor="let product of products" class="product-card">
-      <img mat-card-image [src]="product.image" alt="{{ product.name }}">
-      <mat-card-title>{{ product.name }}</mat-card-title>
-      <mat-card-subtitle>R$ {{ product.price.toFixed(2) }}</mat-card-subtitle>
-      <button mat-button [routerLink]="['/produto', product.id]">Ver Detalhes</button>
-    </mat-card>
+
+  <div class="categories" *ngIf="home?.categorias">
+    <h2>Categorias</h2>
+    <ul>
+      <li *ngFor="let categoria of home?.categorias">
+        <a [routerLink]="['/categorias', categoria]">{{ categoria }}</a>
+      </li>
+    </ul>
   </div>
-</main>
-  
+
+  <div class="featured-brands" *ngIf="home?.marcasEmDestaque">
+    <h2>Marcas em Destaque</h2>
+    <div class="brand-grid">
+      <div class="brand-card" *ngFor="let marca of home?.marcasEmDestaque">
+        <img [src]="marca.nomeImagem" [alt]="marca.nome">
+        <h3>{{ marca.nome }}</h3>
+      </div>
+    </div>
+  </div>
+
   <footer>
-    <p>© {{ currentYear }} Sneaker Paradise. Todos os direitos reservados.</p>
+    <p>&copy; {{ currentYear }} Meu Site. Todos os direitos reservados.</p>
   </footer>
+</div>

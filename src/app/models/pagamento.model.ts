@@ -1,10 +1,11 @@
 import { Cartao } from './cartao.model';
 import { Pedido } from './pedido.model';
 import { StatusPagamento } from './status-pagamento.enum';
+import { TipoPagamento } from './tipo.pagamento';
 
 export class Pagamento {
   id!: number;
-  tipoPagamento!: Pagamento;
+  tipoPagamento!: TipoPagamento;
   statusPagamento!: StatusPagamento;
   valor!: number;
   pedido!: Pedido;

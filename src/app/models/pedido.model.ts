@@ -7,7 +7,7 @@ export class Pedido {
   id?: number;
   data?: Date;
   usuario!: Usuario;
-  iten?: Item[];
+  itens?: Item[];
   total!: number;
   endereco!: Endereco;
   cartao!: Cartao;

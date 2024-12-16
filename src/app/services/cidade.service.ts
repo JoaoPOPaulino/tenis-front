@@ -46,6 +46,12 @@ export class CidadeService {
     return this.httpClient.get<Cidade>(`${this.baseUrl}/${id}`);
   }
 
+  findByEstado(estadoId: number): Observable<Cidade[]> {
+    return this.httpClient.get<Cidade[]>(
+      `${this.baseUrl}/search/estado/${estadoId}`
+    );
+  }
+
   findByNome(
     nome: string,
     page: number,

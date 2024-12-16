@@ -49,7 +49,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   deslogar() {
-    this.authService.removeToken();
-    this.authService.removeUsuarioLogado();
+    this.authService.logout();
   }
 }

@@ -1,94 +1,146 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Usuario } from '../models/usuario.model';
 import { LocalStorageService } from './local-storage.service';
+
+interface AuthResponse {
+  token: string;
+  usuario: Usuario;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private baseUrl = 'http://localhost:8080/auth';
-  private tokenKey = 'jwt_token';
-  private usuarioLogadoKey = 'usuario_logado';
-  private usuarioLogadoSubject = new BehaviorSubject<Usuario | null>(null);
+  private readonly tokenKey = 'jwt_token';
+  private readonly usuarioLogadoKey = 'usuario_logado';
+  private readonly usuarioLogadoSubject = new BehaviorSubject<Usuario | null>(
+    null
+  );
+  private readonly isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private httpClient: HttpClient,
-    private localStorageService: LocalStorageService,
+    private http: HttpClient,
+    private localStorage: LocalStorageService,
     private jwtHelper: JwtHelperService
   ) {
-    this.initUsuarioLogado();
+    this.initAuth();
   }
 
-  private initUsuarioLogado(): void {
-    const usuario = this.localStorageService.getItem(this.usuarioLogadoKey);
-    if (usuario) {
+  private initAuth(): void {
+    const token = this.getToken();
+    const usuario = this.getUsuarioFromStorage();
+
+    if (token && usuario && !this.isTokenExpired()) {
       this.usuarioLogadoSubject.next(usuario);
+      this.isLoggedInSubject.next(true);
+    } else {
+      this.logout();
     }
   }
 
-  public loginADM(username: string, senha: string): Observable<any> {
-    const params = {
-      login: username,
-      senha: senha,
-      perfil: 1,
-    };
-
-    return this.httpClient
-      .post(`${this.baseUrl}`, params, { observe: 'response' })
+  login(
+    username: string,
+    senha: string,
+    perfil: number = 2
+  ): Observable<Usuario> {
+    return this.http
+      .post<AuthResponse>(
+        `${this.baseUrl}`,
+        { login: username, senha, perfil },
+        { observe: 'response' }
+      )
       .pipe(
-        tap((res: any) => {
-          const authToken = res.headers.get('Autorization') ?? '';
-          if (authToken) {
-            this.setToken(authToken);
-            const usuarioLogado = res.body;
+        map((response) => {
+          const token = response.headers.get('Authorization');
+          const usuario = response.body?.usuario;
 
-            if (usuarioLogado) {
-              this.setUsuarioLogado(usuarioLogado);
-              this.usuarioLogadoSubject.next(usuarioLogado);
-            }
+          if (!token || !usuario) {
+            throw new Error('Resposta inválida do servidor');
           }
-        })
+
+          this.setToken(token);
+          this.setUsuarioLogado(usuario);
+          this.isLoggedInSubject.next(true);
+
+          return usuario;
+        }),
+        catchError(this.handleError)
       );
   }
 
-  setUsuarioLogado(usuario: Usuario): void {
-    this.localStorageService.setItem(this.usuarioLogadoKey, usuario);
+  loginAdmin(login: string, senha: string): Observable<Usuario> {
+    return this.login(login, senha, 1);
   }
 
-  setToken(token: string): void {
-    this.localStorageService.setItem(this.tokenKey, token);
+  logout(): void {
+    this.localStorage.removeItem(this.tokenKey);
+    this.localStorage.removeItem(this.usuarioLogadoKey);
+    this.usuarioLogadoSubject.next(null);
+    this.isLoggedInSubject.next(false);
   }
 
-  getUsuarioLogado() {
+  isLoggedIn(): Observable<boolean> {
+    return this.isLoggedInSubject.asObservable();
+  }
+
+  getUsuarioLogado(): Observable<Usuario | null> {
     return this.usuarioLogadoSubject.asObservable();
   }
 
+  hasRole(role: string): boolean {
+    const usuario = this.usuarioLogadoSubject.value;
+    return usuario?.tipoUsuario === role;
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole('ADMINISTRADOR');
+  }
+
+  private getUsuarioFromStorage(): Usuario | null {
+    return this.localStorage.getItem(this.usuarioLogadoKey);
+  }
+
+  private setToken(token: string): void {
+    this.localStorage.setItem(this.tokenKey, token);
+  }
+
+  private setUsuarioLogado(usuario: Usuario): void {
+    this.localStorage.setItem(this.usuarioLogadoKey, usuario);
+    this.usuarioLogadoSubject.next(usuario);
+  }
+
   getToken(): string | null {
-    return this.localStorageService.getItem(this.tokenKey);
-  }
-
-  removeToken(): void {
-    this.localStorageService.removeItem(this.tokenKey);
-  }
-
-  removeUsuarioLogado(): void {
-    this.localStorageService.removeItem(this.usuarioLogadoKey);
-    this.usuarioLogadoSubject.next(null);
+    return this.localStorage.getItem(this.tokenKey);
   }
 
   isTokenExpired(): boolean {
     const token = this.getToken();
-    if (!token) {
-      return true;
-    }
+    if (!token) return true;
+
     try {
       return this.jwtHelper.isTokenExpired(token);
-    } catch (error) {
-      console.error('Token invalido', error);
+    } catch {
       return true;
     }
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Ocorreu um erro na autenticação';
+
+    if (error.error instanceof ErrorEvent) {
+      // Erro do cliente
+      errorMessage = error.error.message;
+    } else if (error.status === 401) {
+      errorMessage = 'Usuário ou senha inválidos';
+    } else if (error.status === 403) {
+      errorMessage = 'Acesso não autorizado';
+    }
+
+    return throwError(() => new Error(errorMessage));
   }
 }

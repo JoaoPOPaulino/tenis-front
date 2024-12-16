@@ -1,108 +1,218 @@
+/* Container Principal */
 .container {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: #ffffff;
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+h2 {
+  color: #673ab7; /* deep purple */
+  margin-bottom: 24px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+/* Formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Campos do Formulário */
+mat-form-field {
+  width: 100%;
+}
+
+/* Textarea */
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Grupo de Botões */
+.button-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+/* Estilos dos Botões */
+.button-group button {
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Cores dos Botões (Deep Purple & Amber theme) */
+.mat-primary {
+  background-color: #673ab7;
+  color: white;
+}
+
+.mat-warn {
+  background-color: #f44336;
+  color: white;
+}
+
+button:not(.mat-primary):not(.mat-warn) {
+  background-color: #ffd740;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Hover States */
+.mat-primary:hover:not([disabled]) {
+  background-color: #5e35b1;
+}
+
+.mat-warn:hover:not([disabled]) {
+  background-color: #e53935;
+}
+
+button:not(.mat-primary):not(.mat-warn):hover:not([disabled]) {
+  background-color: #ffc400;
+}
+
+/* Disabled States */
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Checkbox Styles */
+mat-checkbox {
+  margin-top: 8px;
+}
+
+/* Form Field Theme Overrides */
+::ng-deep .mat-form-field-label {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+::ng-deep .mat-form-field-underline {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+::ng-deep .mat-form-field-ripple {
+  background-color: #673ab7;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+  color: #673ab7 !important;
+}
+
+::ng-deep .mat-form-field-invalid .mat-form-field-label {
+  color: #f44336 !important;
+}
+
+/* Progress Bar */
+mat-progress-bar {
+  margin-bottom: 20px;
+}
+
+/* Icons */
+mat-icon {
+  color: #673ab7;
+}
+
+.mat-warn mat-icon {
+  color: white;
+}
+
+/* Error States */
+mat-error {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Hints */
+mat-hint {
+  font-size: 12px;
+}
+
+/* Date Picker Custom Colors */
+::ng-deep .mat-calendar-body-selected {
+  background-color: #673ab7;
+  color: white;
+}
+
+::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: #673ab7;
+}
+
+/* Select Options */
+::ng-deep .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: #673ab7;
+}
+
+::ng-deep .mat-select-value {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .container {
+    padding: 16px;
+    margin: 16px;
+    border-radius: 4px;
   }
-  
-  h2 {
-    color: #673ab7; /* deep purple */
-    margin-bottom: 20px;
-    font-weight: 500;
-  }
-  
-  form {
-    display: flex;
+
+  .button-group {
     flex-direction: column;
-    gap: 20px;
   }
-  
-  mat-form-field {
+
+  .button-group button {
     width: 100%;
   }
-  
-  .button-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+
+  h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
   }
-  
-  /* Deep Purple & Amber theme specific styles */
-  :host ::ng-deep .mat-form-field-label {
-    color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
   }
-  
-  :host ::ng-deep .mat-form-field-underline {
-    background-color: rgba(0, 0, 0, 0.12);
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+  .container {
+    border: 1px solid CanvasText;
   }
-  
-  :host ::ng-deep .mat-form-field-ripple {
-    background-color: #673ab7;
+
+  button {
+    border: 1px solid CanvasText;
   }
-  
-  :host ::ng-deep .mat-focused .mat-form-field-label {
-    color: #673ab7 !important;
-  }
-  
-  :host ::ng-deep .mat-form-field-invalid .mat-form-field-label {
-    color: #f44336 !important;
-  }
-  
-  :host ::ng-deep .mat-form-field-invalid .mat-form-field-ripple {
-    background-color: #f44336;
-  }
-  
-  /* Textarea styles */
-  textarea {
-    min-height: 100px;
-    resize: vertical;
-  }
-  
-  /* Button styles */
-  .mat-raised-button.mat-primary {
-    background-color: #673ab7;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: #424242;
     color: white;
   }
-  
-  .mat-raised-button.mat-warn {
-    background-color: #f44336;
-    color: white;
+
+  h2 {
+    color: #b39ddb;
   }
-  
-  .mat-raised-button:not(.mat-primary):not(.mat-warn) {
-    background-color: #ffd740;
-    color: rgba(0, 0, 0, 0.87);
+
+  ::ng-deep .mat-form-field-label {
+    color: rgba(255, 255, 255, 0.7) !important;
   }
-  
-  /* Hover effects */
-  .mat-raised-button.mat-primary:hover {
-    background-color: #5e35b1;
+
+  ::ng-deep .mat-form-field-underline {
+    background-color: rgba(255, 255, 255, 0.12);
   }
-  
-  .mat-raised-button.mat-warn:hover {
-    background-color: #e53935;
-  }
-  
-  .mat-raised-button:not(.mat-primary):not(.mat-warn):hover {
-    background-color: #ffab00;
-  }
-  
-  /* Checkbox styles */
-  .mat-checkbox {
-    margin-top: 10px;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    .container {
-      padding: 16px;
-    }
-    
-    .button-group {
-      flex-direction: column;
-    }
-    
-    .button-group button {
-      width: 100%;
-    }
-  }
+}

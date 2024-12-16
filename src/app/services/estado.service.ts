@@ -23,11 +23,15 @@ export class EstadoService {
     return this.httpClient.delete<Estado>(`${this.baseUrl}/${estado.id}`);
   }
 
-  findAll(page: number, pageSize: number): Observable<Estado[]> {
-    const params = {
-      page: page.toString(),
-      pageSize: pageSize.toString(),
-    };
+  findAll(page?: number, pageSize?: number): Observable<Estado[]> {
+    let params = {};
+
+    if (page !== undefined && pageSize !== undefined) {
+      params = {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+      };
+    }
 
     return this.httpClient.get<Estado[]>(`${this.baseUrl}`, { params });
   }

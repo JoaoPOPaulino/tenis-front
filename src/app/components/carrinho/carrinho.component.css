@@ -1,0 +1,199 @@
+.carrinho-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  
+  mat-card {
+    margin-bottom: 20px;
+  }
+  
+  mat-card-header {
+    margin-bottom: 20px;
+  }
+  
+  mat-card-title {
+    font-size: 24px;
+    color: #673ab7;
+    margin-bottom: 8px;
+  }
+  
+  /* Estilo para carrinho vazio */
+  .carrinho-vazio {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  .carrinho-vazio mat-icon {
+    font-size: 64px;
+    height: 64px;
+    width: 64px;
+    color: #9e9e9e;
+    margin-bottom: 16px;
+  }
+  
+  .carrinho-vazio p {
+    color: #757575;
+    font-size: 18px;
+    margin-bottom: 24px;
+  }
+  
+  /* Itens do carrinho */
+  .carrinho-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    gap: 16px;
+  }
+  
+  .item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .item-info {
+    flex: 1;
+  }
+  
+  .item-info h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .preco {
+    color: #673ab7;
+    font-weight: 500;
+    margin: 4px 0;
+  }
+  
+  /* Controles de quantidade */
+  .quantidade-controle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .quantidade-controle span {
+    min-width: 24px;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  .subtotal {
+    font-weight: 500;
+    color: #673ab7;
+    min-width: 100px;
+    text-align: right;
+  }
+  
+  /* Resumo do carrinho */
+  .carrinho-resumo {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    margin-bottom: 24px;
+  }
+  
+  .valor-total {
+    font-size: 24px;
+    font-weight: 500;
+    color: #673ab7;
+  }
+  
+  /* Ações do carrinho */
+  .acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .item {
+      flex-wrap: wrap;
+    }
+  
+    .item img {
+      width: 60px;
+      height: 60px;
+    }
+  
+    .item-info {
+      flex: 1 1 100%;
+      order: -1;
+    }
+  
+    .quantidade-controle {
+      flex: 1;
+      justify-content: flex-start;
+    }
+  
+    .subtotal {
+      width: 100%;
+      text-align: left;
+    }
+  
+    .acoes {
+      flex-direction: column;
+    }
+  
+    .acoes button {
+      width: 100%;
+    }
+  }
+  
+  /* Animações */
+  .item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* Estados de hover */
+  button.mat-icon-button:hover {
+    background-color: rgba(103, 58, 183, 0.04);
+  }
+  
+  button.mat-icon-button.mat-warn:hover {
+    background-color: rgba(244, 67, 54, 0.04);
+  }
+  
+  /* Botões de ação */
+  button.mat-raised-button {
+    min-width: 150px;
+  }
+  
+  /* Acessibilidade */
+  @media (prefers-reduced-motion: reduce) {
+    .item {
+      transition: none;
+    }
+  }
+  
+  /* High contrast */
+  @media (forced-colors: active) {
+    .item {
+      border: 1px solid;
+    }
+  }

@@ -1,54 +1,105 @@
-.sneaker-paradise {
-    text-align: center;
-    padding: 20px 0;
-  }
-  
-  nav {
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
-  }
-  
-  nav a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #333;
-  }
-  
-  main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .product-card {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .product-image {
-    max-width: 100%;
-    height: auto;
-  }
-  
-  .btn {
-    display: inline-block;
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-  }
-  
-  footer {
-    text-align: center;
-    padding: 20px 0;
-    background-color: #f8f9fa;
-  }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.banner {
+  margin-bottom: 40px;
+}
+
+.banner img {
+  width: 100%;
+  height: auto;
+}
+
+.featured-products {
+  margin-bottom: 40px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 20px;
+}
+
+.product-card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  text-align: center;
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.product-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.product-card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.categories {
+  margin-bottom: 40px;
+}
+
+.categories ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.categories li {
+  margin-bottom: 10px;
+}
+
+.categories a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.featured-brands {
+  margin-bottom: 40px;
+}
+
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 20px;
+}
+
+.brand-card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  text-align: center;
+}
+
+.brand-card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.brand-card h3 {
+  font-size: 18px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+}

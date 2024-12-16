@@ -1,77 +1,65 @@
-<p>fornecedor-form works!</p>
 <div class="container">
-    <h2>{{ formGroup.value.id ? 'Editar Fornecedor' : 'Novo Fornecedor' }}</h2>
-    <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+  <h2>{{ formGroup.value.id ? 'Editar Fornecedor' : 'Novo Fornecedor' }}</h2>
+  
+  <form [formGroup]="formGroup" (ngSubmit)="salvar()">
+    <mat-form-field>
+      <input matInput placeholder="Nome" formControlName="nome">
+      <mat-error>{{ getErrorMessage('nome', formGroup.get('nome')?.errors) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="CNPJ" formControlName="cnpj">
+      <mat-error>{{ getErrorMessage('cnpj', formGroup.get('cnpj')?.errors) }}</mat-error>
+    </mat-form-field>
+
+    <div formGroupName="endereco">
       <mat-form-field>
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="nome" required>
-        <mat-error *ngIf="formGroup.get('nome')?.invalid">{{ getErrorMessage('nome', formGroup.get('nome')?.errors) }}</mat-error>
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="estado" (selectionChange)="onEstadoChange($event)">
+          <mat-option *ngFor="let estado of estados" [value]="estado.id">
+            {{ estado.nome }}
+          </mat-option>
+        </mat-select>
+        <mat-error>{{ getErrorMessage('endereco.cidade.estado.nome', formGroup.get('endereco.cidade.estado.nome')?.errors) }}</mat-error>
       </mat-form-field>
-  
+
       <mat-form-field>
-        <mat-label>CNPJ</mat-label>
-        <input matInput formControlName="cnpj" required>
-        <mat-error *ngIf="formGroup.get('cnpj')?.invalid">{{ getErrorMessage('cnpj', formGroup.get('cnpj')?.errors) }}</mat-error>
+        <mat-label>Cidade</mat-label>
+        <mat-select formControlName="cidade">
+          <mat-option *ngFor="let cidade of cidades" [value]="cidade.id">
+            {{ cidade.nome }}
+          </mat-option>
+        </mat-select>
+        <mat-error>{{ getErrorMessage('endereco.cidade.nome', formGroup.get('endereco.cidade.nome')?.errors) }}</mat-error>
       </mat-form-field>
-  
-      <div formGroupName="endereco">
-        <mat-form-field>
-          <mat-label>CEP</mat-label>
-          <input matInput formControlName="cep" required>
-          <mat-error *ngIf="formGroup.get('endereco.cep')?.invalid">{{ getErrorMessage('endereco.cep', formGroup.get('endereco.cep')?.errors) }}</mat-error>
-        </mat-form-field>
-  
-        <mat-form-field>
-          <mat-label>Quadra</mat-label>
-          <input matInput formControlName="quadra" required>
-          <mat-error *ngIf="formGroup.get('endereco.quadra')?.invalid">{{ getErrorMessage('endereco.quadra', formGroup.get('endereco.quadra')?.errors) }}</mat-error>
-        </mat-form-field>
-  
-        <mat-form-field>
-          <mat-label>Rua</mat-label>
-          <input matInput formControlName="rua" required>
-          <mat-error *ngIf="formGroup.get('endereco.rua')?.invalid">{{ getErrorMessage('endereco.rua', formGroup.get('endereco.rua')?.errors) }}</mat-error>
-        </mat-form-field>
-  
-        <mat-form-field>
-          <mat-label>Número</mat-label>
-          <input matInput formControlName="numero" required>
-          <mat-error *ngIf="formGroup.get('endereco.numero')?.invalid">{{ getErrorMessage('endereco.numero', formGroup.get('endereco.numero')?.errors) }}</mat-error>
-        </mat-form-field>
-  
-        <mat-form-field>
-          <mat-label>Complemento</mat-label>
-          <input matInput formControlName="complemento">
-          <mat-error *ngIf="formGroup.get('endereco.complemento')?.invalid">{{ getErrorMessage('endereco.complemento', formGroup.get('endereco.complemento')?.errors) }}</mat-error>
-        </mat-form-field>
-  
-        <div formGroupName="cidade">
-          <mat-form-field>
-            <mat-label>Cidade</mat-label>
-            <input matInput formControlName="nome" required>
-            <mat-error *ngIf="formGroup.get('endereco.cidade.nome')?.invalid">{{ getErrorMessage('endereco.cidade.nome', formGroup.get('endereco.cidade.nome')?.errors) }}</mat-error>
-          </mat-form-field>
-  
-          <div formGroupName="estado">
-            <mat-form-field>
-              <mat-label>Estado</mat-label>
-              <input matInput formControlName="nome" required>
-              <mat-error *ngIf="formGroup.get('endereco.cidade.estado.nome')?.invalid">{{ getErrorMessage('endereco.cidade.estado.nome', formGroup.get('endereco.cidade.estado.nome')?.errors) }}</mat-error>
-            </mat-form-field>
-  
-            <mat-form-field>
-              <mat-label>Sigla</mat-label>
-              <input matInput formControlName="sigla" required>
-              <mat-error *ngIf="formGroup.get('endereco.cidade.estado.sigla')?.invalid">{{ getErrorMessage('endereco.cidade.estado.sigla', formGroup.get('endereco.cidade.estado.sigla')?.errors) }}</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
-  
-      <div class="button-group">
-        <button mat-raised-button color="primary" type="submit" [disabled]="!formGroup.valid">Salvar</button>
-        <button mat-raised-button color="warn" type="button" (click)="excluir()" *ngIf="formGroup.value.id">Excluir</button>
-        <button mat-raised-button routerLink="/admin/fornecedores">Voltar</button>
-      </div>
-    </form>
-  </div>
+
+      <mat-form-field>
+        <input matInput placeholder="CEP" formControlName="cep">
+        <mat-error>{{ getErrorMessage('endereco.cep', formGroup.get('endereco.cep')?.errors) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Quadra" formControlName="quadra">
+        <mat-error>{{ getErrorMessage('endereco.quadra', formGroup.get('endereco.quadra')?.errors) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Rua" formControlName="rua">
+        <mat-error>{{ getErrorMessage('endereco.rua', formGroup.get('endereco.rua')?.errors) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Número" formControlName="numero">
+        <mat-error>{{ getErrorMessage('endereco.numero', formGroup.get('endereco.numero')?.errors) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Complemento" formControlName="complemento">
+        <mat-error>{{ getErrorMessage('endereco.complemento', formGroup.get('endereco.complemento')?.errors) }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" type="submit">Salvar</button>
+    <button mat-raised-button color="warn" type="button" (click)="excluir()" *ngIf="formGroup.value.id">Excluir</button>
+  </form>
+</div>

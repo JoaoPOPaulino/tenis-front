@@ -17,6 +17,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
+import { EstadoService } from '../../../services/estado.service';
+import { CidadeService } from '../../../services/cidade.service';
+import { Estado } from '../../../models/estado.model';
+import { Cidade } from '../../../models/cidade.model';
 
 @Component({
   selector: 'app-fornecedor-form',
@@ -24,6 +29,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatButtonModule,
     ReactiveFormsModule,
     CommonModule,
@@ -33,6 +39,8 @@ import { CommonModule } from '@angular/common';
 })
 export class FornecedorFormComponent implements OnInit {
   formGroup: FormGroup;
+  estados: Estado[] = [];
+  cidades: Cidade[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,7 +48,9 @@ export class FornecedorFormComponent implements OnInit {
     private router: Router,
     private ActivatedRoute: ActivatedRoute,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private estadoService: EstadoService,
+    private cidadeService: CidadeService
   ) {
     this.formGroup = this.formBuilder.group({
       id: [null],
@@ -117,6 +127,7 @@ export class FornecedorFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.carregarEstados();
   }
 
   initializeForm() {
@@ -336,6 +347,19 @@ export class FornecedorFormComponent implements OnInit {
       }
     }
     return 'Campo inválido';
+  }
+
+  carregarEstados() {
+    this.estadoService.findAll().subscribe((estados) => {
+      this.estados = estados;
+    });
+  }
+
+  onEstadoChange(event: any) {
+    const estadoId = event.value;
+    this.cidadeService.findByEstado(estadoId).subscribe((cidades) => {
+      this.cidades = cidades;
+    });
   }
 
   errorMessage: { [controlName: string]: { [errorName: string]: string } } = {

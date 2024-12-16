@@ -1,49 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-}
+import { Home } from '../../models/home.model';
+import { HomeService } from '../../services/home.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
 })
 export class HomeComponent implements OnInit {
-  featuredProducts: Product[] = [
-    {
-      id: 'tenis-corrida',
-      name: 'Tênis de Corrida Ultra Leve',
-      price: 299.99,
-      image: 'https://example.com/tenis-corrida.jpg'
-    },
-    {
-      id: 'tenis-casual',
-      name: 'Tênis Casual Urbano',
-      price: 199.99,
-      image: 'https://example.com/tenis-casual.jpg'
-    },
-    {
-      id: 'tenis-esportivo',
-      name: 'Tênis Esportivo Pro',
-      price: 349.99,
-      image: 'https://example.com/tenis-esportivo.jpg'
-    },
-    {
-      id: 'tenis-skatista',
-      name: 'Tênis Skatista Street',
-      price: 249.99,
-      image: 'https://example.com/tenis-skatista.jpg'
-    }
-  ];
-
+  home: Home | undefined;
   currentYear: number = new Date().getFullYear();
 
-  constructor() { }
+  constructor(private homeService: HomeService) {}
 
   ngOnInit(): void {
+    this.getHomeData();
+  }
+
+  getHomeData(): void {
+    this.homeService.getHomeData().subscribe(
+      (data: Home) => {
+        this.home = data;
+      },
+      (error: any) => {
+        console.error('Erro ao obter os dados da página inicial:', error);
+      }
+    );
   }
 }

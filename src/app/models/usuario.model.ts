@@ -9,7 +9,6 @@ export class Usuario {
   email!: string;
   login!: string;
   senha!: string;
-  username!: string; // Campo adicionado
   tipoUsuario!: TipoUsuario;
   telefones!: Telefone[];
   enderecos!: Endereco[];

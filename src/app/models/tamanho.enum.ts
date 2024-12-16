@@ -1,9 +1,9 @@
 export enum Tamanho {
-  PP = 'PP',
-  P = 'P',
-  M = 'M',
-  G = 'G',
-  GG = 'GG',
-  X = 'X',
-  XG = 'XG',
+  PP = 38,
+  P = 39,
+  M = 40,
+  G = 41,
+  GG = 42,
+  X = 43,
+  XG = 44,
 }
