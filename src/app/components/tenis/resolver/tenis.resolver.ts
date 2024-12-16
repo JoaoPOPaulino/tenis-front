@@ -8,5 +8,5 @@ export const tenisResolver: ResolveFn<Tenis> = (route) => {
   if (isNaN(id)) {
     throw new Error('ID inválido');
   }
-  return inject(TenisService).findById(id);
+  return inject(TenisService).findById(id.toString());
 };

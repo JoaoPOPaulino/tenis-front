@@ -1,17 +1,23 @@
 <mat-toolbar color="primary">
-  <nav>
-    <a mat-button [routerLink]="['/']">Início</a>
-    <a mat-button [routerLink]="['/produtos']">Produtos</a>
-    <a mat-button [routerLink]="['/tenis']">Tênis</a>
-    <a mat-button [routerLink]="['/marcas']">Marcas</a>
-    <a mat-button [routerLink]="['/fornecedores']">Fornecedores</a>
-  </nav>
+  <div class="toolbar-container">
+    <span class="logo">Sneaker Paradise</span>
+    <nav class="navigation">
+      <a mat-button [routerLink]="['/']" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Início</a>
+      <a mat-button [routerLink]="['/produtos']" routerLinkActive="active-link">Produtos</a>
+      <a mat-button [routerLink]="['/tenis']" routerLinkActive="active-link">Tênis</a>
+      <a mat-button [routerLink]="['/marcas']" routerLinkActive="active-link">Marcas</a>
+      <a mat-button [routerLink]="['/fornecedores']" routerLinkActive="active-link">Fornecedores</a>
+    </nav>
+    <button mat-icon-button class="user-menu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
 
-<main class="container">
+<main class="main-content">
   <router-outlet></router-outlet>
 </main>
 
-<footer>
+<footer class="footer">
   <p>© {{ currentYear }} Sneaker Paradise. Todos os direitos reservados.</p>
 </footer>

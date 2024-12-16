@@ -19,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { NgFor } from '@angular/common';
 import { FornecedorService } from '../../../services/fornecedor.service';
 import { Fornecedor } from '../../../models/fornecedor.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tenis-form',
@@ -31,6 +32,7 @@ import { Fornecedor } from '../../../models/fornecedor.model';
     MatIconModule,
     ReactiveFormsModule,
     MatSelectModule,
+    CommonModule,
   ],
   templateUrl: './tenis-form.component.html',
   styleUrls: ['./tenis-form.component.css'],

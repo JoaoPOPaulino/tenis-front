@@ -10,6 +10,8 @@ import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form
 import { tenisResolver } from './components/tenis/resolver/tenis.resolver';
 import { fornecedorResolver } from './components/fornecedor/resolver/resolver.component';
 import { authGuard } from './guard/auth.guard';
+import { MarcaListComponent } from './components/marca/marca-list/marca-list.component';
+import { ProdutoListComponent } from './components/produto/produto-list/produto-list.component';
 
 export const routes: Routes = [
   // Rota pública (e-commerce)
@@ -38,6 +40,16 @@ export const routes: Routes = [
         component: LoginComponent,
         title: 'Login',
       },
+      {
+        path: 'produtos',
+        component: ProdutoListComponent, // Crie este componente
+        title: 'Produtos'
+      },
+      {
+        path: 'marcas',
+        component: MarcaListComponent, // Crie este componente
+        title: 'Marcas'
+      }
     ],
   },
 
