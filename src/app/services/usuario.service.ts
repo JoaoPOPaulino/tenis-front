@@ -60,7 +60,6 @@ export class UsuarioService {
       email: usuario.email,
       login: usuario.login,
       senha: usuario.senha,
-      username: usuario.username,
       tipoUsuario: usuario.tipoUsuario,
       telefones: usuario.telefones.map((tel) => ({
         ddd: tel.ddd,
@@ -103,7 +102,6 @@ export class UsuarioService {
       email: usuario.email,
       login: usuario.login,
       senha: usuario.senha,
-      username: usuario.username,
       tipoUsuario: usuario.tipoUsuario,
       telefones: usuario.telefones.map((tel) => ({
         ddd: tel.ddd,

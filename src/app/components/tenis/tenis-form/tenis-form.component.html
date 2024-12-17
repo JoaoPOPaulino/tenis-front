@@ -1,82 +1,107 @@
 <div class="container">
   <h2>{{ formGroup.value.id ? 'Editar Tênis' : 'Novo Tênis' }}</h2>
-  
+
   <form [formGroup]="formGroup" (ngSubmit)="salvar()">
-    <mat-form-field>
-      <mat-label>Nome</mat-label>
-      <input matInput formControlName="nome" required>
-      <mat-error *ngIf="formGroup.get('nome')?.invalid">Nome é obrigatório</mat-error>
-    </mat-form-field>
+    <div class="form-grid">
+      <mat-form-field>
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" required>
+        <mat-error *ngIf="formGroup.get('nome')?.hasError('required')">
+          Nome é obrigatório
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Preço</mat-label>
-      <input matInput type="number" formControlName="preco" required>
-      <mat-error *ngIf="formGroup.get('preco')?.hasError('required')">Preço é obrigatório</mat-error>
-      <mat-error *ngIf="formGroup.get('preco')?.hasError('min')">Preço deve ser maior que zero</mat-error>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>Modelo</mat-label>
+        <input matInput formControlName="modelo" required>
+        <mat-error *ngIf="formGroup.get('modelo')?.hasError('required')">
+          Modelo é obrigatório
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Fornecedor</mat-label>
-      <mat-select formControlName="fornecedor" required>
-        <mat-option *ngFor="let fornecedor of fornecedores" [value]="fornecedor">
-          {{fornecedor.nome}}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="formGroup.get('fornecedor')?.invalid">Fornecedor é obrigatório</mat-error>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>Marca</mat-label>
+        <mat-select formControlName="marca" required>
+          <mat-option *ngFor="let marca of marcas" [value]="marca">
+            {{marca.nome}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.get('marca')?.hasError('required')">
+          Marca é obrigatória
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Quantidade em Estoque</mat-label>
-      <input matInput type="number" formControlName="quantidadeEstoque" required>
-      <mat-error *ngIf="formGroup.get('quantidadeEstoque')?.hasError('required')">Quantidade é obrigatória</mat-error>
-      <mat-error *ngIf="formGroup.get('quantidadeEstoque')?.hasError('min')">Quantidade deve ser maior que zero</mat-error>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>Fornecedor</mat-label>
+        <mat-select formControlName="fornecedor" required>
+          <mat-option *ngFor="let fornecedor of fornecedores" [value]="fornecedor">
+            {{fornecedor.nome}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.get('fornecedor')?.hasError('required')">
+          Fornecedor é obrigatório
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Descrição</mat-label>
-      <textarea matInput formControlName="descricao" required rows="4"></textarea>
-      <mat-error *ngIf="formGroup.get('descricao')?.invalid">Descrição é obrigatória</mat-error>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>Preço</mat-label>
+        <input matInput type="number" formControlName="preco" required>
+        <mat-error *ngIf="formGroup.get('preco')?.hasError('required')">
+          Preço é obrigatório
+        </mat-error>
+        <mat-error *ngIf="formGroup.get('preco')?.hasError('min')">
+          Preço deve ser maior que zero
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Marca</mat-label>
-      <mat-select formControlName="marca" required>
-        <mat-option *ngFor="let marca of marcas" [value]="marca">
-          {{marca.nome}}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="formGroup.get('marca')?.invalid">Marca é obrigatória</mat-error>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>Estoque</mat-label>
+        <input matInput type="number" formControlName="estoque" required>
+        <mat-error *ngIf="formGroup.get('estoque')?.hasError('required')">
+          Estoque é obrigatório
+        </mat-error>
+        <mat-error *ngIf="formGroup.get('estoque')?.hasError('min')">
+          Estoque não pode ser negativo
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Modelo</mat-label>
-      <input matInput formControlName="modelo" required>
-      <mat-error *ngIf="formGroup.get('modelo')?.invalid">Modelo é obrigatório</mat-error>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>Tamanho</mat-label>
+        <mat-select formControlName="tamanho" required>
+          <mat-option *ngFor="let tamanho of tamanhos" [value]="tamanho">
+            {{tamanho}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.get('tamanho')?.hasError('required')">
+          Tamanho é obrigatório
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Tamanho</mat-label>
-      <mat-select formControlName="tamanho" required>
-        <mat-option *ngFor="let tamanho of tamanhos" [value]="tamanho">
-          {{tamanho}}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="formGroup.get('tamanho')?.invalid">Tamanho é obrigatório</mat-error>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>URL da Imagem</mat-label>
+        <input matInput formControlName="nomeImagem">
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Nome da Imagem</mat-label>
-      <input matInput formControlName="nomeImagem">
-    </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Descrição</mat-label>
+        <textarea matInput formControlName="descricao" rows="4" required></textarea>
+        <mat-error *ngIf="formGroup.get('descricao')?.hasError('required')">
+          Descrição é obrigatória
+        </mat-error>
+      </mat-form-field>
+    </div>
 
     <div class="button-group">
       <button mat-raised-button color="primary" type="submit" [disabled]="!formGroup.valid">
+        <mat-icon>save</mat-icon>
         Salvar
       </button>
       <button mat-raised-button color="warn" type="button" (click)="excluir()" *ngIf="formGroup.value.id">
+        <mat-icon>delete</mat-icon>
         Excluir
       </button>
       <button mat-raised-button routerLink="/tenis">
+        <mat-icon>arrow_back</mat-icon>
         Voltar
       </button>
     </div>

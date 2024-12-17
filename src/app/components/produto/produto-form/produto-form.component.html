@@ -1,1 +1,73 @@
-<p>produto-form works!</p>
+<!-- produto-form.component.html -->
+<div class="container">
+    <h2>{{ formGroup.get('id')?.value ? 'Editar Produto' : 'Novo Produto' }}</h2>
+  
+    <form [formGroup]="formGroup" (ngSubmit)="save()">
+      <mat-form-field>
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" required>
+        <mat-error *ngIf="formGroup.get('nome')?.hasError('required')">
+          Nome é obrigatório
+        </mat-error>
+        <mat-error *ngIf="formGroup.get('nome')?.hasError('minlength')">
+          Nome deve ter no mínimo 3 caracteres
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Preço</mat-label>
+        <input matInput type="number" formControlName="preco" required>
+        <mat-error *ngIf="formGroup.get('preco')?.hasError('required')">
+          Preço é obrigatório
+        </mat-error>
+        <mat-error *ngIf="formGroup.get('preco')?.hasError('min')">
+          Preço deve ser maior que zero
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Estoque</mat-label>
+        <input matInput type="number" formControlName="estoque" required>
+        <mat-error *ngIf="formGroup.get('estoque')?.hasError('required')">
+          Estoque é obrigatório
+        </mat-error>
+        <mat-error *ngIf="formGroup.get('estoque')?.hasError('min')">
+          Estoque deve ser maior ou igual a zero
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Descrição</mat-label>
+        <textarea matInput formControlName="descricao" rows="4" required></textarea>
+        <mat-error *ngIf="formGroup.get('descricao')?.hasError('required')">
+          Descrição é obrigatória
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Fornecedor</mat-label>
+        <mat-select formControlName="fornecedor" required>
+          <mat-option *ngFor="let fornecedor of fornecedores" [value]="fornecedor">
+            {{fornecedor.nome}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.get('fornecedor')?.hasError('required')">
+          Fornecedor é obrigatório
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>URL da Imagem</mat-label>
+        <input matInput formControlName="imagemUrl">
+      </mat-form-field>
+  
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!formGroup.valid">
+          Salvar
+        </button>
+        <button mat-raised-button color="warn" type="button" [routerLink]="['/produtos']">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>

@@ -3,11 +3,13 @@ import { MatIcon } from '@angular/material/icon';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatBadge } from '@angular/material/badge';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
-import { SidebarService } from '../../../services/sidebar.service';
-import { Usuario } from '../../../models/usuario.model';
-import { AuthService } from '../../../services/auth.service';
+import { RouterModule, Router } from '@angular/router';
+import { NgIf } from '@angular/common';
+import { MatMenuModule } from '@angular/material/menu';
 import { Subscription } from 'rxjs';
+import { SidebarService } from '../../../services/sidebar.service';
+import { AuthService } from '../../../services/auth.service';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +21,8 @@ import { Subscription } from 'rxjs';
     MatButton,
     MatIconButton,
     RouterModule,
+    NgIf,
+    MatMenuModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -29,7 +33,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private sidebarService: SidebarService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -40,15 +45,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  clickMenu() {
+  clickMenu(): void {
     this.sidebarService.toggle();
   }
 
-  deslogar() {
+  deslogar(): void {
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

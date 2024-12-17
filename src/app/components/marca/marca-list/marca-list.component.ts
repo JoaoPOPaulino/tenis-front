@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Marca } from '../../../models/marca.model';
 import { MarcaService } from '../../../services/marca.service';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,12 +16,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-marca-list',
   standalone: true,
   imports: [
     NgFor,
+    NgIf,
     MatSidenavModule,
     MatToolbarModule,
     MatIconModule,
@@ -38,7 +40,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
   templateUrl: './marca-list.component.html',
   styleUrls: ['./marca-list.component.css'],
 })
-export class MarcaListComponent implements OnInit {
+export class MarcaListComponent implements OnInit, OnDestroy {
   marcas: Marca[] = [];
   displayedColumns: string[] = ['linha', 'id', 'nome', 'nomeImagem', 'acao'];
 
@@ -46,6 +48,10 @@ export class MarcaListComponent implements OnInit {
   pageSize = 10;
   page = 0;
   filtro: string = '';
+
+  isLoading = false;
+  error: string | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private marcaService: MarcaService,
@@ -55,88 +61,133 @@ export class MarcaListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.marcaService.findAll(this.page, this.pageSize).subscribe((data) => {
-      this.marcas = data;
-    });
-
-    this.marcaService.count().subscribe((data) => {
-      this.totalRecords = data;
-    });
+    this.loadData();
   }
 
-  obterNumeroLinha(index: number): number {
-    return this.page * this.pageSize + index + 1;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadData(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    this.marcaService
+      .findAll(this.page, this.pageSize)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => (this.isLoading = false))
+      )
+      .subscribe({
+        next: (data) => {
+          this.marcas = data;
+          this.loadTotal();
+        },
+        error: (error) => {
+          console.error('Erro ao carregar marcas', error);
+          this.error = 'Erro ao carregar marcas. Tente novamente.';
+          this.snackBar.open('Erro ao carregar marcas', 'OK', {
+            duration: 3000,
+          });
+        },
+      });
+  }
+
+  loadTotal(): void {
+    this.marcaService
+      .count()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (total) => (this.totalRecords = total),
+        error: (error) => console.error('Erro ao carregar total', error),
+      });
   }
 
   paginar(event: PageEvent): void {
     this.page = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.ngOnInit();
+    this.loadData();
   }
 
-  buscarMarcas() {
-    if (this.filtro) {
-      this.marcaService
-        .findByNome(this.filtro, this.page, this.pageSize)
-        .subscribe((data) => {
+  filtrar(): void {
+    this.page = 0; // Reset para primeira página ao filtrar
+    this.isLoading = true;
+
+    const serviceCall = this.filtro
+      ? this.marcaService.findByNome(this.filtro, this.page, this.pageSize)
+      : this.marcaService.findAll(this.page, this.pageSize);
+
+    serviceCall
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => (this.isLoading = false))
+      )
+      .subscribe({
+        next: (data) => {
           this.marcas = data;
-        });
-    } else {
-      this.marcaService.findAll(this.page, this.pageSize).subscribe((data) => {
-        this.marcas = data;
+          this.updateTotal();
+        },
+        error: (error) => {
+          console.error('Erro ao filtrar marcas', error);
+          this.snackBar.open('Erro ao filtrar marcas', 'OK', {
+            duration: 3000,
+          });
+        },
       });
-    }
   }
 
-  buscarTodos() {
-    if (this.filtro) {
-      this.marcaService.countByNome(this.filtro).subscribe((data) => {
-        this.totalRecords = data;
-      });
-    } else {
-      this.marcaService.count().subscribe((data) => {
-        this.totalRecords = data;
-      });
-    }
-  }
+  private updateTotal(): void {
+    const countCall = this.filtro
+      ? this.marcaService.countByNome(this.filtro)
+      : this.marcaService.count();
 
-  filtrar() {
-    this.buscarMarcas();
-    this.buscarTodos();
-    this.snackBar.open('O filtro foi aplicado com sucesso!', 'Fechar', {
-      duration: 3000,
-    });
+    countCall
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((total) => (this.totalRecords = total));
   }
 
   excluir(marca: Marca): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
       data: {
+        title: 'Confirmar Exclusão',
         message:
           'Deseja realmente excluir esta marca? Não será possível reverter.',
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.marcaService.delete(marca).subscribe({
-          next: () => {
-            this.marcas = this.marcas.filter((f) => f.id !== marca.id);
-            this.snackBar.open('A marca foi excluída com sucesso!', 'Fechar', {
-              duration: 3000,
-            });
-          },
-          error: (err) => {
-            console.error('Erro ao tentar excluir a marca', err);
-            this.snackBar.open('Erro ao tentar excluir a marca', 'Fechar', {
-              duration: 3000,
-            });
-          },
-        });
-      }
-    });
-  }
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result) => {
+        if (result) {
+          this.isLoading = true;
+          this.marcaService
+            .delete(marca)
+            .pipe(finalize(() => (this.isLoading = false)))
+            .subscribe({
+              next: () => {
+                this.marcas = this.marcas.filter((m) => m.id !== marca.id);
+                this.totalRecords--;
+                this.snackBar.open('Marca excluída com sucesso!', 'OK', {
+                  duration: 3000,
+                });
 
-  voltar() {
-    this.router.navigateByUrl('/marcas');
+                // Recarregar se for a última marca da página
+                if (this.marcas.length === 0 && this.page > 0) {
+                  this.page--;
+                  this.loadData();
+                }
+              },
+              error: (error) => {
+                console.error('Erro ao excluir marca', error);
+                this.snackBar.open('Erro ao excluir marca', 'OK', {
+                  duration: 3000,
+                });
+              },
+            });
+        }
+      });
   }
 }

@@ -1,3 +1,34 @@
-.faixa-spacer { 
+/* header.component.css */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+  
+  .spacer {
     flex: 1 1 auto;
-}
+  }
+  
+  .logo {
+    margin-left: 16px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  
+  .user-menu {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .username {
+    font-size: 14px;
+  }
+  
+  @media (max-width: 600px) {
+    .username {
+      display: none;
+    }
+  }

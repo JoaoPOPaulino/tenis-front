@@ -1,42 +1,70 @@
-<div class="container">
-  <h1>{{ home?.tituloPagina }}</h1>
-
-  <div class="banner">
-    <img [src]="home?.bannerPrincipal" alt="Banner Principal">
+<!-- home.component.html -->
+<div class="home-container">
+  <!-- Loading -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
   </div>
 
-  <div class="featured-products">
-    <h2>Produtos em Destaque</h2>
-    <div class="product-grid">
-      <div class="product-card" *ngFor="let produto of home?.destaques">
-        <img [src]="produto.imagemUrl" [alt]="produto.nome">
-        <h3>{{ produto.nome }}</h3>
-        <p>{{ produto.preco | currency }}</p>
-        <a [routerLink]="['/produtos', produto.id]" class="btn">Ver Detalhes</a>
-      </div>
+  <!-- Error -->
+  <div class="error-container" *ngIf="error">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{error}}</p>
+    <button mat-raised-button color="primary" (click)="loadHomeData()">
+      Tentar Novamente
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="content" *ngIf="!isLoading && !error && home">
+    <!-- Banner Principal -->
+    <div class="banner" [style.background-image]="'url(' + home.bannerPrincipal + ')'">
+      <h1>{{home.tituloPagina}}</h1>
     </div>
-  </div>
 
-  <div class="categories" *ngIf="home?.categorias">
-    <h2>Categorias</h2>
-    <ul>
-      <li *ngFor="let categoria of home?.categorias">
-        <a [routerLink]="['/categorias', categoria]">{{ categoria }}</a>
-      </li>
-    </ul>
-  </div>
-
-  <div class="featured-brands" *ngIf="home?.marcasEmDestaque">
-    <h2>Marcas em Destaque</h2>
-    <div class="brand-grid">
-      <div class="brand-card" *ngFor="let marca of home?.marcasEmDestaque">
-        <img [src]="marca.nomeImagem" [alt]="marca.nome">
-        <h3>{{ marca.nome }}</h3>
+    <!-- Destaques -->
+    <section class="destaques">
+      <h2>Destaques</h2>
+      <div class="produtos-grid">
+        <mat-card class="produto-card" *ngFor="let produto of home.destaques">
+          <img mat-card-image [src]="produto.imagemUrl" [alt]="produto.nome">
+          <mat-card-content>
+            <h3>{{produto.nome}}</h3>
+            <p class="preco">{{produto.preco | currency:'BRL'}}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary" [routerLink]="['/produtos', produto.id]">
+              Ver Detalhes
+            </button>
+          </mat-card-actions>
+        </mat-card>
       </div>
-    </div>
+    </section>
+
+    <!-- Marcas em Destaque -->
+    <section class="marcas" *ngIf="home.marcasEmDestaque?.length">
+      <h2>Nossas Marcas</h2>
+      <div class="marcas-grid">
+        <div class="marca-item" *ngFor="let marca of home.marcasEmDestaque">
+          <img [src]="marca.nomeImagem" [alt]="marca.nome">
+        </div>
+      </div>
+    </section>
+
+    <!-- Categorias -->
+    <section class="categorias" *ngIf="home.categorias?.length">
+      <h2>Categorias</h2>
+      <div class="categorias-grid">
+        <mat-card class="categoria-card" *ngFor="let categoria of home.categorias">
+          <mat-card-content>
+            <h3>{{categoria}}</h3>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </section>
   </div>
 
+  <!-- Footer -->
   <footer>
-    <p>&copy; {{ currentYear }} Meu Site. Todos os direitos reservados.</p>
+    <p>&copy; {{currentYear}} Sneaker Paradise. Todos os direitos reservados.</p>
   </footer>
 </div>

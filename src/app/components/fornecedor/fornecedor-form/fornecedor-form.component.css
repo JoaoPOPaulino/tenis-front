@@ -1,50 +1,143 @@
-/* deeppurple-amber.css */
-
 .container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ }
+ 
+ h2 {
+  color: #673ab7;
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 500;
+ }
+ 
+ form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+ }
+ 
+ /* Estilo para grupos de campos */
+ div[formGroupName] {
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  background-color: #fafafa;
+ }
+ 
+ /* Layout em grid para campos de endereço */
+ div[formGroupName="endereco"] {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+ }
+ 
+ /* Campos que devem ocupar linha inteira */
+ .full-width {
+  grid-column: 1 / -1;
+ }
+ 
+ mat-form-field {
+  width: 100%;
+ }
+ 
+ /* Estilo para os grupos de estado/cidade */
+ .estado-cidade-group {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+ }
+ 
+ /* Botões */
+ .button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+ }
+ 
+ .button-group button {
+  min-width: 120px;
+ }
+ 
+ /* Cores dos botões */
+ button[color="primary"] {
+  background-color: #673ab7;
+ }
+ 
+ button[color="warn"] {
+  background-color: #f44336;
+ }
+ 
+ /* Estilo quando o campo está com erro */
+ mat-error {
+  font-size: 12px;
+  margin-top: 4px;
+ }
+ 
+ /* Responsividade */
+ @media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    padding: 16px;
   }
-  
-  h2 {
-    color: #673ab7;
-    margin-bottom: 20px;
+ 
+  div[formGroupName="endereco"] {
+    grid-template-columns: 1fr;
   }
-  
-  mat-form-field {
-    width: 100%;
-    margin-bottom: 20px;
+ 
+  .estado-cidade-group {
+    grid-template-columns: 1fr;
   }
-  
-  mat-label {
-    color: #673ab7;
-  }
-  
-  input[type="text"] {
-    color: #000;
-  }
-  
-  mat-error {
-    color: #f44336;
-  }
-  
+ 
   .button-group {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    flex-direction: column;
+  }
+ 
+  .button-group button {
+    width: 100%;
+  }
+ }
+ 
+ /* Estilo para selects */
+ mat-select {
+  width: 100%;
+ }
+ 
+ /* Hover effects */
+ button:hover:not([disabled]) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+ }
+ 
+ /* Estado disabled */
+ button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+ }
+ 
+ /* Animações suaves */
+ .mat-form-field {
+  transition: all 0.3s ease;
+ }
+ 
+ .mat-form-field:focus-within {
+  transform: translateY(-2px);
+ }
+ 
+ /* Alto contraste */
+ @media (forced-colors: active) {
+  .container {
+    border: 1px solid;
   }
   
-  button[type="submit"] {
-    background-color: #673ab7;
-    color: #fff;
+  button {
+    border: 1px solid;
   }
-  
-  button[type="button"] {
-    background-color: #ffc107;
-    color: #000;
-  }
-  
-  button[type="button"]:last-child {
-    background-color: #e0e0e0;
-    color: #000;
-  }
+ }

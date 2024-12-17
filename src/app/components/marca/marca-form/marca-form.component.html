@@ -1,17 +1,20 @@
+<!-- marca-form.component.html -->
 <div class="container">
   <h2>{{ formGroup.value.id ? 'Editar Marca' : 'Nova Marca' }}</h2>
+
   <form [formGroup]="formGroup" (ngSubmit)="salvar()">
     <mat-form-field>
       <mat-label>Nome</mat-label>
       <input matInput formControlName="nome" required>
-      <mat-error *ngIf="formGroup.get('nome')?.invalid">
-        O nome é obrigatório
+      <mat-error *ngIf="formGroup.get('nome')?.hasError('required')">
+        Nome é obrigatório
       </mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-label>Nome da Imagem</mat-label>
+      <mat-label>URL da Imagem</mat-label>
       <input matInput formControlName="nomeImagem">
+      <mat-hint>URL da imagem da marca (opcional)</mat-hint>
     </mat-form-field>
 
     <div class="button-group">
