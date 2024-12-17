@@ -101,4 +101,14 @@ export class TenisService {
   delete(tenis: Tenis): Observable<any> {
     return this.httpClient.delete<any>(`${this.baseUrl}/${tenis.id}`);
   }
+
+  uploadImagem(id: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('imagem', file);
+    return this.httpClient.post(`${this.baseUrl}/${id}/imagem`, formData);
+  }
+
+  getImagemUrl(id: number): string {
+    return `${this.baseUrl}/${id}/imagem`;
+  }
 }

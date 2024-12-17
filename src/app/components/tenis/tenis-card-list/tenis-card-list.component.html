@@ -1,81 +1,87 @@
+<!-- tenis-card-list.component.html -->
 <div class="container">
-  <!-- Área de Filtros -->
-  <div class="filters-section">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon>filter_list</mat-icon>
-          Filtros
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+  <!-- Seção de Filtros -->
+  <mat-expansion-panel class="filters-section">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>filter_list</mat-icon>
+        Filtros
+      </mat-panel-title>
+    </mat-expansion-panel-header>
 
-      <div class="filters-content">
-        <!-- Filtro por Marca -->
-        <mat-form-field>
-          <mat-label>Marca</mat-label>
-          <mat-select [(ngModel)]="filtroMarca" (selectionChange)="aplicarFiltros()">
-            <mat-option [value]="">Todas</mat-option>
-            <mat-option *ngFor="let marca of marcas" [value]="marca.id">
-              {{marca.nome}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+    <div class="filters-content">
+      <!-- Filtro de Marca -->
+      <mat-form-field appearance="outline">
+        <mat-label>Marca</mat-label>
+        <mat-select [(ngModel)]="filtroMarca" (selectionChange)="aplicarFiltros()">
+          <mat-option [value]="null">Todas</mat-option>
+          @for (marca of marcas; track marca.id) {
+            <mat-option [value]="marca.id">{{marca.nome}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-        <!-- Filtro por Preço -->
-        <div class="price-range">
-          <h4>Faixa de Preço</h4>
-          <mat-slider min="0" [max]="maxPreco" step="50">
-            <input matSliderThumb [(ngModel)]="filtroPrecoMax" (change)="aplicarFiltros()">
-          </mat-slider>
-          <p>Até R$ {{filtroPrecoMax}}</p>
-        </div>
+      <!-- Filtro de Tamanho -->
+      <mat-form-field appearance="outline">
+        <mat-label>Tamanho</mat-label>
+        <mat-select [(ngModel)]="filtroTamanho" (selectionChange)="aplicarFiltros()">
+          <mat-option value="">Todos</mat-option>
+          @for (tamanho of tamanhos; track tamanho) {
+            <mat-option [value]="tamanho">{{tamanho}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-        <!-- Filtro por Tamanho -->
-        <mat-form-field>
-          <mat-label>Tamanho</mat-label>
-          <mat-select [(ngModel)]="filtroTamanho" (selectionChange)="aplicarFiltros()">
-            <mat-option [value]="">Todos</mat-option>
-            <mat-option *ngFor="let tamanho of tamanhos" [value]="tamanho">
-              {{tamanho}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <!-- Botão Limpar Filtros -->
-        <button mat-stroked-button color="warn" (click)="limparFiltros()">
-          <mat-icon>clear</mat-icon>
-          Limpar Filtros
-        </button>
+      <!-- Filtro de Preço -->
+      <div class="price-range">
+        <h4>Preço Máximo: R$ {{filtroPrecoMax}}</h4>
+        <mat-slider min="0" [max]="maxPreco" step="50">
+          <input matSliderThumb [(ngModel)]="filtroPrecoMax" (change)="aplicarFiltros()">
+        </mat-slider>
       </div>
-    </mat-expansion-panel>
-  </div>
 
-  <!-- Lista de Produtos -->
+      <!-- Botão Limpar Filtros -->
+      <button mat-raised-button color="warn" (click)="limparFiltros()">
+        <mat-icon>clear</mat-icon>
+        Limpar Filtros
+      </button>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Grid de Tênis -->
   <div class="cards-grid">
-    <mat-card *ngFor="let tenis of tenisFiltrados" class="tenis-card">
-      <img mat-card-image [src]="tenis.nomeImagem || 'assets/placeholder.png'" [alt]="tenis.nome">
-      
-      <mat-card-content>
-        <h3>{{tenis.nome}}</h3>
-        <p class="marca">{{tenis.marca.nome}}</p>
-        <p class="preco">{{tenis.preco | currency:'BRL'}}</p>
-        <p class="estoque" [ngStyle]="{'color': getEstoqueColor(tenis.estoque)}">
-          {{getEstoqueStatus(tenis.estoque)}}
-        </p>
-      </mat-card-content>
-      
-      <mat-card-actions>
-        <button mat-button color="primary" 
-                (click)="adicionarAoCarrinho(tenis)" 
-                [disabled]="tenis.estoque === 0">
-          <mat-icon>shopping_cart</mat-icon>
-          Adicionar ao Carrinho
-        </button>
-        <button mat-button (click)="verDetalhes(tenis)">
-          <mat-icon>info</mat-icon>
-          Detalhes
-        </button>
-      </mat-card-actions>
-    </mat-card>
+    @for (tenis of tenisFiltrados; track tenis.id) {
+      <mat-card class="tenis-card">
+        <img [src]="tenisService.getImagemUrl(tenis.id)" [alt]="tenis.nome">
+        
+        <mat-card-content>
+          <h3>{{tenis.nome}}</h3>
+          <p class="marca">{{tenis.marca.nome}}</p>
+          <p class="preco">R$ {{tenis.preco | number:'1.2-2'}}</p>
+          <p class="estoque" [style.color]="getEstoqueColor(tenis.estoque)">
+            {{getEstoqueStatus(tenis.estoque)}}
+          </p>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="verDetalhes(tenis)">
+            <mat-icon>info</mat-icon>
+            Detalhes
+          </button>
+          <button mat-raised-button color="primary"
+                  [disabled]="tenis.estoque === 0"
+                  (click)="adicionarAoCarrinho(tenis)">
+            <mat-icon>shopping_cart</mat-icon>
+            Comprar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+
+    @if (isLoading) {
+      <div class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    }
   </div>
 </div>

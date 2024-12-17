@@ -1,10 +1,8 @@
-// login.component.ts
-import { Component, OnInit } from '@angular/core';
+// user-login.component.ts
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router'; // Adicione RouterLink aqui
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-// Material imports
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,11 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-user-login',
   standalone: true,
   imports: [
     CommonModule,
@@ -26,11 +23,12 @@ import { AuthService } from '../../services/auth.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    RouterLink,
   ],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  templateUrl: './user-login.component.html',
+  styleUrls: ['./user-login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class UserLoginComponent {
   loginForm: FormGroup;
   hidePassword = true;
   isLoading = false;
@@ -42,25 +40,27 @@ export class LoginComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
+      username: ['', [Validators.required]], // Alterado de 'login' para 'username'
       password: ['', [Validators.required]],
     });
   }
 
   ngOnInit(): void {
-    if (!this.authService.isTokenExpired()) {
-      this.router.navigate(['/admin']);
-    }
+    this.authService.isLoggedIn().subscribe((isLoggedIn) => {
+      if (isLoggedIn) {
+        this.router.navigate(['/ecommerce']);
+      }
+    });
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      const { username, password } = this.loginForm.value;
+      const { username, password } = this.loginForm.value; // Alterado de 'login' para 'username'
 
-      this.authService.loginAdmin(username, password).subscribe({
+      this.authService.login(username, password).subscribe({
         next: () => {
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/ecommerce']);
           this.snackBar.open('Login realizado com sucesso!', 'OK', {
             duration: 3000,
           });

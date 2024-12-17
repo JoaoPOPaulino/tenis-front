@@ -1,0 +1,45 @@
+<!-- alterar-login-dialog.component.html -->
+<h2 mat-dialog-title>Alterar Login</h2>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Login Atual</mat-label>
+      <input matInput formControlName="loginAtual" required>
+      @if (formGroup.get('loginAtual')?.hasError('required') && formGroup.get('loginAtual')?.touched) {
+        <mat-error>Login atual é obrigatório</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Novo Login</mat-label>
+      <input matInput formControlName="novoLogin" required>
+      @if (formGroup.get('novoLogin')?.hasError('required') && formGroup.get('novoLogin')?.touched) {
+        <mat-error>Novo login é obrigatório</mat-error>
+      }
+      @if (formGroup.get('novoLogin')?.hasError('minlength')) {
+        <mat-error>O login deve ter no mínimo 4 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Senha</mat-label>
+      <input matInput [type]="hidePassword ? 'password' : 'text'" 
+             formControlName="senha" required>
+      <button mat-icon-button matSuffix type="button"
+              (click)="hidePassword = !hidePassword">
+        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      @if (formGroup.get('senha')?.hasError('required') && formGroup.get('senha')?.touched) {
+        <mat-error>Senha é obrigatória</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" 
+          [disabled]="formGroup.invalid || isLoading"
+          (click)="onSubmit()">
+    {{isLoading ? 'Salvando...' : 'Salvar'}}
+  </button>
+</div>

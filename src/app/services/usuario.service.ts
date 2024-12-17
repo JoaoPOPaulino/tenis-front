@@ -141,4 +141,54 @@ export class UsuarioService {
   delete(usuario: Usuario): Observable<any> {
     return this.httpClient.delete<any>(`${this.baseUrl}/${usuario.id}`);
   }
+
+  alterarSenha(email: string, novaSenha: string): Observable<any> {
+    const data = {
+      email: email,
+      novaSenha: novaSenha,
+    };
+    return this.httpClient.post<any>(`${this.baseUrl}/alterar-senha`, data);
+  }
+
+  enviarEmailRecuperacao(email: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.baseUrl}/recuperar-senha`, {
+      email,
+    });
+  }
+
+  verificarToken(token: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.baseUrl}/verificar-token/${token}`);
+  }
+
+  redefinirSenha(token: string, novaSenha: string): Observable<any> {
+    const data = {
+      token: token,
+      novaSenha: novaSenha,
+    };
+    return this.httpClient.post<any>(`${this.baseUrl}/redefinir-senha`, data);
+  }
+
+  alterarSenhaLogado(senhaAtual: string, novaSenha: string): Observable<any> {
+    const data = {
+      senhaAtual: senhaAtual,
+      novaSenha: novaSenha,
+    };
+    return this.httpClient.post<any>(
+      `${this.baseUrl}/alterar-senha-logado`,
+      data
+    );
+  }
+
+  alterarLogin(
+    loginAtual: string,
+    novoLogin: string,
+    senha: string
+  ): Observable<any> {
+    const data = {
+      loginAtual,
+      novoLogin,
+      senha,
+    };
+    return this.httpClient.post<any>(`${this.baseUrl}/alterar-login`, data);
+  }
 }

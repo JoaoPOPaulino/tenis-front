@@ -69,7 +69,25 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initializeForm();
+    if (this.router.url === '/novo-usuario') {
+      this.configurarNovoUsuario();
+    } else this.initializeForm();
+  }
+
+  private configurarNovoUsuario() {
+    this.formGroup.reset();
+
+    this.formGroup.patchValue({
+      id: null,
+      tiposUsuario: TipoUsuario.USUARIO,
+      ativo: true,
+    });
+
+    this.addTelefone();
+
+    this.addEndereco();
+
+    this.formGroup.get('tipoUsuario')?.disable();
   }
 
   initializeForm() {
@@ -203,6 +221,9 @@ export class UsuarioFormComponent implements OnInit {
 
   salvar() {
     if (this.formGroup.valid) {
+      // Habilita campos desabilitados antes de enviar
+      this.formGroup.get('tipoUsuario')?.enable();
+
       const usuario = this.formGroup.value;
       const operacao = usuario.id
         ? this.usuarioService.update(usuario)
@@ -210,8 +231,19 @@ export class UsuarioFormComponent implements OnInit {
 
       operacao.subscribe({
         next: () => {
-          this.router.navigateByUrl('/usuarios');
-          this.snackBar.open('Usuário salvo com sucesso!', 'Ok', {
+          // Redireciona baseado no contexto
+          const redirectUrl =
+            this.router.url === '/novo-usuario'
+              ? '/login' // Novo usuário vai para login
+              : '/usuarios'; // Edição vai para lista
+
+          this.router.navigateByUrl(redirectUrl);
+
+          const message = usuario.id
+            ? 'Usuário atualizado com sucesso!'
+            : 'Cadastro realizado com sucesso! Por favor, faça login.';
+
+          this.snackBar.open(message, 'Ok', {
             duration: 3000,
           });
         },
@@ -222,10 +254,28 @@ export class UsuarioFormComponent implements OnInit {
           });
         },
       });
+    } else {
+      // Marca todos os campos como touched para mostrar erros
+      Object.keys(this.formGroup.controls).forEach((key) => {
+        const control = this.formGroup.get(key);
+        control?.markAsTouched();
+      });
+
+      this.snackBar.open(
+        'Por favor, preencha todos os campos obrigatórios',
+        'Ok',
+        {
+          duration: 3000,
+        }
+      );
     }
   }
 
   excluir() {
+    if (this.router.url === '/novo-usuario') {
+      return; // Não permite exclusão em novo cadastro
+    }
+
     const usuario = this.formGroup.value;
     if (usuario.id) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {

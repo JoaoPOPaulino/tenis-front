@@ -8,7 +8,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Tenis } from '../../../models/tenis.model';
 import { Marca } from '../../../models/marca.model';
 import { Tamanho } from '../../../models/tamanho.enum';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,6 +19,7 @@ import { NgFor } from '@angular/common';
 import { FornecedorService } from '../../../services/fornecedor.service';
 import { Fornecedor } from '../../../models/fornecedor.model';
 import { CommonModule } from '@angular/common';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-tenis-form',
@@ -33,6 +33,7 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     MatSelectModule,
     CommonModule,
+    MatProgressBarModule,
   ],
   templateUrl: './tenis-form.component.html',
   styleUrls: ['./tenis-form.component.css'],
@@ -41,6 +42,9 @@ export class TenisFormComponent implements OnInit {
   formGroup: FormGroup;
   marcas: Marca[] = [];
   tamanhos = Object.values(Tamanho);
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
+  uploadProgress = false;
 
   fornecedores: Fornecedor[] = [];
 
@@ -64,7 +68,7 @@ export class TenisFormComponent implements OnInit {
       marca: [null, Validators.required],
       modelo: ['', Validators.required],
       tamanho: [null, Validators.required],
-      nomeImagem: [''],
+      imagemUrl: [''],
     });
   }
 
@@ -91,23 +95,56 @@ export class TenisFormComponent implements OnInit {
     }
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      this.selectedFile = file;
+
+      // Criar preview da imagem
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   salvar() {
     if (this.formGroup.valid) {
       const tenis = this.formGroup.value;
-      const operacao = tenis.id
-        ? this.tenisService.update(tenis)
-        : this.tenisService.insert(tenis);
 
-      operacao.subscribe({
-        next: () => {
-          this.router.navigateByUrl('/tenis');
-          this.snackBar.open('Tênis salvo com sucesso!', 'Ok', {
-            duration: 3000,
-          });
+      this.tenisService.insert(tenis).subscribe({
+        next: (tenisSalvo) => {
+          if (this.selectedFile) {
+            this.uploadProgress = true;
+            this.tenisService
+              .uploadImagem(tenisSalvo.id, this.selectedFile)
+              .subscribe({
+                next: () => {
+                  this.uploadProgress = false;
+                  this.router.navigate(['/tenis']);
+                  this.snackBar.open('Tênis salvo com sucesso!', 'OK', {
+                    duration: 3000,
+                  });
+                },
+                error: (error) => {
+                  console.error('Erro ao fazer upload da imagem:', error);
+                  this.uploadProgress = false;
+                  this.snackBar.open('Erro ao fazer upload da imagem', 'OK', {
+                    duration: 3000,
+                  });
+                },
+              });
+          } else {
+            this.router.navigate(['/tenis']);
+            this.snackBar.open('Tênis salvo com sucesso!', 'OK', {
+              duration: 3000,
+            });
+          }
         },
         error: (error) => {
-          console.error('Erro ao salvar tênis', error);
-          this.snackBar.open('Erro ao salvar tênis', 'Ok', {
+          console.error('Erro ao salvar tênis:', error);
+          this.snackBar.open('Erro ao salvar tênis', 'OK', {
             duration: 3000,
           });
         },

@@ -1,0 +1,57 @@
+<!-- alterar-senha.component.html -->
+<div class="senha-container">
+    <mat-card class="senha-card">
+      <mat-card-header>
+        <mat-card-title>Alterar Senha</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline">
+            <mat-label>E-mail</mat-label>
+            <input matInput formControlName="email" type="email" required>
+            @if (formGroup.get('email')?.hasError('required') && formGroup.get('email')?.touched) {
+              <mat-error>E-mail é obrigatório</mat-error>
+            }
+            @if (formGroup.get('email')?.hasError('email') && formGroup.get('email')?.touched) {
+              <mat-error>E-mail inválido</mat-error>
+            }
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline">
+            <mat-label>Nova Senha</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="senha" required>
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            @if (formGroup.get('senha')?.hasError('required') && formGroup.get('senha')?.touched) {
+              <mat-error>Senha é obrigatória</mat-error>
+            }
+            @if (formGroup.get('senha')?.hasError('minlength')) {
+              <mat-error>A senha deve ter no mínimo 6 caracteres</mat-error>
+            }
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline">
+            <mat-label>Confirmar Nova Senha</mat-label>
+            <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmarSenha" required>
+            <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+              <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            @if (formGroup.hasError('notSame')) {
+              <mat-error>As senhas não correspondem</mat-error>
+            }
+          </mat-form-field>
+  
+          <div class="button-container">
+            <button mat-raised-button type="button" routerLink="/login">
+              Voltar
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="formGroup.invalid || isLoading">
+              {{ isLoading ? 'Alterando...' : 'Alterar Senha' }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>

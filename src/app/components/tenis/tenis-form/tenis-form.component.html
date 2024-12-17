@@ -91,6 +91,30 @@
       </mat-form-field>
     </div>
 
+    <div class="imagem-container">
+      <input type="file" #fileInput style="display: none" 
+             accept="image/*" (change)="onFileSelected($event)">
+      
+      <button type="button" mat-raised-button (click)="fileInput.click()">
+        <mat-icon>upload</mat-icon>
+        Selecionar Imagem
+      </button>
+    
+      @if (imagePreview) {
+        <div class="preview-container">
+          <img [src]="imagePreview" alt="Preview" class="image-preview">
+          <button mat-icon-button color="warn" 
+                  (click)="selectedFile = null; imagePreview = null">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    
+      @if (uploadProgress) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+    </div>
+
     <div class="button-group">
       <button mat-raised-button color="primary" type="submit" [disabled]="!formGroup.valid">
         <mat-icon>save</mat-icon>

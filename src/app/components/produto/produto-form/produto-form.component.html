@@ -1,6 +1,15 @@
 <!-- produto-form.component.html -->
 <div class="container">
     <h2>{{ formGroup.get('id')?.value ? 'Editar Produto' : 'Novo Produto' }}</h2>
+
+    <div class="button-group" *ngIf="isAdmin">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!formGroup.valid">
+        Salvar
+      </button>
+      <button mat-raised-button color="warn" type="button" [routerLink]="['/produtos']">
+        Cancelar
+      </button>
+    </div>
   
     <form [formGroup]="formGroup" (ngSubmit)="save()">
       <mat-form-field>

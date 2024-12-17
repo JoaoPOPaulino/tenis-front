@@ -1,0 +1,79 @@
+/* user-menu.component.css */
+.user-menu {
+    display: flex;
+    align-items: center;
+  }
+  
+  .menu-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .menu-trigger:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  
+  .user-icon {
+    font-size: 24px;
+    height: 24px;
+    width: 24px;
+    margin-right: 4px;
+  }
+  
+  .username {
+    font-size: 14px;
+    font-weight: 500;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .dropdown-icon {
+    opacity: 0.7;
+    font-size: 20px;
+  }
+  
+  :host ::ng-deep .user-menu-panel {
+    min-width: 200px;
+  }
+  
+  mat-divider {
+    margin: 8px 0;
+  }
+  
+  .logout-item {
+    color: #f44336;
+  }
+  
+  .logout-item mat-icon {
+    color: #f44336;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 600px) {
+    .username {
+      display: none;
+    }
+  
+    .dropdown-icon {
+      display: none;
+    }
+  
+    .menu-trigger {
+      padding: 8px;
+      min-width: 0;
+    }
+  
+    .user-icon {
+      margin-right: 0;
+    }
+
+    .spacer {
+        flex: 1 1 auto;
+      }
+  }

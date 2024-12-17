@@ -1,0 +1,55 @@
+<!-- alterar-senha-dialog.component.html -->
+<h2 mat-dialog-title>Alterar Senha</h2>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Senha Atual</mat-label>
+      <input matInput [type]="hideCurrentPassword ? 'password' : 'text'" 
+             formControlName="senhaAtual" required>
+      <button mat-icon-button matSuffix type="button"
+              (click)="hideCurrentPassword = !hideCurrentPassword">
+        <mat-icon>{{hideCurrentPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      @if (formGroup.get('senhaAtual')?.hasError('required') && formGroup.get('senhaAtual')?.touched) {
+        <mat-error>Senha atual é obrigatória</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nova Senha</mat-label>
+      <input matInput [type]="hideNewPassword ? 'password' : 'text'" 
+             formControlName="novaSenha" required>
+      <button mat-icon-button matSuffix type="button"
+              (click)="hideNewPassword = !hideNewPassword">
+        <mat-icon>{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      @if (formGroup.get('novaSenha')?.hasError('required') && formGroup.get('novaSenha')?.touched) {
+        <mat-error>Nova senha é obrigatória</mat-error>
+      }
+      @if (formGroup.get('novaSenha')?.hasError('minlength')) {
+        <mat-error>A senha deve ter no mínimo 6 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Confirmar Nova Senha</mat-label>
+      <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" 
+             formControlName="confirmarSenha" required>
+      <button mat-icon-button matSuffix type="button"
+              (click)="hideConfirmPassword = !hideConfirmPassword">
+        <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      @if (formGroup.hasError('notSame')) {
+        <mat-error>As senhas não correspondem</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" 
+          [disabled]="formGroup.invalid || isLoading"
+          (click)="onSubmit()">
+    {{isLoading ? 'Salvando...' : 'Salvar'}}
+  </button>
+</div>

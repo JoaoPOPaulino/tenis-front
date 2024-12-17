@@ -16,6 +16,8 @@ import { CarrinhoService } from '../../../services/carrinho.service';
 import { Tenis } from '../../../models/tenis.model';
 import { Marca } from '../../../models/marca.model';
 import { Tamanho } from '../../../models/tamanho.enum';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-tenis-card-list',
@@ -30,6 +32,8 @@ import { Tamanho } from '../../../models/tamanho.enum';
     MatFormFieldModule,
     MatSelectModule,
     MatSliderModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
   ],
   templateUrl: './tenis-card-list.component.html',
   styleUrls: ['./tenis-card-list.component.css'],
@@ -51,7 +55,7 @@ export class TenisCardListComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    private tenisService: TenisService,
+    public tenisService: TenisService,
     private marcaService: MarcaService,
     private carrinhoService: CarrinhoService,
     private snackBar: MatSnackBar

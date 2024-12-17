@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { AdminTemplateComponent } from './components/template/admin-template/admin-template.component';
 import { UserTemplateComponent } from './components/template/user-template/user-template.component';
 import { TenisListComponent } from './components/tenis/tenis-list/tenis-list.component';
-import { LoginComponent } from './components/login/login.component';
 import { CarrinhoComponent } from './components/carrinho/carrinho.component';
 import { TenisFormComponent } from './components/tenis/tenis-form/tenis-form.component';
 import { FornecedorListComponent } from './components/fornecedor/fornecedor-list/fornecedor-list.component';
@@ -19,6 +18,9 @@ import { ProdutoFormComponent } from './components/produto/produto-form/produto-
 import { usuarioResolver } from './components/usuario/resolver/resolver.component';
 import { marcaResolver } from './components/marca/resolver/resolver.component';
 import { produtoResolver } from './components/produto/resolver/resolver.component';
+import { UserLoginComponent } from './components/login/user-login/user-login.component';
+import { AdminLoginComponent } from './components/login/admin-login/admin-login.component';
+import { AlterarSenhaComponent } from './components/usuario/alterar-senha/alterar-senha.component';
 
 export const routes: Routes = [
   // Rota pública (e-commerce)
@@ -44,8 +46,18 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        component: LoginComponent,
-        title: 'Login',
+        component: UserLoginComponent, // Novo componente para login de usuário
+        title: 'Login de Usuário',
+      },
+      {
+        path: 'esqueci-senha',
+        component: AlterarSenhaComponent,
+        title: 'Alterar Senha',
+      },
+      {
+        path: 'novo-usuario',
+        component: UsuarioFormComponent,
+        title: 'Novo Usuário',
       },
       {
         path: 'produtos',
@@ -58,6 +70,12 @@ export const routes: Routes = [
         title: 'Marcas',
       },
     ],
+  },
+
+  {
+    path: 'admin/login',
+    component: AdminLoginComponent, // Novo componente para login administrativo
+    title: 'Login Administrativo',
   },
 
   // Rota administrativa (protegida)

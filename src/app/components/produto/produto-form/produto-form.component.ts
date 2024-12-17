@@ -15,6 +15,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Fornecedor } from '../../../models/fornecedor.model';
 import { ProdutoService } from '../../../services/produto.service';
 import { FornecedorService } from '../../../services/fornecedor.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-produto-form',
@@ -35,6 +36,7 @@ import { FornecedorService } from '../../../services/fornecedor.service';
 export class ProdutoFormComponent implements OnInit {
   formGroup: FormGroup;
   fornecedores: Fornecedor[] = [];
+  isAdmin = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -42,7 +44,8 @@ export class ProdutoFormComponent implements OnInit {
     private fornecedorService: FornecedorService,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {
     this.formGroup = this.formBuilder.group({
       id: [null],
@@ -56,6 +59,13 @@ export class ProdutoFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('Antes da inscrição: ', this.isAdmin);
+    this.authService.isLoggedIn().subscribe((isLoggedIn) => {
+      this.isAdmin = isLoggedIn && this.authService.isAdmin();
+      console.log('Dentro da inscrição: ', this.isAdmin);
+    });
+    console.log('Depois da inscrição: ', this.isAdmin);
+
     this.loadFornecedores();
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

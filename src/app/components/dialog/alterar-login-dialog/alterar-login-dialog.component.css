@@ -1,0 +1,21 @@
+/* alterar-login-dialog.component.css */
+:host {
+    display: block;
+    padding: 16px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 300px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  mat-dialog-actions {
+    margin-top: 16px;
+    gap: 8px;
+  }

@@ -50,19 +50,6 @@
       </div>
     </section>
 
-    <!-- Categorias -->
-    <section class="categorias" *ngIf="home.categorias?.length">
-      <h2>Categorias</h2>
-      <div class="categorias-grid">
-        <mat-card class="categoria-card" *ngFor="let categoria of home.categorias">
-          <mat-card-content>
-            <h3>{{categoria}}</h3>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </section>
-  </div>
-
   <!-- Footer -->
   <footer>
     <p>&copy; {{currentYear}} Sneaker Paradise. Todos os direitos reservados.</p>

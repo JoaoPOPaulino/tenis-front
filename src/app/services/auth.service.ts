@@ -98,7 +98,9 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.hasRole('ADMINISTRADOR');
+    const isAdmin = this.hasRole('ADMINISTRADOR');
+    console.log('Is Admin: ', isAdmin);
+    return isAdmin;
   }
 
   private getUsuarioFromStorage(): Usuario | null {
