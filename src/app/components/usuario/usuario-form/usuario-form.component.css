@@ -1,117 +1,191 @@
+/* usuario-form.component.css */
 .container {
+  max-width: 1200px;
+  margin: 20px auto;
   padding: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-  background-color: #ffffff;
-}
-
-h2 {
+ }
+ 
+ h2 {
   color: #673ab7;
-  margin-bottom: 20px;
-  font-weight: 500;
-}
-
-h3 {
-  color: #673ab7;
-  margin: 20px 0;
-  font-weight: 400;
-}
-
-.section {
-  background-color: #f8f8f8;
-  padding: 20px;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+ }
+ 
+ .section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-form {
+ }
+ 
+ .section h3 {
+  color: #673ab7;
+  margin-top: 0;
+  margin-bottom: 20px;
+ }
+ 
+ .section-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+ }
+ 
+ .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-}
-
-mat-form-field {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.array-item {
-  background-color: #ffffff;
-  padding: 15px;
-  border-radius: 4px;
-  margin-bottom: 15px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  position: relative;
-}
-
-.array-item mat-form-field {
-  width: calc(50% - 10px);
-  margin-right: 10px;
-}
-
-.array-item button[color="warn"] {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-.button-group {
+ }
+ 
+ /* Estilo dos arrays (telefones, endereços, cartões) */
+ .array-item {
   display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-/* Deep Purple & Amber theme specific styles */
-:host ::ng-deep .mat-form-field-label {
-  color: rgba(0, 0, 0, 0.6) !important;
-}
-
-:host ::ng-deep .mat-form-field-underline {
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-:host ::ng-deep .mat-form-field-ripple {
-  background-color: #673ab7;
-}
-
-:host ::ng-deep .mat-focused .mat-form-field-label {
-  color: #673ab7 !important;
-}
-
-/* Button styles */
-.mat-raised-button.mat-primary {
-  background-color: #673ab7;
-  color: white;
-}
-
-.mat-raised-button.mat-warn {
-  background-color: #f44336;
-  color: white;
-}
-
-.mat-raised-button:not(.mat-primary):not(.mat-warn) {
-  background-color: #ffd740;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-/* Checkbox styles */
-.mat-checkbox {
-  margin: 0 10px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .array-item mat-form-field {
-    width: 100%;
-    margin-right: 0;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-radius: 4px;
+ }
+ 
+ /* Estilo específico para endereços */
+ .endereco-item {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+ }
+ 
+ .endereco-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+ }
+ 
+ .endereco-options {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+ }
+ 
+ /* Estilo específico para cartões */
+ .cartao-item {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+ }
+ 
+ .cartao-options {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+ }
+ 
+ /* Campos de formulário */
+ mat-form-field {
+  width: 100%;
+ }
+ 
+ /* Grupo de botões */
+ .button-group {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 24px;
+ }
+ 
+ .button-group button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+ }
+ 
+ /* Responsividade */
+ @media (max-width: 960px) {
+  .form-grid,
+  .cartao-item {
+    grid-template-columns: 1fr;
   }
-
+  
+  .endereco-grid {
+    grid-template-columns: 1fr;
+  }
+ }
+ 
+ @media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .section {
+    padding: 16px;
+  }
+  
+  .array-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
   .button-group {
     flex-direction: column;
   }
-
+  
   .button-group button {
     width: 100%;
   }
-}
+ }
+ 
+ /* Estilos de hover e foco */
+ button:hover:not([disabled]) {
+  opacity: 0.9;
+ }
+ 
+ .array-item:hover,
+ .endereco-item:hover,
+ .cartao-item:hover {
+  background-color: #f0f0f0;
+ }
+ 
+ /* Estados de erro */
+ mat-error {
+  font-size: 12px;
+ }
+ 
+ .ng-invalid.ng-touched {
+  border-color: #f44336;
+ }
+ 
+ /* Checkboxes */
+ mat-checkbox {
+  margin-right: 16px;
+ }
+ 
+ /* Datepicker */
+ mat-datepicker-toggle {
+  color: #673ab7;
+ }
+ 
+ /* Animações */
+ .section {
+  transition: all 0.3s ease;
+ }
+ 
+ .array-item,
+ .endereco-item,
+ .cartao-item {
+  transition: background-color 0.2s ease;
+ }
+ 
+ /* Acessibilidade */
+ @media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+ }

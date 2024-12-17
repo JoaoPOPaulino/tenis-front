@@ -1,34 +1,81 @@
-/* header.component.css */
 .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #673ab7; /* Deep Purple */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 64px; /* Altura padrão do Material toolbar */
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 500;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Ajustes para ícones e botões */
+.toolbar-actions .mat-icon-button {
+  color: white;
+}
+
+.toolbar-actions .mat-badge-content {
+  background-color: #ffd740; /* Amber */
+  color: rgba(0, 0, 0, 0.87);
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
   }
   
-  .spacer {
-    flex: 1 1 auto;
+  .container {
+    padding: 0 8px;
   }
   
   .logo {
-    margin-left: 16px;
     font-size: 20px;
-    font-weight: 500;
   }
-  
-  .user-menu {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  
-  .username {
-    font-size: 14px;
-  }
-  
-  @media (max-width: 600px) {
-    .username {
-      display: none;
-    }
-  }
+}

@@ -9,11 +9,8 @@
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline">
           <mat-label>Username</mat-label>
-          <input 
-            matInput 
-            formControlName="username" 
-            placeholder="Digite seu username"
-            required>
+          <input matInput formControlName="username" autocomplete="username">
+          <mat-icon matSuffix>person</mat-icon>
           <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
             Username é obrigatório
           </mat-error>
@@ -21,31 +18,23 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Senha</mat-label>
-          <input 
-            matInput 
-            type="password" 
-            formControlName="password"
-            placeholder="Digite sua senha"
-            required>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" 
+                 formControlName="password" 
+                 autocomplete="current-password">
+          <button mat-icon-button matSuffix type="button"
+                  (click)="hidePassword = !hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
           <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
             Senha é obrigatória
           </mat-error>
         </mat-form-field>
 
         <div class="button-container">
-          <button 
-            mat-raised-button 
-            color="primary" 
-            type="submit"
-            [disabled]="!loginForm.valid">
-            Entrar
-          </button>
-          
-          <button 
-            mat-button 
-            type="button" 
-            routerLink="/">
-            Voltar
+          <button mat-raised-button color="primary" 
+                  type="submit" 
+                  [disabled]="!loginForm.valid || isLoading">
+            {{ isLoading ? 'Entrando...' : 'Entrar' }}
           </button>
         </div>
       </form>

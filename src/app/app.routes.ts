@@ -12,6 +12,13 @@ import { fornecedorResolver } from './components/fornecedor/resolver/resolver.co
 import { authGuard } from './guard/auth.guard';
 import { MarcaListComponent } from './components/marca/marca-list/marca-list.component';
 import { ProdutoListComponent } from './components/produto/produto-list/produto-list.component';
+import { MarcaFormComponent } from './components/marca/marca-form/marca-form.component';
+import { UsuarioListComponent } from './components/usuario/usuario-list/usuario-list.component';
+import { UsuarioFormComponent } from './components/usuario/usuario-form/usuario-form.component';
+import { ProdutoFormComponent } from './components/produto/produto-form/produto-form.component';
+import { usuarioResolver } from './components/usuario/resolver/resolver.component';
+import { marcaResolver } from './components/marca/resolver/resolver.component';
+import { produtoResolver } from './components/produto/resolver/resolver.component';
 
 export const routes: Routes = [
   // Rota pública (e-commerce)
@@ -43,13 +50,13 @@ export const routes: Routes = [
       {
         path: 'produtos',
         component: ProdutoListComponent, // Crie este componente
-        title: 'Produtos'
+        title: 'Produtos',
       },
       {
         path: 'marcas',
         component: MarcaListComponent, // Crie este componente
-        title: 'Marcas'
-      }
+        title: 'Marcas',
+      },
     ],
   },
 
@@ -108,6 +115,73 @@ export const routes: Routes = [
             component: FornecedorFormComponent,
             title: 'Editar Fornecedor',
             resolve: { fornecedor: fornecedorResolver },
+          },
+        ],
+      }, // Rotas de Marca
+      {
+        path: 'marcas',
+        children: [
+          {
+            path: '',
+            component: MarcaListComponent,
+            title: 'Lista de Marcas',
+          },
+          {
+            path: 'new',
+            component: MarcaFormComponent,
+            title: 'Nova Marca',
+          },
+          {
+            path: 'edit/:id',
+            component: MarcaFormComponent,
+            title: 'Editar Marca',
+            resolve: { marca: marcaResolver },
+          },
+        ],
+      },
+
+      // Rotas de Usuário
+      {
+        path: 'usuarios',
+        children: [
+          {
+            path: '',
+            component: UsuarioListComponent,
+            title: 'Lista de Usuários',
+          },
+          {
+            path: 'new',
+            component: UsuarioFormComponent,
+            title: 'Novo Usuário',
+          },
+          {
+            path: 'edit/:id',
+            component: UsuarioFormComponent,
+            title: 'Editar Usuário',
+            resolve: { usuario: usuarioResolver },
+          },
+        ],
+      },
+
+      // Rotas de Produto
+      {
+        path: 'produtos',
+        children: [
+          {
+            path: '',
+            component: ProdutoListComponent,
+            title: 'Lista de Produtos',
+          },
+          {
+            path: 'new',
+            component: ProdutoFormComponent,
+            title: 'Novo Produto',
+          },
+          {
+            path: 'edit/:id',
+            component: ProdutoFormComponent,
+            title: 'Editar Produto',
+            resolve: { produto: produtoResolver },
           },
         ],
       },

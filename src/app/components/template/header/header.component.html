@@ -1,29 +1,48 @@
-<!-- header.component.html -->
 <mat-toolbar color="primary" class="header">
-  <button mat-icon-button (click)="clickMenu()">
-    <mat-icon>menu</mat-icon>
-  </button>
+  <div class="container">
+    <a routerLink="/" class="logo">
+      Sneaker Paradise
+    </a>
 
-  <span class="logo">Admin Panel</span>
+    <nav class="nav-links">
+      <a routerLink="/produtos" routerLinkActive="active">Produtos</a>
+      <a routerLink="/marcas" routerLinkActive="active">Marcas</a>
+    </nav>
 
-  <span class="spacer"></span>
+    <div class="toolbar-actions">
+      <button mat-icon-button routerLink="/carrinho">
+        <mat-icon [matBadge]="quantidadeItens" [matBadgeHidden]="quantidadeItens === 0">
+          shopping_cart
+        </mat-icon>
+      </button>
 
-  <mat-menu #userMenu="matMenu">
-    <button mat-menu-item>
-      <mat-icon>person</mat-icon>
-      <span>Perfil</span>
-    </button>
-    <button mat-menu-item (click)="deslogar()">
-      <mat-icon>exit_to_app</mat-icon>
-      <span>Sair</span>
-    </button>
-  </mat-menu>
-  
-  <button mat-icon-button [matMenuTriggerFor]="userMenu">
-    <mat-icon>account_circle</mat-icon>
-  </button>
+      <ng-container *ngIf="usuarioLogado; else loginButton">
+        <button mat-button [matMenuTriggerFor]="userMenu">
+          <mat-icon>person</mat-icon>
+          {{ usuarioLogado.nome }}
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item routerLink="/perfil">
+            <mat-icon>account_circle</mat-icon>
+            Meu Perfil
+          </button>
+          <button mat-menu-item routerLink="/pedidos">
+            <mat-icon>shopping_bag</mat-icon>
+            Meus Pedidos
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            Sair
+          </button>
+        </mat-menu>
+      </ng-container>
 
-    <button mat-icon-button (click)="deslogar()">
-      <mat-icon>exit_to_app</mat-icon>
-    </button>
+      <ng-template #loginButton>
+        <button mat-button routerLink="/login">
+          <mat-icon>login</mat-icon>
+          Entrar
+        </button>
+      </ng-template>
+    </div>
+  </div>
 </mat-toolbar>

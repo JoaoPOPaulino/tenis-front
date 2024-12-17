@@ -1,9 +1,9 @@
 /* login.component.css */
 .login-container {
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   background-color: #f5f5f5;
   padding: 20px;
 }
@@ -11,40 +11,70 @@
 .login-card {
   width: 100%;
   max-width: 400px;
-  padding: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 mat-card-header {
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 mat-card-title {
-  color: #673ab7;
+  color: #673ab7; /* deep purple */
   font-size: 24px;
-  margin-bottom: 16px;
+  font-weight: 500;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 mat-form-field {
   width: 100%;
 }
 
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 16px;
-  gap: 16px;
+/* Cores do tema para os campos */
+::ng-deep .mat-form-field-outline {
+  color: rgba(0, 0, 0, 0.12);
 }
 
-button[type="submit"] {
-  flex: 1;
+::ng-deep .mat-form-field-outline-thick {
+  color: #673ab7;
+}
+
+/* Botão principal com cor do tema */
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.button-container button {
+  width: 200px;
+  height: 45px;
+  background-color: #673ab7;
+  color: white;
+}
+
+.button-container button:hover:not([disabled]) {
+  background-color: #5e35b1;
+}
+
+.button-container button[disabled] {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+/* Ícones */
+mat-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+/* Estados de erro */
+mat-error {
+  color: #f44336;
 }
 
 /* Responsividade */
@@ -57,39 +87,7 @@ button[type="submit"] {
     padding: 16px;
   }
 
-  .button-container {
-    flex-direction: column;
-  }
-
   .button-container button {
     width: 100%;
-  }
-}
-
-/* Animações */
-.login-card {
-  animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Melhorias de acessibilidade */
-:focus {
-  outline: 2px solid #673ab7;
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .login-card {
-    animation: none;
   }
 }

@@ -1,59 +1,64 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
-import { MatToolbar } from '@angular/material/toolbar';
-import { MatBadge } from '@angular/material/badge';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { RouterModule, Router } from '@angular/router';
-import { NgIf } from '@angular/common';
-import { MatMenuModule } from '@angular/material/menu';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { SidebarService } from '../../../services/sidebar.service';
+
+// Material Imports
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
+
 import { AuthService } from '../../../services/auth.service';
+import { CarrinhoService } from '../../../services/carrinho.service';
 import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    MatToolbar,
-    MatIcon,
-    MatBadge,
-    MatButton,
-    MatIconButton,
+    CommonModule,
     RouterModule,
-    NgIf,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
     MatMenuModule,
+    MatBadgeModule,
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   usuarioLogado: Usuario | null = null;
-  private subscription = new Subscription();
+  quantidadeItens = 0;
+  private subscriptions = new Subscription();
 
   constructor(
-    private sidebarService: SidebarService,
     private authService: AuthService,
+    private carrinhoService: CarrinhoService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.subscription.add(
+  ngOnInit() {
+    this.subscriptions.add(
       this.authService
         .getUsuarioLogado()
         .subscribe((usuario) => (this.usuarioLogado = usuario))
     );
+
+    this.subscriptions.add(
+      this.carrinhoService
+        .obterQuantidadeTotal()
+        .subscribe((quantidade) => (this.quantidadeItens = quantidade))
+    );
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
-  clickMenu(): void {
-    this.sidebarService.toggle();
-  }
-
-  deslogar(): void {
+  logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }

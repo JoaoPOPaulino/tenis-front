@@ -1,41 +1,81 @@
-<!-- tenis-card-list.component.html -->
 <div class="container">
-  <div class="search-container">
-    <mat-form-field appearance="outline">
-      <mat-label>Buscar tênis</mat-label>
-      <input matInput [(ngModel)]="filtro" (keyup.enter)="filtrar()">
-      <button mat-icon-button matSuffix (click)="filtrar()">
-        <mat-icon>search</mat-icon>
-      </button>
-    </mat-form-field>
+  <!-- Área de Filtros -->
+  <div class="filters-section">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>filter_list</mat-icon>
+          Filtros
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="filters-content">
+        <!-- Filtro por Marca -->
+        <mat-form-field>
+          <mat-label>Marca</mat-label>
+          <mat-select [(ngModel)]="filtroMarca" (selectionChange)="aplicarFiltros()">
+            <mat-option [value]="">Todas</mat-option>
+            <mat-option *ngFor="let marca of marcas" [value]="marca.id">
+              {{marca.nome}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Filtro por Preço -->
+        <div class="price-range">
+          <h4>Faixa de Preço</h4>
+          <mat-slider min="0" [max]="maxPreco" step="50">
+            <input matSliderThumb [(ngModel)]="filtroPrecoMax" (change)="aplicarFiltros()">
+          </mat-slider>
+          <p>Até R$ {{filtroPrecoMax}}</p>
+        </div>
+
+        <!-- Filtro por Tamanho -->
+        <mat-form-field>
+          <mat-label>Tamanho</mat-label>
+          <mat-select [(ngModel)]="filtroTamanho" (selectionChange)="aplicarFiltros()">
+            <mat-option [value]="">Todos</mat-option>
+            <mat-option *ngFor="let tamanho of tamanhos" [value]="tamanho">
+              {{tamanho}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Botão Limpar Filtros -->
+        <button mat-stroked-button color="warn" (click)="limparFiltros()">
+          <mat-icon>clear</mat-icon>
+          Limpar Filtros
+        </button>
+      </div>
+    </mat-expansion-panel>
   </div>
 
+  <!-- Lista de Produtos -->
   <div class="cards-grid">
-    <mat-card *ngFor="let tenis of tenis" class="tenis-card">
+    <mat-card *ngFor="let tenis of tenisFiltrados" class="tenis-card">
       <img mat-card-image [src]="tenis.nomeImagem || 'assets/placeholder.png'" [alt]="tenis.nome">
+      
       <mat-card-content>
         <h3>{{tenis.nome}}</h3>
         <p class="marca">{{tenis.marca.nome}}</p>
         <p class="preco">{{tenis.preco | currency:'BRL'}}</p>
-        <p class="estoque" [style.color]="getEstoqueColor(tenis.estoque)">
+        <p class="estoque" [ngStyle]="{'color': getEstoqueColor(tenis.estoque)}">
           {{getEstoqueStatus(tenis.estoque)}}
         </p>
       </mat-card-content>
+      
       <mat-card-actions>
-        <button mat-button color="primary" [routerLink]="['/tenis', tenis.id]">
-          DETALHES
+        <button mat-button color="primary" 
+                (click)="adicionarAoCarrinho(tenis)" 
+                [disabled]="tenis.estoque === 0">
+          <mat-icon>shopping_cart</mat-icon>
+          Adicionar ao Carrinho
         </button>
-        <button mat-button color="accent" [disabled]="tenis.estoque === 0">
-          COMPRAR
+        <button mat-button (click)="verDetalhes(tenis)">
+          <mat-icon>info</mat-icon>
+          Detalhes
         </button>
       </mat-card-actions>
     </mat-card>
   </div>
-
-  <mat-paginator
-    [length]="totalRecords"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="[12, 24, 36]"
-    (page)="paginar($event)">
-  </mat-paginator>
 </div>
