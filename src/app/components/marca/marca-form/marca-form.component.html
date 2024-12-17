@@ -1,14 +1,13 @@
-<!-- marca-form.component.html -->
 <div class="container">
-  <h2>{{ formGroup.value.id ? 'Editar Marca' : 'Nova Marca' }}</h2>
+  <h2>@if (formGroup.value.id) {Editar Marca} @else {Nova Marca}</h2>
 
   <form [formGroup]="formGroup" (ngSubmit)="salvar()">
     <mat-form-field>
       <mat-label>Nome</mat-label>
       <input matInput formControlName="nome" required>
-      <mat-error *ngIf="formGroup.get('nome')?.hasError('required')">
-        Nome é obrigatório
-      </mat-error>
+      @if (formGroup.get('nome')?.hasError('required')) {
+        <mat-error>Nome é obrigatório</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field>
@@ -21,9 +20,11 @@
       <button mat-raised-button color="primary" type="submit" [disabled]="!formGroup.valid">
         Salvar
       </button>
-      <button mat-raised-button color="warn" type="button" (click)="excluir()" *ngIf="formGroup.value.id">
-        Excluir
-      </button>
+      @if (formGroup.value.id) {
+        <button mat-raised-button color="warn" type="button" (click)="excluir()">
+          Excluir
+        </button>
+      }
       <button mat-raised-button routerLink="/marcas">
         Voltar
       </button>

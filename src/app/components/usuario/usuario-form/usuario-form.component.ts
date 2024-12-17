@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Usuario } from '../../../models/usuario.model';
 import { TipoUsuario } from '../../../models/tipo-usuario.enum';
 import { TipoCartao } from '../../../models/tipo-cartao.model';
@@ -18,13 +18,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { NgFor } from '@angular/common';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-usuario-form',
   standalone: true,
   imports: [
-    NgFor,
+    NgIf,
+    RouterLink,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -34,6 +35,8 @@ import { NgFor } from '@angular/common';
     MatNativeDateModule,
     MatCheckboxModule,
     MatIconModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ],
   templateUrl: './usuario-form.component.html',
   styleUrls: ['./usuario-form.component.css'],

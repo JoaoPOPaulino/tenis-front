@@ -1,6 +1,5 @@
-<!-- usuario-form.component.html -->
 <div class="container">
-  <h2>{{ formGroup.value.id ? 'Editar Usuário' : 'Novo Usuário' }}</h2>
+  <h2>@if (formGroup.value.id) {Editar Usuário} @else {Novo Usuário}</h2>
 
   <form [formGroup]="formGroup" (ngSubmit)="salvar()">
     <!-- Informações Básicas -->
@@ -10,48 +9,48 @@
         <mat-form-field>
           <mat-label>Nome</mat-label>
           <input matInput formControlName="nome" required>
-          <mat-error *ngIf="formGroup.get('nome')?.hasError('required')">
-            Nome é obrigatório
-          </mat-error>
+          @if (formGroup.get('nome')?.hasError('required')) {
+            <mat-error>Nome é obrigatório</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" required type="email">
-          <mat-error *ngIf="formGroup.get('email')?.hasError('required')">
-            Email é obrigatório
-          </mat-error>
-          <mat-error *ngIf="formGroup.get('email')?.hasError('email')">
-            Email inválido
-          </mat-error>
+          @if (formGroup.get('email')?.hasError('required')) {
+            <mat-error>Email é obrigatório</mat-error>
+          }
+          @if (formGroup.get('email')?.hasError('email')) {
+            <mat-error>Email inválido</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Login</mat-label>
           <input matInput formControlName="login" required>
-          <mat-error *ngIf="formGroup.get('login')?.hasError('required')">
-            Login é obrigatório
-          </mat-error>
+          @if (formGroup.get('login')?.hasError('required')) {
+            <mat-error>Login é obrigatório</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Senha</mat-label>
           <input matInput formControlName="senha" type="password" required>
-          <mat-error *ngIf="formGroup.get('senha')?.hasError('required')">
-            Senha é obrigatória
-          </mat-error>
+          @if (formGroup.get('senha')?.hasError('required')) {
+            <mat-error>Senha é obrigatória</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Tipo de Usuário</mat-label>
           <mat-select formControlName="tipoUsuario" required>
-            <mat-option *ngFor="let tipo of tiposUsuario" [value]="tipo">
-              {{tipo}}
-            </mat-option>
+            @for (tipo of tiposUsuario; track tipo) {
+              <mat-option [value]="tipo">{{tipo}}</mat-option>
+            }
           </mat-select>
-          <mat-error *ngIf="formGroup.get('tipoUsuario')?.hasError('required')">
-            Tipo de usuário é obrigatório
-          </mat-error>
+          @if (formGroup.get('tipoUsuario')?.hasError('required')) {
+            <mat-error>Tipo de usuário é obrigatório</mat-error>
+          }
         </mat-form-field>
       </div>
     </div>
@@ -66,21 +65,23 @@
       </div>
 
       <div formArrayName="telefones">
-        <div *ngFor="let telefone of telefonesArray.controls; let i = index" [formGroupName]="i" class="array-item">
-          <mat-form-field>
-            <mat-label>DDD</mat-label>
-            <input matInput formControlName="ddd" required>
-          </mat-form-field>
+        @for (telefone of telefonesArray.controls; track telefone; let i = $index) {
+          <div [formGroupName]="i" class="array-item">
+            <mat-form-field>
+              <mat-label>DDD</mat-label>
+              <input matInput formControlName="ddd" required>
+            </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>Número</mat-label>
-            <input matInput formControlName="numero" required>
-          </mat-form-field>
+            <mat-form-field>
+              <mat-label>Número</mat-label>
+              <input matInput formControlName="numero" required>
+            </mat-form-field>
 
-          <button type="button" mat-icon-button color="warn" (click)="removeTelefone(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
+            <button type="button" mat-icon-button color="warn" (click)="removeTelefone(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
       </div>
     </div>
 
@@ -94,59 +95,61 @@
       </div>
 
       <div formArrayName="enderecos">
-        <div *ngFor="let endereco of enderecosArray.controls; let i = index" [formGroupName]="i" class="endereco-item">
-          <div formGroupName="cidade">
-            <div formGroupName="estado">
+        @for (endereco of enderecosArray.controls; track endereco; let i = $index) {
+          <div [formGroupName]="i" class="endereco-item">
+            <div formGroupName="cidade">
+              <div formGroupName="estado">
+                <mat-form-field>
+                  <mat-label>Estado</mat-label>
+                  <input matInput formControlName="nome" required>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Sigla</mat-label>
+                  <input matInput formControlName="sigla" required>
+                </mat-form-field>
+              </div>
               <mat-form-field>
-                <mat-label>Estado</mat-label>
+                <mat-label>Cidade</mat-label>
                 <input matInput formControlName="nome" required>
               </mat-form-field>
+            </div>
+
+            <mat-form-field>
+              <mat-label>CEP</mat-label>
+              <input matInput formControlName="cep" required>
+            </mat-form-field>
+
+            <div class="endereco-grid">
               <mat-form-field>
-                <mat-label>Sigla</mat-label>
-                <input matInput formControlName="sigla" required>
+                <mat-label>Quadra</mat-label>
+                <input matInput formControlName="quadra" required>
+              </mat-form-field>
+            
+              <mat-form-field>
+                <mat-label>Rua</mat-label>
+                <input matInput formControlName="rua" required>
+              </mat-form-field>
+            
+              <mat-form-field>
+                <mat-label>Número</mat-label>
+                <input matInput formControlName="numero" required>
+              </mat-form-field>
+            
+              <mat-form-field>
+                <mat-label>Complemento</mat-label>
+                <input matInput formControlName="complemento">
               </mat-form-field>
             </div>
-            <mat-form-field>
-              <mat-label>Cidade</mat-label>
-              <input matInput formControlName="nome" required>
-            </mat-form-field>
+
+            <div class="endereco-options">
+              <mat-checkbox formControlName="principal">Principal</mat-checkbox>
+              <mat-checkbox formControlName="ativo">Ativo</mat-checkbox>
+              <button type="button" mat-icon-button color="warn" (click)="removeEndereco(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
-
-          <mat-form-field>
-            <mat-label>CEP</mat-label>
-            <input matInput formControlName="cep" required>
-          </mat-form-field>
-
-          <div class="endereco-grid">
-            <mat-form-field>
-              <mat-label>Quadra</mat-label>
-              <input matInput formControlName="quadra" required>
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>Rua</mat-label>
-              <input matInput formControlName="rua" required>
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>Número</mat-label>
-              <input matInput formControlName="numero" required>
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>Complemento</mat-label>
-              <input matInput formControlName="complemento">
-            </mat-form-field>
-          </div>
-
-          <div class="endereco-options">
-            <mat-checkbox formControlName="principal">Principal</mat-checkbox>
-            <mat-checkbox formControlName="ativo">Ativo</mat-checkbox>
-            <button type="button" mat-icon-button color="warn" (click)="removeEndereco(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </div>
+        }
       </div>
     </div>
 
@@ -160,50 +163,52 @@
       </div>
 
       <div formArrayName="cartoes">
-        <div *ngFor="let cartao of cartoesArray.controls; let i = index" [formGroupName]="i" class="cartao-item">
-          <mat-form-field>
-            <mat-label>Tipo de Cartão</mat-label>
-            <mat-select formControlName="tipoCartao" required>
-              <mat-option *ngFor="let tipo of tiposCartao" [value]="tipo">
-                {{tipo}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+        @for (cartao of cartoesArray.controls; track cartao; let i = $index) {
+          <div [formGroupName]="i" class="cartao-item">
+            <mat-form-field>
+              <mat-label>Tipo de Cartão</mat-label>
+              <mat-select formControlName="tipoCartao" required>
+                @for (tipo of tiposCartao; track tipo) {
+                  <mat-option [value]="tipo">{{tipo}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>Número</mat-label>
-            <input matInput formControlName="numero" required>
-          </mat-form-field>
+            <mat-form-field>
+              <mat-label>Número</mat-label>
+              <input matInput formControlName="numero" required>
+            </mat-form-field>
+            
+            <mat-form-field>
+              <mat-label>CVV</mat-label>
+              <input matInput formControlName="cvv" required>
+            </mat-form-field>
+            
+            <mat-form-field>
+              <mat-label>Validade</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="validade" required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            
+            <mat-form-field>
+              <mat-label>Titular</mat-label>
+              <input matInput formControlName="titular" required>
+            </mat-form-field>
+            
+            <mat-form-field>
+              <mat-label>CPF</mat-label>
+              <input matInput formControlName="cpf" required>
+            </mat-form-field>
 
-          <mat-form-field>
-            <mat-label>CVV</mat-label>
-            <input matInput formControlName="cvv" required>
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Validade</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="validade" required>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Titular</mat-label>
-            <input matInput formControlName="titular" required>
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>CPF</mat-label>
-            <input matInput formControlName="cpf" required>
-          </mat-form-field>
-
-          <div class="cartao-options">
-            <mat-checkbox formControlName="ativo">Ativo</mat-checkbox>
-            <button type="button" mat-icon-button color="warn" (click)="removeCartao(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
+            <div class="cartao-options">
+              <mat-checkbox formControlName="ativo">Ativo</mat-checkbox>
+              <button type="button" mat-icon-button color="warn" (click)="removeCartao(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
-        </div>
+        }
       </div>
     </div>
 
@@ -214,10 +219,12 @@
         Salvar
       </button>
 
-      <button mat-raised-button color="warn" type="button" (click)="excluir()" *ngIf="formGroup.value.id">
-        <mat-icon>delete</mat-icon>
-        Excluir
-      </button>
+      @if (formGroup.value.id) {
+        <button mat-raised-button color="warn" type="button" (click)="excluir()">
+          <mat-icon>delete</mat-icon>
+          Excluir
+        </button>
+      }
 
       <button mat-raised-button type="button" routerLink="/usuarios">
         <mat-icon>arrow_back</mat-icon>
