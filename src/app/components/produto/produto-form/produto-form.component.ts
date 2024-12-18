@@ -36,7 +36,7 @@ import { AuthService } from '../../../services/auth.service';
 export class ProdutoFormComponent implements OnInit {
   formGroup: FormGroup;
   fornecedores: Fornecedor[] = [];
-  isAdmin = false;
+  isAdmin: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,14 +59,31 @@ export class ProdutoFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('Antes da inscrição: ', this.isAdmin);
-    this.authService.isLoggedIn().subscribe((isLoggedIn) => {
-      this.isAdmin = isLoggedIn && this.authService.isAdmin();
-      console.log('Dentro da inscrição: ', this.isAdmin);
-    });
-    console.log('Depois da inscrição: ', this.isAdmin);
-
+    this.setupAdminStatus();
     this.loadFornecedores();
+    this.loadProduto();
+  }
+
+  private setupAdminStatus(): void {
+    // Inscreve-se nas mudanças do status de login
+    this.authService.isLoggedIn().subscribe((isLoggedIn) => {
+      if (isLoggedIn) {
+        // Inscreve-se nas mudanças do usuário logado
+        this.authService.getUsuarioLogado().subscribe((usuario) => {
+          this.isAdmin = usuario?.tipoUsuario === 'ADMINISTRADOR';
+          if (!this.isAdmin) {
+            // Redireciona para a lista se não for admin
+            this.router.navigate(['/produtos']);
+          }
+        });
+      } else {
+        this.isAdmin = false;
+        this.router.navigate(['/produtos']);
+      }
+    });
+  }
+
+  private loadProduto(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.produtoService.findById(Number(id)).subscribe((produto) => {

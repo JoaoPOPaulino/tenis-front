@@ -144,7 +144,7 @@ export class TenisCardListComponent implements OnInit {
   adicionarAoCarrinho(tenis: Tenis) {
     this.carrinhoService.adicionar({
       id: tenis.id,
-      nome: tenis.nome,
+      tenis: tenis,
       preco: tenis.preco,
       quantidade: 1,
     });

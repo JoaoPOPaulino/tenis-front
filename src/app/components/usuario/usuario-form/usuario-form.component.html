@@ -41,20 +41,6 @@
           }
         </mat-form-field>
 
-        <mat-form-field>
-          <mat-label>Tipo de Usuário</mat-label>
-          <mat-select formControlName="tipoUsuario" required>
-            @for (tipo of tiposUsuario; track tipo) {
-              <mat-option [value]="tipo">{{tipo}}</mat-option>
-            }
-          </mat-select>
-          @if (formGroup.get('tipoUsuario')?.hasError('required')) {
-            <mat-error>Tipo de usuário é obrigatório</mat-error>
-          }
-        </mat-form-field>
-      </div>
-    </div>
-
     <!-- Telefones -->
     <div class="section">
       <div class="section-header">
@@ -231,5 +217,4 @@
         Voltar
       </button>
     </div>
-  </form>
 </div>

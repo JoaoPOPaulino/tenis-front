@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Tenis } from '../../../models/tenis.model';
 import { TenisService } from '../../../services/tenis.service';
-import { NgFor, NgStyle, CurrencyPipe } from '@angular/common';
+import { NgFor, NgIf, NgStyle, CurrencyPipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,12 +15,14 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-tenis-list',
   standalone: true,
   imports: [
     NgFor,
+    NgIf,
     NgStyle,
     MatToolbarModule,
     MatIconModule,
@@ -39,6 +41,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   styleUrls: ['./tenis-list.component.css'],
 })
 export class TenisListComponent implements OnInit {
+  isAdmin: boolean = false;
+  isEcommerceRoute: boolean = false;
   tenis: Tenis[] = [];
   displayedColumns: string[] = [
     'linha',
@@ -62,10 +66,19 @@ export class TenisListComponent implements OnInit {
     private tenisService: TenisService,
     private dialog: MatDialog,
     private router: Router,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private authService: AuthService
+  ) {
+    this.isEcommerceRoute = this.router.url.includes('/ecommerce');
+  }
 
   ngOnInit(): void {
+    if (!this.isEcommerceRoute) {
+      // Se não estiver na rota de ecommerce, verifica se é admin
+      this.authService.getUsuarioLogado().subscribe((usuario) => {
+        this.isAdmin = usuario?.tipoUsuario === 'ADMINISTRADOR';
+      });
+    }
     this.loadTenis();
     this.loadTotal();
   }

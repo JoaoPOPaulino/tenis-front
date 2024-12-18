@@ -34,6 +34,12 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadHomeData();
+    const themeToggle = document.getElementById(
+      'theme-toggle'
+    ) as HTMLInputElement;
+    themeToggle.addEventListener('change', function () {
+      document.body.classList.toggle('dark-mode', this.checked);
+    });
   }
 
   loadHomeData(): void {

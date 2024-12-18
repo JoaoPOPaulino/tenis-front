@@ -1,7 +1,8 @@
-export interface ItemCarrinho {
-  id: number;
-  nome: string;
-  quantidade: number;
-  preco: number;
-  imageUrl?: string;
+import { Tenis } from './tenis.model';
+
+export class ItemCarrinho {
+  id!: number;
+  quantidade!: number;
+  preco!: number;
+  tenis!: Tenis;
 }

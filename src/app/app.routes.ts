@@ -8,7 +8,7 @@ import { FornecedorListComponent } from './components/fornecedor/fornecedor-list
 import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form/fornecedor-form.component';
 import { tenisResolver } from './components/tenis/resolver/tenis.resolver';
 import { fornecedorResolver } from './components/fornecedor/resolver/resolver.component';
-import { authGuard } from './guard/auth.guard';
+import { adminGuard } from './guard/auth.guard';
 import { MarcaListComponent } from './components/marca/marca-list/marca-list.component';
 import { ProdutoListComponent } from './components/produto/produto-list/produto-list.component';
 import { MarcaFormComponent } from './components/marca/marca-form/marca-form.component';
@@ -43,10 +43,11 @@ export const routes: Routes = [
         path: 'carrinho',
         component: CarrinhoComponent,
         title: 'Carrinho',
+        canActivate: [adminGuard], // Protege o carrinho para usuários logados
       },
       {
         path: 'login',
-        component: UserLoginComponent, // Novo componente para login de usuário
+        component: UserLoginComponent,
         title: 'Login de Usuário',
       },
       {
@@ -61,29 +62,30 @@ export const routes: Routes = [
       },
       {
         path: 'produtos',
-        component: ProdutoListComponent, // Crie este componente
+        component: ProdutoListComponent,
         title: 'Produtos',
       },
       {
         path: 'marcas',
-        component: MarcaListComponent, // Crie este componente
+        component: MarcaListComponent,
         title: 'Marcas',
       },
     ],
   },
 
+  // Rota de login admin (pública)
   {
     path: 'admin/login',
-    component: AdminLoginComponent, // Novo componente para login administrativo
+    component: AdminLoginComponent,
     title: 'Login Administrativo',
   },
 
-  // Rota administrativa (protegida)
+  // Rota administrativa (protegida por authGuard e adminGuard)
   {
     path: 'admin',
     component: AdminTemplateComponent,
     title: 'Administração',
-    canActivate: [authGuard],
+    canActivate: [adminGuard], // Protege toda área admin
     children: [
       {
         path: '',
@@ -135,7 +137,9 @@ export const routes: Routes = [
             resolve: { fornecedor: fornecedorResolver },
           },
         ],
-      }, // Rotas de Marca
+      },
+
+      // Rotas de Marca
       {
         path: 'marcas',
         children: [

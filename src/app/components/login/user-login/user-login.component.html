@@ -9,8 +9,8 @@
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline">
           <mat-label>Usuário</mat-label>
-          <input matInput formControlName="username" required>
-          @if (loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched) {
+          <input matInput formControlName="login" required>
+          @if (loginForm.get('login')?.hasError('required') && loginForm.get('login')?.touched) {
             <mat-error>Usuário é obrigatório</mat-error>
           }
         </mat-form-field>

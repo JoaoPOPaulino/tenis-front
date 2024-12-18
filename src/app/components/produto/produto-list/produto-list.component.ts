@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
 import { Produto } from '../../../models/produto.model';
 import { ProdutoService } from '../../../services/produto.service';
 import { MatTableModule } from '@angular/material/table';
@@ -14,6 +17,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-produto-list',
@@ -34,25 +38,65 @@ import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/co
   templateUrl: './produto-list.component.html',
   styleUrls: ['./produto-list.component.css'],
 })
-export class ProdutoListComponent implements OnInit {
+export class ProdutoListComponent implements OnInit, OnDestroy {
+  isAdmin: boolean = false;
+  isAdminRoute: boolean = false;
   produtos: Produto[] = [];
-  displayedColumns = ['id', 'nome', 'preco', 'estoque', 'fornecedor', 'acoes'];
-  totalRecords = 0;
-  pageSize = 10;
-  page = 0;
-  filtro = '';
+  displayedColumns: string[] = [
+    'id',
+    'nome',
+    'preco',
+    'estoque',
+    'fornecedor',
+    'acoes',
+  ];
+  totalRecords: number = 0;
+  pageSize: number = 10;
+  page: number = 0;
+  filtro: string = '';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private produtoService: ProdutoService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private authService: AuthService,
+    public router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.isAdminRoute = !this.router.url.includes('/ecommerce');
+  }
 
   ngOnInit(): void {
     this.loadProdutos();
     this.loadTotal();
+
+    if (!this.router.url.includes('/ecommerce')) {
+      this.authService
+        .getUsuarioLogado()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((usuario) => {
+          this.isAdmin = usuario?.tipoUsuario === 'ADMINISTRADOR';
+        });
+    } else {
+      this.isAdmin = false; // Garante que não seja admin na rota de ecommerce
+    }
   }
 
+  getRouterLink(tipo: string, id?: number): any[] {
+    if (this.router.url.includes('/ecommerce')) {
+      return ['/admin/login'];
+    }
+    if (tipo === 'edit') {
+      return ['/admin/produtos/edit', id];
+    }
+    return ['/admin/produtos/new'];
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   loadProdutos(): void {
     this.produtoService.findAll(this.page, this.pageSize).subscribe((data) => {
       this.produtos = data;

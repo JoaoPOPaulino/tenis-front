@@ -98,9 +98,13 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    const isAdmin = this.hasRole('ADMINISTRADOR');
-    console.log('Is Admin: ', isAdmin);
-    return isAdmin;
+    const usuario = this.usuarioLogadoSubject.value;
+    console.log('AuthService isAdmin check:', {
+      usuario,
+      tipoUsuario: usuario?.tipoUsuario,
+      isAdmin: usuario?.tipoUsuario === 'ADMINISTRADOR',
+    });
+    return usuario?.tipoUsuario === 'ADMINISTRADOR';
   }
 
   private getUsuarioFromStorage(): Usuario | null {

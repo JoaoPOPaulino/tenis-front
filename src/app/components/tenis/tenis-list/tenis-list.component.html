@@ -1,75 +1,70 @@
-<!-- tenis-list.component.html -->
 <div class="container">
   <mat-toolbar>
-    <span>Gerenciar Tênis</span>
+    <span>{{ isEcommerceRoute ? 'Tênis' : 'Gerenciar Tênis' }}</span>
     <span class="spacer"></span>
-    <button mat-raised-button color="primary" [routerLink]="['/admin/tenis/new']">
+    <button
+      mat-raised-button
+      color="primary"
+      [routerLink]="['/admin/tenis/new']"
+      *ngIf="!isEcommerceRoute && isAdmin">
       <mat-icon>add</mat-icon>
       Novo Tênis
     </button>
   </mat-toolbar>
 
+  <!-- Campo de Busca -->
   <div class="search-container">
     <mat-form-field appearance="outline">
-      <mat-label>Buscar tênis</mat-label>
-      <input matInput [(ngModel)]="filtro" (keyup.enter)="filtrar()">
-      <button mat-icon-button matSuffix (click)="filtrar()">
-        <mat-icon>search</mat-icon>
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        [(ngModel)]="filtro"
+        placeholder="Buscar tênis"
+        (keyup.enter)="filtrar()" />
+      <button
+        *ngIf="filtro"
+        matSuffix
+        mat-icon-button
+        (click)="filtro=''; filtrar()">
+        <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
   </div>
 
-  
-
   <div class="table-container mat-elevation-z8">
     <table mat-table [dataSource]="tenis">
+      <!-- Coluna Nº -->
       <ng-container matColumnDef="linha">
         <th mat-header-cell *matHeaderCellDef> Nº </th>
-        <td mat-cell *matCellDef="let item; let i = index"> {{obterNumeroLinha(i)}} </td>
+        <td mat-cell *matCellDef="let item; let i = index"> {{ obterNumeroLinha(i) }} </td>
       </ng-container>
 
+      <!-- Outras colunas -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> ID </th>
-        <td mat-cell *matCellDef="let item"> {{item.id}} </td>
+        <td mat-cell *matCellDef="let item"> {{ item.id }} </td>
       </ng-container>
 
+      <!-- Exemplo com nome -->
       <ng-container matColumnDef="nome">
         <th mat-header-cell *matHeaderCellDef> Nome </th>
-        <td mat-cell *matCellDef="let item"> {{item.nome}} </td>
+        <td mat-cell *matCellDef="let item"> {{ item.nome }} </td>
       </ng-container>
 
-      <ng-container matColumnDef="marca">
-        <th mat-header-cell *matHeaderCellDef> Marca </th>
-        <td mat-cell *matCellDef="let item"> {{item.marca.nome}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="modelo">
-        <th mat-header-cell *matHeaderCellDef> Modelo </th>
-        <td mat-cell *matCellDef="let item"> {{item.modelo}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="tamanho">
-        <th mat-header-cell *matHeaderCellDef> Tamanho </th>
-        <td mat-cell *matCellDef="let item"> {{item.tamanho}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="preco">
-        <th mat-header-cell *matHeaderCellDef> Preço </th>
-        <td mat-cell *matCellDef="let item"> {{item.preco | currency:'BRL'}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="estoque">
-        <th mat-header-cell *matHeaderCellDef> Estoque </th>
-        <td mat-cell *matCellDef="let item"> {{item.estoque}} </td>
-      </ng-container>
-
+      <!-- Coluna Ações -->
       <ng-container matColumnDef="acao">
         <th mat-header-cell *matHeaderCellDef> Ações </th>
         <td mat-cell *matCellDef="let item">
-          <button mat-icon-button color="primary" [routerLink]="['/admin/tenis/edit', item.id]">
+          <button 
+            mat-icon-button 
+            color="primary" 
+            [routerLink]="['/admin/tenis/edit', item.id]">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="excluir(item)">
+          <button 
+            mat-icon-button 
+            color="warn" 
+            (click)="excluir(item)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>

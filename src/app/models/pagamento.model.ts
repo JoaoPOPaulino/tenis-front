@@ -9,7 +9,7 @@ export class Pagamento {
   statusPagamento!: StatusPagamento;
   valor!: number;
   pedido!: Pedido;
-  cartao!: Cartao;
+  cartao?: Cartao; // Tornar opcional
   chavePix!: string;
   numeroBoleto!: string;
   dataPagamento!: Date;

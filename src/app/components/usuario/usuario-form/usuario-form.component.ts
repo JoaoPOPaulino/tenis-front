@@ -5,9 +5,7 @@ import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Usuario } from '../../../models/usuario.model';
-import { TipoUsuario } from '../../../models/tipo-usuario.enum';
 import { TipoCartao } from '../../../models/tipo-cartao.model';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,6 +17,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NgIf } from '@angular/common';
+import { TipoUsuario } from '../../../models/tipo-usuario.enum';
 
 @Component({
   selector: 'app-usuario-form',
@@ -45,6 +44,8 @@ export class UsuarioFormComponent implements OnInit {
   formGroup: FormGroup;
   tiposUsuario = Object.values(TipoUsuario);
   tiposCartao = Object.values(TipoCartao);
+  isEditMode = false;
+  TipoUsuario = TipoUsuario; // Add this line
 
   constructor(
     private formBuilder: FormBuilder,
@@ -60,7 +61,6 @@ export class UsuarioFormComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       login: ['', Validators.required],
       senha: ['', Validators.required],
-      username: ['', Validators.required],
       tipoUsuario: [TipoUsuario.USUARIO, Validators.required],
       telefones: this.formBuilder.array([]),
       enderecos: this.formBuilder.array([]),
@@ -71,7 +71,10 @@ export class UsuarioFormComponent implements OnInit {
   ngOnInit(): void {
     if (this.router.url === '/novo-usuario') {
       this.configurarNovoUsuario();
-    } else this.initializeForm();
+    } else {
+      this.isEditMode = true; // Define que estamos em modo de edição
+      this.initializeForm();
+    }
   }
 
   private configurarNovoUsuario() {
@@ -79,15 +82,11 @@ export class UsuarioFormComponent implements OnInit {
 
     this.formGroup.patchValue({
       id: null,
-      tiposUsuario: TipoUsuario.USUARIO,
+      tipoUsuario: TipoUsuario.USUARIO, // Define tipo de usuário como "USUARIO"
       ativo: true,
     });
 
-    this.addTelefone();
-
-    this.addEndereco();
-
-    this.formGroup.get('tipoUsuario')?.disable();
+    this.formGroup.get('tipoUsuario')?.disable(); // Desabilita o campo
   }
 
   initializeForm() {
@@ -255,7 +254,6 @@ export class UsuarioFormComponent implements OnInit {
         },
       });
     } else {
-      // Marca todos os campos como touched para mostrar erros
       Object.keys(this.formGroup.controls).forEach((key) => {
         const control = this.formGroup.get(key);
         control?.markAsTouched();

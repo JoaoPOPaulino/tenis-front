@@ -40,7 +40,7 @@ export class UserLoginComponent {
     private snackBar: MatSnackBar
   ) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required]], // Alterado de 'login' para 'username'
+      login: ['', [Validators.required]], // Alterado de 'login' para 'login'
       password: ['', [Validators.required]],
     });
   }
@@ -56,9 +56,9 @@ export class UserLoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      const { username, password } = this.loginForm.value; // Alterado de 'login' para 'username'
+      const { login, password } = this.loginForm.value; // Alterado de 'login' para 'login'
 
-      this.authService.login(username, password).subscribe({
+      this.authService.login(login, password).subscribe({
         next: () => {
           this.router.navigate(['/ecommerce']);
           this.snackBar.open('Login realizado com sucesso!', 'OK', {

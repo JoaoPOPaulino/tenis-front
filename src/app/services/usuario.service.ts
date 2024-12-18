@@ -191,4 +191,14 @@ export class UsuarioService {
     };
     return this.httpClient.post<any>(`${this.baseUrl}/alterar-login`, data);
   }
+
+  getUsuarioLogado(): Observable<Usuario> {
+    const usuarioId = localStorage.getItem('usuarioId');
+
+    if (!usuarioId) {
+      throw new Error('Usuário não está logado');
+    }
+
+    return this.httpClient.get<Usuario>(`${this.baseUrl}/${usuarioId}`);
+  }
 }

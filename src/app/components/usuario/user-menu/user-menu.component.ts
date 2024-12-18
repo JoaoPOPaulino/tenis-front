@@ -25,7 +25,7 @@ import { AlterarLoginDialogComponent } from '../../dialog/alterar-login-dialog/a
   styleUrls: ['./user-menu.component.css'],
 })
 export class UserMenuComponent {
-  username = '';
+  login = '';
 
   constructor(
     private dialog: MatDialog,
@@ -34,11 +34,12 @@ export class UserMenuComponent {
   ) {
     this.authService.getUsuarioLogado().subscribe((user) => {
       if (user) {
-        this.username = user.nome;
+        this.login = user.nome;
       }
     });
   }
 
+  // Abre o diálogo para alterar senha
   alterarSenha() {
     const dialogRef = this.dialog.open(AlterarSenhaDialogComponent, {
       width: '400px',
@@ -46,11 +47,12 @@ export class UserMenuComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // Senha alterada com sucesso
+        // Lógica adicional para quando a senha for alterada com sucesso
       }
     });
   }
 
+  // Abre o diálogo para alterar login
   alterarLogin() {
     const dialogRef = this.dialog.open(AlterarLoginDialogComponent, {
       width: '400px',
@@ -58,16 +60,34 @@ export class UserMenuComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        // Lógica adicional para quando o login for alterado com sucesso
       }
     });
   }
 
+  // Redireciona para a página do perfil
   meuPerfil() {
     this.router.navigate(['/perfil']);
   }
 
+  // Realiza o logout do usuário
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  // Gerenciar telefones
+  gerenciarTelefones() {
+    this.router.navigate(['/telefones']); // Rota para a página de gerenciamento de telefones
+  }
+
+  // Gerenciar endereços
+  gerenciarEnderecos() {
+    this.router.navigate(['/enderecos']); // Rota para a página de gerenciamento de endereços
+  }
+
+  // Gerenciar cartões
+  gerenciarCartoes() {
+    this.router.navigate(['/cartoes']); // Rota para a página de gerenciamento de cartões
   }
 }
