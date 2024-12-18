@@ -96,9 +96,12 @@ export class CarrinhoComponent implements OnInit, OnDestroy {
       this.snackBar
         .open('Por favor, faça login para continuar', 'Login', {
           duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
         })
         .onAction()
         .subscribe(() => {
+          // Redireciona para login de usuário, não de admin
           this.router.navigate(['/login'], {
             queryParams: { returnUrl: '/carrinho' },
           });

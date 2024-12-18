@@ -1,26 +1,39 @@
-import { CanActivateFn, Router } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
-export const adminGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
 
-  // Primeiro verifica se está autenticado
-  if (authService.isTokenExpired()) {
-    console.log('Token inválido');
-    authService.logout();
-    router.navigate(['/admin/login']);
-    return false;
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {
+    const isAdminRoute = state.url.startsWith('/admin');
+
+    if (isAdminRoute) {
+      if (this.authService.isAdmin()) {
+        return true;
+      }
+      this.router.navigate(['/admin/login']);
+      return false;
+    } else {
+      if (this.authService.isLoggedIn()) {
+        return true;
+      }
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: state.url },
+      });
+      return false;
+    }
   }
-
-  // Depois verifica se é admin
-  if (!authService.isAdmin()) {
-    console.log('Usuário não é administrador');
-    router.navigate(['/produtos']);
-    return false;
-  }
-
-  console.log('Usuário é administrador');
-  return true;
-};
+}

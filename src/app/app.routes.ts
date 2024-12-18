@@ -8,7 +8,6 @@ import { FornecedorListComponent } from './components/fornecedor/fornecedor-list
 import { FornecedorFormComponent } from './components/fornecedor/fornecedor-form/fornecedor-form.component';
 import { tenisResolver } from './components/tenis/resolver/tenis.resolver';
 import { fornecedorResolver } from './components/fornecedor/resolver/resolver.component';
-import { adminGuard } from './guard/auth.guard';
 import { MarcaListComponent } from './components/marca/marca-list/marca-list.component';
 import { ProdutoListComponent } from './components/produto/produto-list/produto-list.component';
 import { MarcaFormComponent } from './components/marca/marca-form/marca-form.component';
@@ -21,6 +20,7 @@ import { produtoResolver } from './components/produto/resolver/resolver.componen
 import { UserLoginComponent } from './components/login/user-login/user-login.component';
 import { AdminLoginComponent } from './components/login/admin-login/admin-login.component';
 import { AlterarSenhaComponent } from './components/usuario/alterar-senha/alterar-senha.component';
+import { AuthGuard } from './guard/auth.guard';
 
 export const routes: Routes = [
   // Rota pública (e-commerce)
@@ -42,8 +42,7 @@ export const routes: Routes = [
       {
         path: 'carrinho',
         component: CarrinhoComponent,
-        title: 'Carrinho',
-        canActivate: [adminGuard], // Protege o carrinho para usuários logados
+        title: 'Carrinho', // Protege o carrinho para usuários logados
       },
       {
         path: 'login',
@@ -85,7 +84,7 @@ export const routes: Routes = [
     path: 'admin',
     component: AdminTemplateComponent,
     title: 'Administração',
-    canActivate: [adminGuard], // Protege toda área admin
+    canActivate: [AuthGuard], // Protege toda área admin
     children: [
       {
         path: '',
