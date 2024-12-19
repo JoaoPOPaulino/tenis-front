@@ -30,6 +30,11 @@ export const routes: Routes = [
     title: 'e-commerce',
     children: [
       {
+        path: 'admin/login',
+        component: LoginAdminComponent,
+        title: 'Login Administrativo',
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'ecommerce',
