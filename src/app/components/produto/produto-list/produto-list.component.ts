@@ -40,7 +40,6 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class ProdutoListComponent implements OnInit, OnDestroy {
   isAdmin: boolean = false;
-  isAdminRoute: boolean = false;
   produtos: Produto[] = [];
   displayedColumns: string[] = [
     'id',
@@ -63,40 +62,28 @@ export class ProdutoListComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     public router: Router,
     private route: ActivatedRoute
-  ) {
-    this.isAdminRoute = !this.router.url.includes('/ecommerce');
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.loadProdutos();
-    this.loadTotal();
-
-    if (!this.router.url.includes('/ecommerce')) {
-      this.authService
-        .getUsuarioLogado()
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((usuario) => {
-          this.isAdmin = usuario?.tipoUsuario === 'ADMINISTRADOR';
-        });
-    } else {
-      this.isAdmin = false; // Garante que não seja admin na rota de ecommerce
-    }
-  }
-
-  getRouterLink(tipo: string, id?: number): any[] {
-    if (this.router.url.includes('/ecommerce')) {
-      return ['/admin/login'];
-    }
-    if (tipo === 'edit') {
-      return ['/admin/produtos/edit', id];
-    }
-    return ['/admin/produtos/new'];
+    this.authService
+      .getUsuarioLogado()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((usuario) => {
+        if (usuario?.tipoUsuario !== 'ADMINISTRADOR') {
+          this.router.navigate(['/home']);
+        } else {
+          this.isAdmin = true;
+          this.loadProdutos();
+          this.loadTotal();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
   loadProdutos(): void {
     this.produtoService.findAll(this.page, this.pageSize).subscribe((data) => {
       this.produtos = data;

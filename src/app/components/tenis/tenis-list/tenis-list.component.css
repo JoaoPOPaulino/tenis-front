@@ -1,12 +1,16 @@
 /* Container Principal */
 .container {
   padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 /* Ajuste do mat-toolbar */
 mat-toolbar {
   margin-bottom: 20px;
   border-radius: 4px;
+  background-color: #673ab7;
+  color: white;
 }
 
 /* Espaçamento flexível */
@@ -30,7 +34,186 @@ button.mat-icon-button {
   margin-right: 8px;
 }
 
-/* Evitar sobreposição do placeholder */
+/* Tabela */
+.table-container {
+  position: relative;
+  min-height: 300px; /* Aumento da altura mínima */
+  overflow-x: auto; /* Habilita rolagem horizontal */
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra na tabela */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* Colapsa as bordas da tabela */
+}
+
+.mat-mdc-header-row {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0; /* Linha divisória nos cabeçalhos */
+}
+
+.mat-mdc-header-cell {
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 12px 16px; /* Aumenta o espaçamento dos cabeçalhos */
+}
+
+.mat-mdc-cell {
+  padding: 12px 16px; /* Aumenta o espaçamento das células */
+  border-bottom: 1px solid #e0e0e0; /* Linha divisória entre as linhas */
+}
+
+.mat-mdc-row:hover {
+  background-color: #f5f5f5; /* Cor de fundo ao passar o mouse */
+}
+
+/* Loading State */
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.table-container.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Mensagem de Erro */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #fee;
+  border: 1px solid #f99;
+  border-radius: 4px;
+  color: #d33;
+}
+
+.error-message mat-icon {
+  color: #d33;
+}
+
+/* Mensagem Sem Dados */
+.no-data-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.no-data-message mat-icon {
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
+}
+
+/* Paginação */
+mat-paginator {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 0 16px;
+}
+
+/* Ajustes Responsivos */
+@media screen and (max-width: 960px) {
+  .container {
+    padding: 16px;
+  }
+
+  .table-container {
+    margin: 0 -16px;
+    border-radius: 0;
+  }
+
+  .mat-column-linha,
+  .mat-column-id {
+    display: none;
+  }
+
+  .mat-cell {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .mat-column-estoque,
+  .mat-column-fornecedor {
+    display: none;
+  }
+
+  .search-container {
+    max-width: 100%;
+  }
+}
+
+/* Utilitários */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Cores de Status */
+.low-stock {
+  color: #d33;
+  font-weight: 500;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.table-container {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Tooltips */
+::ng-deep .mat-tooltip {
+  font-size: 14px !important;
+  max-width: 200px !important;
+}
+
+/* Botões de Ação */
+.mat-column-acao {
+  width: 100px;
+  text-align: center;
+}
+
+.mat-column-acao button {
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.mat-column-acao button:hover {
+  opacity: 1;
+}
+
+/* Células da Tabela */
+.mat-mdc-cell {
+  padding: 12px 16px;
+}
+
+.mat-mdc-header-cell {
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+/* Ajuste para o campo de busca */
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  margin: 0;
+}
+
 .mat-form-field-appearance-outline .mat-form-field-label {
   top: -5px;
 }

@@ -17,10 +17,9 @@ import { ProdutoFormComponent } from './components/produto/produto-form/produto-
 import { usuarioResolver } from './components/usuario/resolver/resolver.component';
 import { marcaResolver } from './components/marca/resolver/resolver.component';
 import { produtoResolver } from './components/produto/resolver/resolver.component';
-import { UserLoginComponent } from './components/login/user-login/user-login.component';
-import { AdminLoginComponent } from './components/login/admin-login/admin-login.component';
 import { AlterarSenhaComponent } from './components/usuario/alterar-senha/alterar-senha.component';
-import { AuthGuard } from './guard/auth.guard';
+import { authGuard } from './guard/auth.guard';
+import { LoginComponent } from './components/login/login.component';
 
 export const routes: Routes = [
   // Rota pública (e-commerce)
@@ -42,12 +41,13 @@ export const routes: Routes = [
       {
         path: 'carrinho',
         component: CarrinhoComponent,
-        title: 'Carrinho', // Protege o carrinho para usuários logados
+        title: 'Carrinho',
+        canActivate: [authGuard],
       },
       {
         path: 'login',
-        component: UserLoginComponent,
-        title: 'Login de Usuário',
+        component: LoginComponent,
+        title: 'Login',
       },
       {
         path: 'esqueci-senha',
@@ -72,26 +72,18 @@ export const routes: Routes = [
     ],
   },
 
-  // Rota de login admin (pública)
-  {
-    path: 'admin/login',
-    component: AdminLoginComponent,
-    title: 'Login Administrativo',
-  },
-
-  // Rota administrativa (protegida por authGuard e adminGuard)
+  // Área administrativa
   {
     path: 'admin',
     component: AdminTemplateComponent,
     title: 'Administração',
-    canActivate: [AuthGuard], // Protege toda área admin
+    canActivate: [authGuard],
     children: [
       {
         path: '',
         pathMatch: 'full',
         redirectTo: 'tenis',
       },
-
       // Rotas de Tênis
       {
         path: 'tenis',

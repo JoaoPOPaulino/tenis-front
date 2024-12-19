@@ -1,39 +1,31 @@
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  CanActivateFn,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+export const authGuard: CanActivateFn = async (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean {
-    const isAdminRoute = state.url.startsWith('/admin');
+  if (authService.isTokenExpired()) {
+    console.log('Token inválido');
+    authService.logout();
+    router.navigate(['/login'], {
+      queryParams: { returnUrl: state.url },
+    });
+    return false;
+  }
 
-    if (isAdminRoute) {
-      if (this.authService.isAdmin()) {
-        return true;
-      }
-      this.router.navigate(['/admin/login']);
-      return false;
-    } else {
-      if (this.authService.isLoggedIn()) {
-        return true;
-      }
-      this.router.navigate(['/login'], {
-        queryParams: { returnUrl: state.url },
-      });
+  // Se a rota começa com /admin, verifica se é administrador
+  const usuario = await firstValueFrom(authService.getUsuarioLogado());
+  if (state.url.startsWith('/admin')) {
+    if (!usuario || usuario.tipoUsuario !== 'ADMINISTRADOR') {
+      console.log('Acesso não autorizado: área administrativa');
+      router.navigate(['/ecommerce']);
       return false;
     }
   }
-}
+
+  console.log('Token válido');
+  return true;
+};

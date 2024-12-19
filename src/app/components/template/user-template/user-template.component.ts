@@ -8,6 +8,6 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [HeaderComponent, FooterComponent, RouterModule, RouterOutlet],
   templateUrl: './user-template.component.html',
-  styleUrl: './user-template.component.css',
+  styleUrls: ['./user-template.component.css'],
 })
 export class UserTemplateComponent {}

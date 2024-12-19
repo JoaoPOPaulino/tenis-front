@@ -16,6 +16,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../../services/auth.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-tenis-list',
@@ -36,6 +39,7 @@ import { AuthService } from '../../../services/auth.service';
     MatInputModule,
     MatSnackBarModule,
     CurrencyPipe,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './tenis-list.component.html',
   styleUrls: ['./tenis-list.component.css'],
@@ -59,8 +63,12 @@ export class TenisListComponent implements OnInit {
 
   totalRecords = 0;
   pageSize = 10;
+  pageSizeOptions = [5, 10, 25, 50];
   page = 0;
   filtro: string = '';
+
+  isLoading = false;
+  errorMessage: string | null = null;
 
   constructor(
     private tenisService: TenisService,
@@ -73,12 +81,27 @@ export class TenisListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.checkAdminStatus();
+    this.loadData();
+  }
+
+  private checkAdminStatus(): void {
     if (!this.isEcommerceRoute) {
-      // Se não estiver na rota de ecommerce, verifica se é admin
-      this.authService.getUsuarioLogado().subscribe((usuario) => {
-        this.isAdmin = usuario?.tipoUsuario === 'ADMINISTRADOR';
+      this.authService.getUsuarioLogado().subscribe({
+        next: (usuario) => {
+          this.isAdmin = usuario?.tipoUsuario === 'ADMINISTRADOR';
+        },
+        error: (error) => {
+          console.error('Erro ao verificar status do usuário:', error);
+          this.snackBar.open('Erro ao verificar permissões do usuário', 'OK', {
+            duration: 3000,
+          });
+        },
       });
     }
+  }
+
+  private loadData(): void {
     this.loadTenis();
     this.loadTotal();
   }
@@ -87,61 +110,139 @@ export class TenisListComponent implements OnInit {
     return this.page * this.pageSize + index + 1;
   }
 
-  loadTenis() {
+  loadTenis(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+
     this.tenisService
       .findAll(this.page, this.pageSize)
-      .subscribe((data) => (this.tenis = data));
+      .pipe(
+        catchError((error) => {
+          console.error('Erro ao carregar tênis:', error);
+          this.errorMessage =
+            'Erro ao carregar a lista de tênis. Tente novamente mais tarde.';
+          return of([]);
+        }),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe((data) => {
+        this.tenis = data;
+      });
   }
 
-  loadTotal() {
-    this.tenisService.count().subscribe((data) => (this.totalRecords = data));
+  loadTotal(): void {
+    this.tenisService
+      .count()
+      .pipe(
+        catchError((error) => {
+          console.error('Erro ao carregar total:', error);
+          return of(0);
+        })
+      )
+      .subscribe((total) => {
+        this.totalRecords = total;
+      });
   }
 
   paginar(event: PageEvent): void {
     this.page = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.loadTenis();
+    this.loadData();
   }
 
-  filtrar() {
-    if (this.filtro) {
-      this.tenisService
+  filtrar(): void {
+    this.page = 0; // Reset para primeira página ao filtrar
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    if (this.filtro.trim()) {
+      const filtroRequest = this.tenisService
         .findByNome(this.filtro, this.page, this.pageSize)
-        .subscribe((data) => (this.tenis = data));
-      this.tenisService
-        .countByNome(this.filtro)
-        .subscribe((data) => (this.totalRecords = data));
+        .pipe(
+          catchError((error) => {
+            console.error('Erro ao filtrar tênis:', error);
+            this.errorMessage =
+              'Erro ao aplicar filtro. Tente novamente mais tarde.';
+            return of([]);
+          }),
+          finalize(() => {
+            this.isLoading = false;
+          })
+        );
+
+      const countRequest = this.tenisService.countByNome(this.filtro).pipe(
+        catchError((error) => {
+          console.error('Erro ao contar registros filtrados:', error);
+          return of(0);
+        })
+      );
+
+      filtroRequest.subscribe((data) => {
+        this.tenis = data;
+      });
+
+      countRequest.subscribe((total) => {
+        this.totalRecords = total;
+      });
     } else {
-      this.loadTenis();
-      this.loadTotal();
+      this.loadData();
     }
-    this.snackBar.open('Filtro aplicado', 'Ok', { duration: 3000 });
   }
 
-  excluir(tenis: Tenis) {
+  excluir(tenis: Tenis): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
         message: 'Deseja realmente excluir este tênis?',
       },
+      width: '300px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.tenisService.delete(tenis).subscribe({
-          next: () => {
-            this.tenis = this.tenis.filter((t) => t.id !== tenis.id);
-            this.snackBar.open('Tênis excluído com sucesso!', 'Ok', {
-              duration: 3000,
-            });
-          },
-          error: (error) => {
-            console.error('Erro ao excluir tênis', error);
-            this.snackBar.open('Erro ao excluir tênis', 'Ok', {
-              duration: 3000,
-            });
-          },
-        });
+        this.isLoading = true;
+        this.tenisService
+          .delete(tenis)
+          .pipe(
+            finalize(() => {
+              this.isLoading = false;
+            })
+          )
+          .subscribe({
+            next: () => {
+              this.tenis = this.tenis.filter((t) => t.id !== tenis.id);
+              this.totalRecords--;
+              this.snackBar.open('Tênis excluído com sucesso!', 'OK', {
+                duration: 3000,
+              });
+
+              // Recarrega os dados se estiver na última página e ela ficar vazia
+              if (this.tenis.length === 0 && this.page > 0) {
+                this.page--;
+                this.loadData();
+              }
+            },
+            error: (error) => {
+              console.error('Erro ao excluir tênis:', error);
+              this.snackBar.open(
+                'Erro ao excluir tênis. Tente novamente mais tarde.',
+                'OK',
+                {
+                  duration: 3000,
+                }
+              );
+            },
+          });
       }
     });
+  }
+
+  limparFiltro(): void {
+    if (this.filtro) {
+      this.filtro = '';
+      this.page = 0;
+      this.loadData();
+    }
   }
 }

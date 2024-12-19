@@ -65,19 +65,10 @@ export class ProdutoFormComponent implements OnInit {
   }
 
   private setupAdminStatus(): void {
-    // Inscreve-se nas mudanças do status de login
-    this.authService.isLoggedIn().subscribe((isLoggedIn) => {
-      if (isLoggedIn) {
-        // Inscreve-se nas mudanças do usuário logado
-        this.authService.getUsuarioLogado().subscribe((usuario) => {
-          this.isAdmin = usuario?.tipoUsuario === 'ADMINISTRADOR';
-          if (!this.isAdmin) {
-            // Redireciona para a lista se não for admin
-            this.router.navigate(['/produtos']);
-          }
-        });
-      } else {
-        this.isAdmin = false;
+    this.authService.getUsuarioLogado().subscribe((usuario) => {
+      this.isAdmin = usuario?.tipoUsuario === 'ADMINISTRADOR';
+      if (!this.isAdmin) {
+        this.snackBar.open('Acesso não autorizado', 'OK', { duration: 3000 });
         this.router.navigate(['/produtos']);
       }
     });

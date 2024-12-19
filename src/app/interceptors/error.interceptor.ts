@@ -1,19 +1,34 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpErrorResponse,
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
-export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router);
+@Injectable()
+export class ErrorInterceptor implements HttpInterceptor {
+  constructor(private router: Router) {}
 
-  return next(req).pipe(
-    catchError((error: HttpErrorResponse) => {
-      const listOfErrors = new Array(401, 403);
-      if (listOfErrors.indexOf(error.status) > -1) {
-        router.navigate(['/admin/login']);
-      }
-      return throwError(() => error);
-    })
-  );
-};
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        const listOfErrors = new Array(401, 403);
+        if (listOfErrors.indexOf(error.status) > -1) {
+          // Redirecionar para a página de login em caso de não autorizado
+          this.router.navigate(['/admin/login']);
+        }
+
+        // Pode adicionar mais lógica de manipulação de erros conforme necessário
+        return throwError(() => error);
+      })
+    );
+  }
+}

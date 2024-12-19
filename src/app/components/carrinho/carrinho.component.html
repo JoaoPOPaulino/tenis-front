@@ -1,58 +1,108 @@
 <div class="carrinho-container">
-  <mat-card>
+  <mat-card appearance="outlined">
     <mat-card-header>
-      <mat-card-title>Meu Carrinho</mat-card-title>
-      <mat-card-subtitle *ngIf="carrinhoItens.length > 0">
-        {{ carrinhoItens.length }} {{ carrinhoItens.length === 1 ? 'item' : 'itens' }}
-      </mat-card-subtitle>
+      <mat-card-title>
+        Meu Carrinho 
+        <span *ngIf="quantidadeTotal > 0" class="quantity-badge">
+          ({{quantidadeTotal}} {{quantidadeTotal === 1 ? 'item' : 'itens'}})
+        </span>
+      </mat-card-title>
+      <span class="spacer"></span>
+      <button mat-stroked-button
+              color="primary"
+              (click)="continuarComprando()">
+        <mat-icon>shopping_bag</mat-icon>
+        Continuar Comprando
+      </button>
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Lista de Itens -->
-      <div class="carrinho-vazio" *ngIf="carrinhoItens.length === 0">
-        <mat-icon>shopping_cart</mat-icon>
+      <!-- Loading State -->
+      <div class="loading-overlay" *ngIf="isLoading">
+        <mat-spinner diameter="40" color="primary"></mat-spinner>
+      </div>
+
+      <!-- Empty Cart -->
+      <div class="empty-cart" *ngIf="carrinhoItens.length === 0">
+        <mat-icon color="primary">shopping_cart</mat-icon>
         <p>Seu carrinho está vazio</p>
-        <button mat-raised-button color="primary" (click)="continuarComprando()">
-          Continuar Comprando
+        <button mat-raised-button 
+                color="primary"
+                (click)="continuarComprando()">
+          Começar a Comprar
         </button>
       </div>
 
-      <div class="carrinho-items" *ngIf="carrinhoItens.length > 0">
-        <div *ngFor="let item of carrinhoItens">
-          <mat-card>
-            <mat-card-header>
-              <img [src]="item.tenis.nomeImagem || 'assets/placeholder.png'" [alt]="item.tenis.nome">
-              <h3>{{ item.tenis.nome }}</h3>
-            </mat-card-header>
-            <mat-card-content>
-              <p>Quantidade: {{ item.quantidade }}</p>
-              <p>Preço: {{ item.preco | currency }}</p>
-            </mat-card-content>
-            <mat-card-actions>
-              <button mat-button (click)="removerItem(item)">Remover</button>
-              <button mat-button (click)="atualizarQuantidade(item, true)">+</button>
-              <button mat-button (click)="atualizarQuantidade(item, false)">-</button>
-            </mat-card-actions>
-          </mat-card>
+      <!-- Cart Items -->
+      <div class="cart-content" *ngIf="carrinhoItens.length > 0">
+        <div class="cart-item" *ngFor="let item of carrinhoItens">
+          <div class="item-image">
+            <img [src]="item.tenis.nomeImagem ? 'assets/images/' + item.tenis.nomeImagem : 'assets/placeholder.png'" 
+                 [alt]="item.tenis.modelo" />
+          </div>
+
+          <div class="item-info">
+            <h3>{{ item.tenis.modelo }}</h3>
+            <p class="marca" *ngIf="item.tenis.marca">{{ item.tenis.marca.nome }}</p>
+            <p class="preco">{{ item.preco | currency:'BRL' }}</p>
+            <p class="estoque" *ngIf="item.tenis.estoque <= 5">
+              Apenas {{ item.tenis.estoque }} unidades em estoque
+            </p>
+          </div>
+
+          <div class="item-quantidade mat-elevation-z1">
+            <button mat-icon-button 
+                    color="primary"
+                    (click)="diminuirQuantidade(item)"
+                    [disabled]="isLoading">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span>{{ item.quantidade }}</span>
+            <button mat-icon-button 
+                    color="primary"
+                    (click)="aumentarQuantidade(item)"
+                    [disabled]="item.quantidade >= item.tenis.estoque || isLoading">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <div class="item-subtotal">
+            <p>Subtotal</p>
+            <strong>{{ calcularSubtotal(item) | currency:'BRL' }}</strong>
+          </div>
+
+          <button mat-icon-button 
+                  color="warn"
+                  (click)="removerItem(item)"
+                  [disabled]="isLoading">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
 
         <mat-divider></mat-divider>
 
-        <div class="carrinho-resumo">
+        <!-- Cart Summary -->
+        <div class="cart-summary mat-elevation-z1">
           <div class="total">
-            <span>Total</span>
-            <span class="valor-total">{{ calcularTotal() | currency:'BRL' }}</span>
+            <h3>Total do Pedido</h3>
+            <h2>{{ valorTotal | currency:'BRL' }}</h2>
           </div>
 
-          <div class="acoes">
-            <button mat-stroked-button (click)="continuarComprando()">
-              Continuar Comprando
-            </button>
-            <button mat-stroked-button color="warn" (click)="limparCarrinho()">
+          <div class="cart-actions">
+            <button mat-stroked-button
+                    color="warn"
+                    (click)="limparCarrinho()"
+                    [disabled]="isLoading">
+              <mat-icon>remove_shopping_cart</mat-icon>
               Limpar Carrinho
             </button>
-            <button mat-raised-button color="primary" (click)="finalizarCompra()">
-              Finalizar Compra
+            
+            <button mat-raised-button
+                    color="primary"
+                    (click)="finalizarCompra()"
+                    [disabled]="carrinhoItens.length === 0 || isLoading">
+              <mat-icon>shopping_cart_checkout</mat-icon>
+              {{isLoading ? 'Processando...' : 'Finalizar Compra'}}
             </button>
           </div>
         </div>

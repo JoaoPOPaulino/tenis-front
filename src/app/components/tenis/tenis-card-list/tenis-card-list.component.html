@@ -52,10 +52,10 @@
   <div class="cards-grid">
     @for (tenis of tenisFiltrados; track tenis.id) {
       <mat-card class="tenis-card">
-        <img [src]="tenisService.getImagemUrl(tenis.id)" [alt]="tenis.nome">
+        <img [src]="tenisService.getUrlImage" [alt]="tenis.modelo">
         
         <mat-card-content>
-          <h3>{{tenis.nome}}</h3>
+          <h3>{{tenis.modelo}}</h3>
           <p class="marca">{{tenis.marca.nome}}</p>
           <p class="preco">R$ {{tenis.preco | number:'1.2-2'}}</p>
           <p class="estoque" [style.color]="getEstoqueColor(tenis.estoque)">

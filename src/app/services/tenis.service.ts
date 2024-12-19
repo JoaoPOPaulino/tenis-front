@@ -34,7 +34,7 @@ export class TenisService {
   }
 
   findByNome(
-    nome: string,
+    marca: string,
     page?: number,
     pageSize?: number
   ): Observable<Tenis[]> {
@@ -45,9 +45,12 @@ export class TenisService {
         pageSize: pageSize.toString(),
       };
     }
-    return this.httpClient.get<Tenis[]>(`${this.baseUrl}/search/nome/${nome}`, {
-      params,
-    });
+    return this.httpClient.get<Tenis[]>(
+      `${this.baseUrl}/search/nome/${marca}`,
+      {
+        params,
+      }
+    );
   }
 
   findById(id: string): Observable<Tenis> {
@@ -56,7 +59,7 @@ export class TenisService {
 
   insert(tenis: Tenis): Observable<Tenis> {
     const data = {
-      nome: tenis.nome,
+      modelo: tenis.modelo,
       preco: tenis.preco,
       estoque: tenis.estoque,
       fornecedor: {
@@ -69,7 +72,6 @@ export class TenisService {
         nome: tenis.marca.nome,
         nomeImagem: tenis.marca.nomeImagem,
       },
-      modelo: tenis.modelo,
       tamanho: tenis.tamanho,
       nomeImagem: tenis.nomeImagem,
     };
@@ -78,7 +80,7 @@ export class TenisService {
 
   update(tenis: Tenis): Observable<Tenis> {
     const data = {
-      nome: tenis.nome,
+      modelo: tenis.modelo,
       preco: tenis.preco,
       estoque: tenis.estoque,
       fornecedor: {
@@ -91,7 +93,6 @@ export class TenisService {
         nome: tenis.marca.nome,
         nomeImagem: tenis.marca.nomeImagem,
       },
-      modelo: tenis.modelo,
       tamanho: tenis.tamanho,
       nomeImagem: tenis.nomeImagem,
     };
@@ -102,13 +103,19 @@ export class TenisService {
     return this.httpClient.delete<any>(`${this.baseUrl}/${tenis.id}`);
   }
 
-  uploadImagem(id: number, file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('imagem', file);
-    return this.httpClient.post(`${this.baseUrl}/${id}/imagem`, formData);
+  uploadImage(id: number, nomeImagem: string, imagem: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('id', id.toString());
+    formData.append('nomeImagem', imagem.name);
+    formData.append('imagem', imagem, imagem.name);
+
+    return this.httpClient.patch<Tenis>(
+      `${this.baseUrl}/image/upload`,
+      formData
+    );
   }
 
-  getImagemUrl(id: number): string {
-    return `${this.baseUrl}/${id}/imagem`;
+  getUrlImage(nomeImagem: string): string {
+    return `${this.baseUrl}/image/download/${nomeImagem}`;
   }
 }

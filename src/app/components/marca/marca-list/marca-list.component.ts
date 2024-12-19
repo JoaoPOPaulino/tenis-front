@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-marca-list',
@@ -57,11 +58,21 @@ export class MarcaListComponent implements OnInit, OnDestroy {
     private marcaService: MarcaService,
     private dialog: MatDialog,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
+    this.authService
+      .getUsuarioLogado()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((usuario) => {
+        if (usuario?.tipoUsuario !== 'ADMINISTRADOR') {
+          this.router.navigate(['/home']);
+        } else {
+          this.loadData();
+        }
+      });
   }
 
   ngOnDestroy(): void {

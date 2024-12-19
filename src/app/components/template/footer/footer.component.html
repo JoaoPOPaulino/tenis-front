@@ -1,67 +1,37 @@
-<footer>
-  <!-- Container dos botões -->
-  <div class="button-container">
-    <!-- Botão do Instagram -->
-    <a
-      href="https://www.instagram.com/"
-      target="_blank"
-      class="button flex-center"
-      aria-label="Visite nosso Instagram"
-    >
-      <svg
-        viewBox="0 0 24 24"
-        class="btn-svg"
-        width="22px"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"
-          fill="#fff"
-        ></path>
-        <path
-          d="M18 5C17.4477 5 17 5.44772 17 6C17 6.55228 17.4477 7 18 7C18.5523 7 19 6.55228 19 6C19 5.44772 18.5523 5 18 5Z"
-          fill="#fff"
-        ></path>
-      </svg>
-    </a>
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section team-section">
+      <h3>Equipe de Desenvolvimento</h3>
+      <div class="team-members">
+        <div class="member" *ngFor="let member of teamMembers">
+          <p class="member-name">{{ member.name }}</p>
+          <div class="member-social">
+            <a [href]="member.instagram" 
+               target="_blank"
+               class="social-button"
+               aria-label="Instagram">
+              <svg viewBox="0 0 24 24" class="social-icon instagram" width="22px" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"/>
+                <path d="M18 5C17.4477 5 17 5.44772 17 6C17 6.55228 17.4477 7 18 7C18.5523 7 19 6.55228 19 6C19 5.44772 18.5523 5 18 5Z"/>
+              </svg>
+            </a>
+            <a [href]="member.github" 
+               target="_blank"
+               class="social-button"
+               aria-label="GitHub">
+              <svg viewBox="0 0 20 20" width="22px" class="social-icon github">
+                <path d="M10 0.3C4.48 0.3 0 4.78 0 10.3C0 14.58 2.87 18.26 6.84 19.5C7.34 19.58 7.52 19.3 7.52 19.06C7.52 18.86 7.52 18.26 7.52 17.46C4.92 17.96 4.28 16.64 4.1 16.22C3.98 15.94 3.54 15.1 3.18 14.9C2.84 14.72 2.36 14.24 3.16 14.24C3.92 14.24 4.42 14.96 4.58 15.24C5.46 16.62 6.94 16.2 7.52 15.96C7.6 15.36 7.86 14.96 8.14 14.72C5.92 14.46 3.6 13.64 3.6 9.9C3.6 8.8 4 7.9 4.66 7.22C4.58 6.98 4.26 6.06 4.74 4.78C4.74 4.78 5.6 4.5 7.52 5.62C8.3 5.4 9.14 5.3 10 5.3C10.86 5.3 11.7 5.4 12.48 5.62C14.4 4.5 15.26 4.78 15.26 4.78C15.74 6.06 15.42 6.98 15.34 7.22C16 7.9 16.4 8.8 16.4 9.9C16.4 13.66 14.08 14.46 11.86 14.72C12.16 15 12.44 15.46 12.44 16.14C12.44 17.14 12.42 18.08 12.42 19.06C12.42 19.3 12.6 19.58 13.1 19.5C17.08 18.26 20 14.58 20 10.3C20 4.78 15.52 0.3 10 0.3Z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Botão do GitHub -->
-    <a
-      href="https://github.com/"
-      target="_blank"
-      class="button flex-center"
-      aria-label="Visite nosso GitHub"
-    >
-      <svg
-        viewBox="0 0 20 20"
-        width="22px"
-        class="btn-svg"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="#fff"
-        stroke="#fff"
-      >
-        <path
-          d="M10 0.3C4.48 0.3 0 4.78 0 10.3C0 14.58 2.87 18.26 6.84 19.5C7.34 19.58 7.52 19.3 7.52 19.06C7.52 18.86 7.52 18.26 7.52 17.46C4.92 17.96 4.28 16.64 4.1 16.22C3.98 15.94 3.54 15.1 3.18 14.9C2.84 14.72 2.36 14.24 3.16 14.24C3.92 14.24 4.42 14.96 4.58 15.24C5.46 16.62 6.94 16.2 7.52 15.96C7.6 15.36 7.86 14.96 8.14 14.72C5.92 14.46 3.6 13.64 3.6 9.9C3.6 8.8 4 7.9 4.66 7.22C4.58 6.98 4.26 6.06 4.74 4.78C4.74 4.78 5.6 4.5 7.52 5.62C8.3 5.4 9.14 5.3 10 5.3C10.86 5.3 11.7 5.4 12.48 5.62C14.4 4.5 15.26 4.78 15.26 4.78C15.74 6.06 15.42 6.98 15.34 7.22C16 7.9 16.4 8.8 16.4 9.9C16.4 13.66 14.08 14.46 11.86 14.72C12.16 15 12.44 15.46 12.44 16.14C12.44 17.14 12.42 18.08 12.42 19.06C12.42 19.3 12.6 19.58 13.1 19.5C17.08 18.26 20 14.58 20 10.3C20 4.78 15.52 0.3 10 0.3Z"
-        ></path>
-      </svg>
-    </a>
+    <mat-divider></mat-divider>
+
+    <div class="footer-section copyright">
+      <p>&copy; {{ currentYear }} - Todos os direitos reservados</p>
+    </div>
   </div>
-
-  <mat-divider vertical></mat-divider>
-
-  <!-- Lista de integrantes -->
-  <div class="integrantes">
-    <h3>Integrantes</h3>
-    <ul>
-      <li>João Pedro de Oliveira Paulino</li>
-      <li>Luiz</li>
-    </ul>
-  </div>
-
-  <!-- Direitos reservados -->
-  <p>&copy; Todos os direitos reservados</p>
 </footer>

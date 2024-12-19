@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-marca-form',
@@ -31,6 +32,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 })
 export class MarcaFormComponent implements OnInit {
   formGroup: FormGroup;
+  isAdmin: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -38,7 +40,8 @@ export class MarcaFormComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {
     this.formGroup = this.formBuilder.group({
       id: [null],
@@ -48,7 +51,14 @@ export class MarcaFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initializeForm();
+    this.authService.getUsuarioLogado().subscribe((usuario) => {
+      this.isAdmin = usuario?.tipoUsuario === 'ADMINISTRADOR';
+      if (this.isAdmin) {
+        this.initializeForm();
+      } else {
+        this.router.navigate(['/home']);
+      }
+    });
   }
 
   initializeForm() {

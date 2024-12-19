@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Produto } from '../models/produto.model';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +13,13 @@ export class ProdutoService {
 
   constructor(
     private httpClient: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   private checkAdminAuthorization(): Observable<never> | null {
-    if (!this.authService.isAdmin()) {
+    const usuario = this.authService.usuarioAtual;
+    if (!usuario || usuario.tipoUsuario !== 'ADMINISTRADOR') {
       console.log('Tentativa de acesso não autorizado');
       return throwError(
         () => new Error('Usuário não tem permissão de administrador')
@@ -24,28 +27,21 @@ export class ProdutoService {
     }
     return null;
   }
-
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ocorreu um erro ao processar a requisição';
 
-    if (error.error instanceof ErrorEvent) {
-      // Erro do lado do cliente
+    if (error.status === 401) {
+      this.authService.removeToken();
+      this.authService.removeUsuarioLogado();
+      this.router.navigate(['/login']);
+      errorMessage = 'Sessão expirada. Por favor, faça login novamente.';
+    } else if (error.status === 403) {
+      errorMessage =
+        'Acesso negado. Você não tem permissão para realizar esta operação.';
+    } else if (error.error instanceof ErrorEvent) {
       errorMessage = error.error.message;
     } else {
-      // Erro do lado do servidor
-      switch (error.status) {
-        case 401:
-          errorMessage = 'Não autorizado';
-          break;
-        case 403:
-          errorMessage = 'Acesso negado';
-          break;
-        case 404:
-          errorMessage = 'Recurso não encontrado';
-          break;
-        default:
-          errorMessage = `Erro do servidor: ${error.status}`;
-      }
+      errorMessage = `Erro do servidor: ${error.status}`;
     }
 
     console.error('Erro na operação:', errorMessage);

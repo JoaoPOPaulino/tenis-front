@@ -6,17 +6,13 @@
       <mat-form-field>
         <mat-label>Nome</mat-label>
         <input matInput formControlName="nome" required>
-        <mat-error *ngIf="formGroup.get('nome')?.hasError('required')">
-          Nome é obrigatório
-        </mat-error>
+        <mat-error>{{ getErrorMessage('nome', formGroup.get('nome')?.errors) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Modelo</mat-label>
         <input matInput formControlName="modelo" required>
-        <mat-error *ngIf="formGroup.get('modelo')?.hasError('required')">
-          Modelo é obrigatório
-        </mat-error>
+        <mat-error>{{ getErrorMessage('modelo', formGroup.get('modelo')?.errors) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
@@ -26,9 +22,7 @@
             {{marca.nome}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="formGroup.get('marca')?.hasError('required')">
-          Marca é obrigatória
-        </mat-error>
+        <mat-error>{{ getErrorMessage('marca', formGroup.get('marca')?.errors) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
@@ -38,31 +32,19 @@
             {{fornecedor.nome}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="formGroup.get('fornecedor')?.hasError('required')">
-          Fornecedor é obrigatório
-        </mat-error>
+        <mat-error>{{ getErrorMessage('fornecedor', formGroup.get('fornecedor')?.errors) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Preço</mat-label>
         <input matInput type="number" formControlName="preco" required>
-        <mat-error *ngIf="formGroup.get('preco')?.hasError('required')">
-          Preço é obrigatório
-        </mat-error>
-        <mat-error *ngIf="formGroup.get('preco')?.hasError('min')">
-          Preço deve ser maior que zero
-        </mat-error>
+        <mat-error>{{ getErrorMessage('preco', formGroup.get('preco')?.errors) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Estoque</mat-label>
         <input matInput type="number" formControlName="estoque" required>
-        <mat-error *ngIf="formGroup.get('estoque')?.hasError('required')">
-          Estoque é obrigatório
-        </mat-error>
-        <mat-error *ngIf="formGroup.get('estoque')?.hasError('min')">
-          Estoque não pode ser negativo
-        </mat-error>
+        <mat-error>{{ getErrorMessage('estoque', formGroup.get('estoque')?.errors) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
@@ -72,59 +54,69 @@
             {{tamanho}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="formGroup.get('tamanho')?.hasError('required')">
-          Tamanho é obrigatório
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>URL da Imagem</mat-label>
-        <input matInput formControlName="nomeImagem">
+        <mat-error>{{ getErrorMessage('tamanho', formGroup.get('tamanho')?.errors) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field class="full-width">
         <mat-label>Descrição</mat-label>
         <textarea matInput formControlName="descricao" rows="4" required></textarea>
-        <mat-error *ngIf="formGroup.get('descricao')?.hasError('required')">
-          Descrição é obrigatória
-        </mat-error>
+        <mat-error>{{ getErrorMessage('descricao', formGroup.get('descricao')?.errors) }}</mat-error>
       </mat-form-field>
     </div>
 
     <div class="imagem-container">
-      <input type="file" #fileInput style="display: none" 
-             accept="image/*" (change)="onFileSelected($event)">
+      <input type="file" 
+             #fileInput 
+             style="display: none" 
+             accept="image/*" 
+             (change)="carregarImagemSelecionada($event)">
       
-      <button type="button" mat-raised-button (click)="fileInput.click()">
+      <button type="button" 
+              mat-raised-button 
+              (click)="fileInput.click()">
         <mat-icon>upload</mat-icon>
         Selecionar Imagem
       </button>
+      
+      @if (fileName) {
+        <span class="file-name">{{ fileName }}</span>
+      }
     
       @if (imagePreview) {
         <div class="preview-container">
-          <img [src]="imagePreview" alt="Preview" class="image-preview">
-          <button mat-icon-button color="warn" 
-                  (click)="selectedFile = null; imagePreview = null">
+          <img [src]="imagePreview" 
+               alt="Preview" 
+               class="image-preview">
+          <button mat-icon-button 
+                  color="warn" 
+                  (click)="selectedFile = null; imagePreview = null; fileName = ''">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
       }
-    
-      @if (uploadProgress) {
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      }
     </div>
 
     <div class="button-group">
-      <button mat-raised-button color="primary" type="submit" [disabled]="!formGroup.valid">
+      <button mat-raised-button 
+              color="primary" 
+              type="submit" 
+              [disabled]="!formGroup.valid">
         <mat-icon>save</mat-icon>
         Salvar
       </button>
-      <button mat-raised-button color="warn" type="button" (click)="excluir()" *ngIf="formGroup.value.id">
+      
+      <button mat-raised-button 
+              color="warn" 
+              type="button" 
+              (click)="excluir()" 
+              *ngIf="formGroup.value.id">
         <mat-icon>delete</mat-icon>
         Excluir
       </button>
-      <button mat-raised-button routerLink="/tenis">
+      
+      <button mat-raised-button 
+              type="button"
+              (click)="voltarPagina()">
         <mat-icon>arrow_back</mat-icon>
         Voltar
       </button>

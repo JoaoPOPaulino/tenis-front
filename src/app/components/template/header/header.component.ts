@@ -58,8 +58,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  logout() {
-    this.authService.logout();
+  onLogout() {
+    this.authService.removeToken();
+    this.authService.removeUsuarioLogado();
     this.router.navigate(['/login']);
+  }
+
+  isAdminUser(): boolean {
+    return this.usuarioLogado?.tipoUsuario === 'ADMINISTRADOR';
   }
 }

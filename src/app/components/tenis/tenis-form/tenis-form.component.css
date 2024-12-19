@@ -7,6 +7,7 @@
 h2 {
   color: #673ab7;
   margin-bottom: 24px;
+  font-weight: 500;
 }
 
 .form-grid {
@@ -41,7 +42,64 @@ textarea {
   gap: 8px;
 }
 
+.imagem-container {
+  grid-column: 1 / -1;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.file-name {
+  color: #673ab7;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
+.preview-container {
+  position: relative;
+  display: inline-block;
+  margin-top: 16px;
+}
+
+.image-preview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.preview-container button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Deep Purple Theme Customizations */
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-ripple {
+  background-color: #673ab7;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
+  color: #673ab7;
+}
+
+:host ::ng-deep .mat-mdc-select-arrow {
+  color: #673ab7;
+}
+
+:host ::ng-deep .mat-mdc-select-value {
+  color: rgba(0, 0, 0, 0.87);
+}
+
 @media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
   .form-grid {
     grid-template-columns: 1fr;
   }
@@ -56,25 +114,38 @@ textarea {
   }
 
   .imagem-container {
-    margin: 20px 0;
+    align-items: center;
+    text-align: center;
   }
-  
+
   .preview-container {
-    margin-top: 16px;
-    position: relative;
-    display: inline-block;
+    margin-top: 20px;
   }
-  
+
   .image-preview {
-    max-width: 200px;
-    max-height: 200px;
-    border-radius: 4px;
+    max-width: 100%;
+    height: auto;
   }
-  
+}
+
+/* Additional Responsive Adjustments */
+@media (max-width: 480px) {
+  .container {
+    margin: 10px;
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+
+  .imagem-container {
+    margin: 16px 0;
+  }
+
   .preview-container button {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background-color: white;
+    top: -8px;
+    right: -8px;
   }
 }

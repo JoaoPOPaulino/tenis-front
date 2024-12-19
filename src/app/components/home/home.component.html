@@ -5,9 +5,6 @@
     <mat-spinner diameter="50"></mat-spinner>
   </div>
 
-  <!-- home.component.html -->
-<input type="checkbox" id="theme-toggle" class="theme-checkbox">
-
   <!-- Error -->
   <div class="error-container" *ngIf="error">
     <mat-icon color="warn">error</mat-icon>
@@ -24,37 +21,9 @@
       <h1>{{home.tituloPagina}}</h1>
     </div>
 
-    <!-- Destaques -->
-    <section class="destaques">
-      <h2>Destaques</h2>
-      <div class="produtos-grid">
-        <mat-card class="produto-card" *ngFor="let produto of home.destaques">
-          <img mat-card-image [src]="produto.imagemUrl" [alt]="produto.nome">
-          <mat-card-content>
-            <h3>{{produto.nome}}</h3>
-            <p class="preco">{{produto.preco | currency:'BRL'}}</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button color="primary" [routerLink]="['/produtos', produto.id]">
-              Ver Detalhes
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-    </section>
-
-    <!-- Marcas em Destaque -->
-    <section class="marcas" *ngIf="home.marcasEmDestaque?.length">
-      <h2>Nossas Marcas</h2>
-      <div class="marcas-grid">
-        <div class="marca-item" *ngFor="let marca of home.marcasEmDestaque">
-          <img [src]="marca.nomeImagem" [alt]="marca.nome">
-        </div>
-      </div>
-    </section>
-
-  <!-- Footer -->
-  <footer>
-    <p>&copy; {{currentYear}} Sneaker Paradise. Todos os direitos reservados.</p>
-  </footer>
+    <!-- Footer -->
+    <footer>
+      <p>&copy; {{currentYear}} Sneaker Paradise. Todos os direitos reservados.</p>
+    </footer>
+  </div>
 </div>
