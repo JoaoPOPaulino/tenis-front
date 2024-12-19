@@ -1,0 +1,153 @@
+/* Definições globais para o tema Deep Purple & Amber */
+:root {
+    --primary-color: #673ab7; /* Deep Purple */
+    --accent-color: #ffab40; /* Amber */
+    --text-color: #ffffff; /* Branco */
+    --background-color: #ede7f6; /* Fundo lilás suave */
+    --card-background: rgba(255, 255, 255, 0.9); /* Fundo translúcido */
+    --hover-color: #5e35b1; /* Cor de hover mais escura para primário */
+    --disabled-color: #bdbdbd; /* Cinza para desabilitados */
+  }
+  
+  /* Fundo com gradiente e animação */
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #673ab7, #ffab40);
+    animation: backgroundAnimation 10s infinite alternate;
+  }
+  
+  @keyframes backgroundAnimation {
+    0% {
+      background: linear-gradient(135deg, #673ab7, #ffab40);
+    }
+    50% {
+      background: linear-gradient(135deg, #512da8, #ffcc80);
+    }
+    100% {
+      background: linear-gradient(135deg, #311b92, #ffd740);
+    }
+  }
+  
+  /* Estilo do container principal */
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    background: var(--card-background);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    transform: scale(0.95);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .login-container:hover {
+    transform: scale(1);
+  }
+  
+  /* Estilo do card de login */
+  .login-card {
+    width: 100%;
+    padding: 16px;
+    text-align: center;
+  }
+  
+  /* Header do card */
+  mat-card-header {
+    background: var(--primary-color);
+    color: var(--text-color);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 24px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Inputs e botões */
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  mat-icon {
+    color: var(--primary-color);
+  }
+  
+  button.submit-button {
+    width: 100%;
+    height: 48px;
+    margin-top: 16px;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-weight: bold;
+    border-radius: 24px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  button.submit-button:hover {
+    background-color: var(--hover-color);
+    box-shadow: 0 4px 12px rgba(103, 58, 183, 0.4);
+  }
+  
+  button[mat-button] {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  button[mat-button]:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Botões de ação adicionais */
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+  }
+  
+  button[mat-button][color='accent'] {
+    color: var(--primary-color);
+  }
+  
+  button[mat-button][color='accent']:hover {
+    background-color: rgba(103, 58, 183, 0.1);
+  }
+  
+  /* Mensagens de erro */
+  mat-error {
+    color: #d32f2f; /* Vermelho para erros */
+    font-size: 0.8rem;
+  }
+  
+  /* Spinner de carregamento */
+  mat-spinner {
+    color: var(--text-color);
+  }
+  
+  /* Responsividade */
+  @media (max-width: 480px) {
+    .login-card {
+      margin: 16px;
+    }
+  
+    .action-buttons {
+      flex-direction: column;
+      gap: 8px;
+    }
+  
+    button.submit-button {
+      margin-top: 12px;
+    }
+  }

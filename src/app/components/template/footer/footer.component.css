@@ -1,7 +1,7 @@
 .footer {
   background-color: #673ab7; /* DeepPurple do tema */
   color: white;
-  padding: 32px 0;
+  padding: 24px 0; /* Diminuindo o padding para compactar a altura */
   margin-top: auto;
 }
 
@@ -13,20 +13,20 @@
 
 .footer-section {
   text-align: center;
-  margin: 16px 0;
+  margin: 16px 0; /* Diminuindo o espaçamento entre as seções */
 }
 
 .team-section h3 {
-  font-size: 1.5rem;
-  margin-bottom: 24px;
-  font-weight: 500;
+  font-size: 1.25rem; /* Font menor */
+  margin-bottom: 16px;
+  font-weight: 500; /* Ajustando o peso da fonte */
 }
 
 .team-members {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 32px;
+  gap: 24px; /* Diminuindo o gap entre os membros */
 }
 
 .member {
@@ -34,23 +34,25 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  width: 130px; /* Diminuindo a largura dos membros */
 }
 
 .member-name {
-  font-size: 1rem;
+  font-size: 1rem; /* Fonte menor */
   margin: 0;
+  font-weight: 400; /* Ajustando o peso da fonte */
 }
 
 .member-social {
   display: flex;
-  gap: 16px;
+  gap: 12px; /* Reduzindo o espaço entre os ícones */
 }
 
 .social-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  width: 40px; /* Ícones menores */
   height: 40px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.1);
@@ -64,8 +66,8 @@
 
 .social-icon {
   fill: white;
-  width: 20px;
-  height: 20px;
+  width: 18px; /* Ícones menores */
+  height: 18px;
   transition: transform 0.3s ease;
 }
 
@@ -74,36 +76,54 @@
 }
 
 mat-divider {
-  margin: 24px 0;
+  margin: 16px 0; /* Diminuindo o espaçamento do divisor */
   background-color: rgba(255, 255, 255, 0.1);
 }
 
 .copyright {
-  font-size: 0.9rem;
+  font-size: 0.85rem; /* Fonte menor */
   opacity: 0.8;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
   .team-members {
-    gap: 24px;
+    gap: 16px; /* Diminuindo o gap em telas médias */
   }
 
   .footer-section {
-    margin: 12px 0;
+    margin: 12px 0; /* Menor espaçamento */
+  }
+
+  .team-section h3 {
+    font-size: 1.25rem; /* Ajustando o tamanho do título */
+  }
+
+  .member-name {
+    font-size: 0.9rem; /* Fonte menor em telas pequenas */
   }
 }
 
 @media (max-width: 480px) {
   .footer {
-    padding: 24px 0;
+    padding: 16px 0; /* Menor padding em telas pequenas */
   }
 
   .team-section h3 {
-    font-size: 1.25rem;
+    font-size: 1.125rem; /* Tamanho ajustado para telas pequenas */
   }
 
   .member-name {
-    font-size: 0.9rem;
+    font-size: 0.875rem; /* Fonte menor */
+  }
+
+  .social-button {
+    width: 35px; /* Ícones ainda menores */
+    height: 35px;
+  }
+
+  .social-icon {
+    width: 16px; /* Ícones menores */
+    height: 16px;
   }
 }

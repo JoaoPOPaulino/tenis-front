@@ -1,6 +1,30 @@
-<!-- admin-template.component.html -->
-<div class="admin-container">
-    <app-header></app-header>
-    <app-sidebar></app-sidebar>
-    <app-footer></app-footer>
-  </div>
+<mat-toolbar color="primary">
+  <button mat-button routerLink="/ecommerce">
+    <mat-icon>home</mat-icon>
+    Home
+  </button>
+
+  <span class="spacer"></span>
+
+  <ng-container *ngIf="isAdmin()">
+    <button mat-button [matMenuTriggerFor]="adminMenu">
+      <mat-icon>admin_panel_settings</mat-icon>
+      Administração
+    </button>
+    <mat-menu #adminMenu="matMenu">
+      <button mat-menu-item routerLink="/admin/tenis">Tênis</button>
+      <button mat-menu-item routerLink="/admin/fornecedor">Fornecedores</button>
+      <button mat-menu-item routerLink="/admin/marcas">Marcas</button>
+      <button mat-menu-item routerLink="/admin/usuarios">Usuários</button>
+      <button mat-menu-item routerLink="/admin/produtos">Produtos</button>
+    </mat-menu>
+  </ng-container>
+
+  <button mat-icon-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

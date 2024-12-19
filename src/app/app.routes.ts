@@ -19,7 +19,8 @@ import { marcaResolver } from './components/marca/resolver/resolver.component';
 import { produtoResolver } from './components/produto/resolver/resolver.component';
 import { AlterarSenhaComponent } from './components/usuario/alterar-senha/alterar-senha.component';
 import { authGuard } from './guard/auth.guard';
-import { LoginComponent } from './components/login/login.component';
+import { LoginUserComponent } from './components/login/login-user/login-user.component';
+import { LoginAdminComponent } from './components/login/login-admin/login-admin.component';
 
 export const routes: Routes = [
   // Rota pública (e-commerce)
@@ -46,11 +47,11 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        component: LoginComponent,
+        component: LoginUserComponent,
         title: 'Login',
       },
       {
-        path: 'esqueci-senha',
+        path: 'alterar-senha',
         component: AlterarSenhaComponent,
         title: 'Alterar Senha',
       },
@@ -58,11 +59,6 @@ export const routes: Routes = [
         path: 'novo-usuario',
         component: UsuarioFormComponent,
         title: 'Novo Usuário',
-      },
-      {
-        path: 'produtos',
-        component: ProdutoListComponent,
-        title: 'Produtos',
       },
       {
         path: 'marcas',

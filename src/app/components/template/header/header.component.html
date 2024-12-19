@@ -1,13 +1,13 @@
 <mat-toolbar color="primary">
   <div class="toolbar-container">
     <div class="left-side">
-      <span class="logo">Sneaker Paradise</span>
       <button mat-button routerLink="/ecommerce">
         <mat-icon>home</mat-icon>
-        Home
       </button>
     </div>
-
+    <div class="center-title">
+      <span class="logo">Sneaker Paradise</span>
+    </div>
     <div class="right-side">
       <!-- Carrinho -->
       <button mat-icon-button routerLink="/carrinho" [matBadge]="quantidadeItens" 

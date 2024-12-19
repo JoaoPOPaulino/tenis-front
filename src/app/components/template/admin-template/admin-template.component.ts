@@ -1,14 +1,35 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from '../header/header.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
-import { FooterComponent } from '../footer/footer.component';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-admin-template',
   standalone: true,
-  imports: [HeaderComponent, SidebarComponent, FooterComponent, RouterOutlet],
+  imports: [
+    CommonModule,
+    RouterModule,
+    RouterOutlet,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+  ],
   templateUrl: './admin-template.component.html',
-  styleUrl: './admin-template.component.css',
+  styleUrls: ['./admin-template.component.css'],
 })
-export class AdminTemplateComponent {}
+export class AdminTemplateComponent {
+  constructor(private authService: AuthService) {}
+
+  logout() {
+    this.authService.logout();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+}

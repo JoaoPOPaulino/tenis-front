@@ -52,6 +52,30 @@ export class AuthService {
         })
       );
   }
+
+  public loginUser(username: string, senha: string): Observable<any> {
+    const params = {
+      login: username,
+      senha: senha,
+      perfil: 2, // Usuário Comum
+    };
+    return this.httpClient
+      .post(`${this.baseUrl}`, params, { observe: 'response' })
+      .pipe(
+        tap((res: any) => {
+          const authToken = res.headers.get('Authorization') ?? '';
+          if (authToken) {
+            this.setToken(authToken);
+            const usuarioLogado = res.body;
+            if (usuarioLogado) {
+              this.setUsuarioLogado(usuarioLogado);
+              this.usuarioLogadoSubject.next(usuarioLogado);
+            }
+          }
+        })
+      );
+  }
+
   getCurrentUser(): Usuario | null {
     return this.usuarioLogadoSubject.value;
   }
